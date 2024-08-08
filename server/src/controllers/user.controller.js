@@ -2,6 +2,9 @@ import { StatusCodes } from 'http-status-codes';
 import { User } from '../models/index.js';
 import { ApiError, asyncHandler, handleResponse } from '../utils/index.js';
 
+// TODO: Add username and avatar fields to user model
+// TODO: Add controller according to user model
+
 const updateUserProfile = asyncHandler(async (req, res) => {
     const { fullName, gradYear, university, branch } = req.body;
 
@@ -37,7 +40,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 });
 
 // getUserProfile
-
 const getUserProfile = asyncHandler(async (req, res) => {
     const { email } = req.params;
 

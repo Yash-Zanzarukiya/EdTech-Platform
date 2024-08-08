@@ -10,6 +10,8 @@ import {
 import { cloudinary } from '../utils/index.js';
 import { StatusCodes } from 'http-status-codes';
 
+// TODO: modify according to course model
+
 const createCourse = asyncHandler(async (req, res) => {
     const { name, description, price, duration } = req.body;
 

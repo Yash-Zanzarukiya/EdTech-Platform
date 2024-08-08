@@ -3,6 +3,10 @@ import authController from './auth.controller.js';
 import userController from './user.controller.js';
 import purchaseController from './purchase.controller.js';
 import courseController from './course.controller.js';
+import progressController from './progress.controller.js';
+import topicController from './topic.controller.js';
+import sectionController from './section.controller.js';
+import videoController from './video.controller.js';
 
 export {
     checkHealth,
@@ -10,4 +14,8 @@ export {
     userController,
     purchaseController,
     courseController,
+    progressController,
+    topicController,
+    sectionController,
+    videoController,
 };

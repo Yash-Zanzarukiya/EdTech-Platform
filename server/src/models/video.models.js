@@ -25,7 +25,7 @@ const videoSchema = new Schema(
       type: String,
       default: "private",
     },
-    ownerId: {
+    owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
