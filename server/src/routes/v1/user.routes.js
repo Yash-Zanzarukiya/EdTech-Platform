@@ -4,8 +4,9 @@ import { verifyJWT } from '../../middlewares/index.js';
 
 const router = Router();
 
-router.get('/get', verifyJWT, (req, res) => {
-    res.send('Hello World')
-})
+router
+    .route('/profile/:identifier')
+    .get(userController.getUserProfile)
+    .patch(verifyJWT, userController.updateUserProfile);
 
 export default router;

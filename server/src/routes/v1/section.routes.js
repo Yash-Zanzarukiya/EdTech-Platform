@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { verifyJWT } from '../../middlewares/index.js';
-import sectionController from '../../controllers/section.controller.js';
+import { sectionController } from '../../controllers/index.js';
 
 const {
     createSection,

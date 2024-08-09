@@ -1,6 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { axiosConfig, toast } from '@/utils/index.js';
+import {
+    axiosConfig,
+    toastErrorMessage,
+    toastSuccessMessage,
+} from '@/utils/index.js';
 
 const initialState = {
     loading: false,
@@ -10,20 +14,19 @@ const initialState = {
 
 export const signUp = createAsyncThunk(
     'auth/signUp',
-    async ({ email, password, name, role = 'user' }) => {
+    async ({ username, email, password, fullName, role = 'user' }) => {
         try {
             const response = await axiosConfig.post('/auth/signup', {
+                username,
                 email,
                 password,
-                name,
+                fullName,
                 role,
             });
-            toast('Account Created Successfully');
+            toastSuccessMessage('Signed Up Successfully', response);
             return response.data.data;
         } catch (error) {
-            const message = error.response.data.message;
-            console.log({ message });
-            toast(message);
+            toastErrorMessage('Sign Up Failed', error);
             return null;
         }
     }

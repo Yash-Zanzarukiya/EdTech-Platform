@@ -4,14 +4,14 @@ import jwt from 'jsonwebtoken';
 
 const userSchema = new Schema(
     {
-        // username: {
-        //   type: String,
-        //   required: true,
-        //   unique: true,
-        //   lowercase: true,
-        //   trim: true,
-        //   index: true,
-        // },
+        username: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true,
+            index: true,
+        },
         email: {
             type: String,
             required: true,
@@ -23,7 +23,6 @@ const userSchema = new Schema(
             type: String,
             required: true,
             trim: true,
-            index: true,
         },
         university: {
             type: String,
@@ -39,6 +38,7 @@ const userSchema = new Schema(
         },
         role: {
             type: String,
+            default: 'user',
         },
     },
     { timestamps: true }
@@ -48,7 +48,7 @@ userSchema.methods.generateToken = function () {
     return jwt.sign(
         {
             id: this._id,
-            name: this.name,
+            username: this.username,
             email: this.email,
             role: this.role,
         },

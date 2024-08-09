@@ -12,7 +12,6 @@ const useAuthRedirect = () => {
             if (userData?.role === ROLE.ADMIN) {
                 navigate('/admin-dashboard');
             } else if (userData?.role === ROLE.USER) {
-                console.log({ userData });
                 navigate('/user-dashboard');
             }
         }

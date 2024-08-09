@@ -23,20 +23,19 @@ function SignIn() {
     const { status } = useSelector(({ auth }) => auth);
 
     useAuthRedirect();
-    
+
     const dispatch = useDispatch();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     const form = useCustomForm(signInSchema, {
-        email: '',
+        identifier: '',
         password: '',
     });
 
     async function onSubmit(values) {
-        setIsSubmitting(true);
-        dispatch(signIn(values.email, values.password));
-        setIsSubmitting(false);
+        setIsSubmitting(() => true);
+        dispatch(signIn(values)).then(() => setIsSubmitting(() => false));
     }
 
     return (
@@ -69,14 +68,14 @@ function SignIn() {
                         {/* identifier */}
                         <FormField
                             control={form.control}
-                            name="email"
+                            name="identifier"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Email</FormLabel>
+                                    <FormLabel>Username or Email</FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
-                                            placeholder="Enter your email"
+                                            placeholder="Enter your username or email"
                                         />
                                     </FormControl>
                                     <FormMessage />

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import videoController from '../../controllers/index.js';
+import { videoController } from '../../controllers/index.js';
 const {
     getAllVideos,
     publishAVideo,

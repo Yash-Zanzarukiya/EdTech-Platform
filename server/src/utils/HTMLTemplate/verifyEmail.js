@@ -1,5 +1,5 @@
-import { BASE_URL } from "../../config/serverConfig.js";
-import { APP_NAME } from "../../constants.js";
+import { BASE_URL } from '../../config/serverConfig.js';
+import { APP_NAME } from '../../constants.js';
 
 function verifyEmailHTML(token) {
     token = `${BASE_URL}/api/v1/auth/verify-email/` + token;
@@ -73,10 +73,8 @@ function verifyEmailHTML(token) {
     </div>
 </body>
 </html>
-`
+`;
     return verifyEmailHTML;
 }
 
-export {
-    verifyEmailHTML
-};
+export { verifyEmailHTML };

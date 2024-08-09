@@ -15,10 +15,14 @@ import { useDispatch } from 'react-redux';
 import { getUser } from './app/slices/authSlice';
 import { healthCheck } from './app/slices/healthSlice';
 import { useEffect, useState } from 'react';
+import { useToast } from '@/components/ui/use-toast';
+
+let toastMessage;
 
 function App() {
+    const { toast } = useToast();
+    toastMessage = toast;
     const dispatch = useDispatch();
-
     const [initialLoading, setInitialLoading] = useState(true);
 
     useEffect(() => {
@@ -53,3 +57,4 @@ function App() {
 }
 
 export default App;
+export { toastMessage };

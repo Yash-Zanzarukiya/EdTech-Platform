@@ -4,13 +4,13 @@ import { isEmail, isPassword } from '../utils/index.js';
 
 const authSchema = new mongoose.Schema(
     {
-        // username: {
-        //     type: String,
-        //     required: true,
-        //     unique: true,
-        //     lowercase: true,
-        //     trim: true,
-        // },
+        username: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true,
+        },
         email: {
             type: String,
             required: true,
@@ -42,6 +42,15 @@ const authSchema = new mongoose.Schema(
 authSchema.statics.isEmailAlreadyRegistered = async function (email) {
     try {
         const auth = await this.findOne({ email });
+        return auth;
+    } catch {
+        return null;
+    }
+};
+
+authSchema.statics.isUsernameAlreadyTaken = async function (username) {
+    try {
+        const auth = await this.findOne({ username });
         return auth;
     } catch {
         return null;

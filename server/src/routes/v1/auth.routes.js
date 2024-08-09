@@ -8,5 +8,6 @@ router.post('/signin', authController.signIn);
 router.get('/me', authController.me);
 router.post('/logout', authController.logout);
 router.get('/verify-email/:token', authController.verifyEmail);
+router.get('/username/:username', authController.checkUsername);
 
 export default router;

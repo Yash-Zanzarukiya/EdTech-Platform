@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -11,3 +11,6 @@ export const DB_NAME = process.env.DB_NAME;
 export const CLIENT_URL = process.env.CLIENT_URL;
 export const EMAIL_ID = process.env.EMAIL_ID;
 export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
+export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
+export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
+export const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;

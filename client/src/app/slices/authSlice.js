@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { axiosConfig } from '@/utils';
-
+import { axiosConfig, toastErrorMessage } from '@/utils';
 const initialState = {
     loading: false,
     status: false,
@@ -10,14 +9,15 @@ const initialState = {
 
 export const signIn = createAsyncThunk(
     'auth/signIn',
-    async (email, password) => {
+    async ({ identifier, password }) => {
         try {
             const response = await axiosConfig.post('/auth/signin', {
-                email,
+                identifier,
                 password,
             });
             return response.data.data;
         } catch (error) {
+            toastErrorMessage('Sign In Failed', error);
             return null;
         }
     }
@@ -27,7 +27,7 @@ export const logout = createAsyncThunk('auth/logout', async () => {
     try {
         await axiosConfig.post('/auth/logout');
     } catch (error) {
-        console.log(error);
+        toastErrorMessage('Logout Failed', error);
         return null;
     }
 });
@@ -40,6 +40,18 @@ export const getUser = createAsyncThunk('auth/getUser', async () => {
         return null;
     }
 });
+
+export const checkUsername = async (username) => {
+    try {
+        const response = await axiosConfig.get(`/auth/username/${username}`);
+        return response.data.data;
+    } catch (error) {
+        return {
+            isAvailable: false,
+            message: 'failed to check username, please try later',
+        };
+    }
+};
 
 const authSlice = createSlice({
     name: 'auth',

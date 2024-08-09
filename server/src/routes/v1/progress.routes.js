@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import progressController from '../../controllers/progress.controller.js';
+import { progressController } from '../../controllers/index.js';
 const { toggleProgressStatus } = progressController;
 import { verifyJWT } from '../../middlewares/index.js';
 

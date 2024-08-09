@@ -1,8 +1,12 @@
 import { StatusCodes } from 'http-status-codes';
 import { User } from '../models/index.js';
-import { ApiError, asyncHandler, handleResponse } from '../utils/index.js';
+import {
+    ApiError,
+    asyncHandler,
+    handleResponse,
+    cloudinary,
+} from '../utils/index.js';
 
-// TODO: Add username and avatar fields to user model
 // TODO: Add controller according to user model
 
 const updateUserProfile = asyncHandler(async (req, res) => {
@@ -39,11 +43,12 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     );
 });
 
-// getUserProfile
 const getUserProfile = asyncHandler(async (req, res) => {
-    const { email } = req.params;
+    const { identifier } = req.params;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+        $or: [{ email: identifier }, { username: identifier }],
+    });
 
     if (!user) throw new ApiError(404, 'User not found with this email');
 
@@ -55,9 +60,43 @@ const getUserProfile = asyncHandler(async (req, res) => {
     );
 });
 
+const updateUserAvatar = asyncHandler(async (req, res) => {
+    const avatarLocalPath = req.file?.path;
+
+    if (!avatarLocalPath)
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Avatar file required');
+
+    const avatarImg = await cloudinary.uploadPhotoOnCloudinary(avatarLocalPath);
+
+    if (!avatarImg)
+        throw new ApiError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            'An Error Occurred While updating avatar'
+        );
+
+    const user = await User.findById(req.user?._id);
+
+    if (!user)
+        throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, 'User not found');
+
+    await cloudinary.deleteImageOnCloudinary(user.avatar);
+
+    user.avatar = avatarImg.url;
+
+    const updatedUser = await user.save({ validateBeforeSave: false });
+
+    handleResponse(
+        res,
+        StatusCodes.OK,
+        updatedUser,
+        'avatar updated Successfully'
+    );
+});
+
 const userController = {
     updateUserProfile,
     getUserProfile,
+    updateUserAvatar,
 };
 
 export default userController;

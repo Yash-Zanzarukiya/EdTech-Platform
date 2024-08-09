@@ -20,34 +20,37 @@ import { Loader2 } from 'lucide-react';
 import { signUp } from '@/app/slices/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { useUniqueUsername } from './useUniqueUsername';
 
 function SignUp() {
     useAuthRedirect();
-    const [username, setUsername] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-
-    const [usernameMessage, setUsernameMessage] = useState('');
-    const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
-    const [isUsernameChecking, setIsUsernameChecking] = useState(false);
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
+    const {
+        username,
+        usernameMessage,
+        isUsernameAvailable,
+        isUsernameChecking,
+        setUsername,
+    } = useUniqueUsername();
+
     const form = useCustomForm(signUpSchema, {
-        name: '',
+        username: '',
         email: '',
         password: '',
+        fullName: '',
     });
 
     async function onSubmit(values) {
-        const { email, password, name } = values;
-
         setIsSubmitting(true);
-        dispatch(signUp({ email, password, name })).then((res) =>
-            navigate('/sign-in')
-        );
-        setIsSubmitting(false);
+        dispatch(signUp(values)).then((res) => {
+            setIsSubmitting(false);
+            if (res?.payload) navigate('/sign-in');
+        });
     }
 
     return (
@@ -66,6 +69,7 @@ function SignUp() {
                     </h1>
                     <p>Sign up to start your adventure with us</p>
                 </div>
+
                 {/* Form */}
                 <Form {...form}>
                     <form
@@ -75,10 +79,10 @@ function SignUp() {
                         {/* Username */}
                         <FormField
                             control={form.control}
-                            name="name"
+                            name="username"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                    <FormLabel>Username</FormLabel>
                                     {/* Input field */}
                                     <FormControl>
                                         <Input
@@ -87,29 +91,28 @@ function SignUp() {
                                                 field.onChange(e);
                                                 setUsername(e.target.value);
                                             }}
-                                            placeholder="Enter your full name"
+                                            placeholder="Choose your username"
                                         />
                                     </FormControl>
                                     {/* Unique username check response */}
-                                    {/* <FormDescription>
+                                    <FormDescription>
                                         {isUsernameChecking ? (
                                             <Loader2 className=" animate-spin" />
                                         ) : (
                                             username &&
                                             usernameMessage && (
-                                                <p
+                                                <span
                                                     className={`text-sm ${
-                                                        usernameMessage ===
-                                                        'Username is available'
+                                                        isUsernameAvailable
                                                             ? 'text-green-500'
                                                             : 'text-red-500'
                                                     }`}
                                                 >
                                                     {usernameMessage}
-                                                </p>
+                                                </span>
                                             )
                                         )}
-                                    </FormDescription> */}
+                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -126,6 +129,23 @@ function SignUp() {
                                             type="email"
                                             placeholder="Enter your email"
                                             {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        {/* Full name */}
+                        <FormField
+                            control={form.control}
+                            name="fullName"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Full Name</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            placeholder="Enter your full name"
                                         />
                                     </FormControl>
                                     <FormMessage />
@@ -154,6 +174,7 @@ function SignUp() {
                                 </FormItem>
                             )}
                         />
+                        {/* Checkbox for show password */}
                         <div className="flex items-center justify-between space-x-2">
                             <div className="flex items-center space-x-2">
                                 <Checkbox
@@ -170,7 +191,6 @@ function SignUp() {
                                 </Label>
                             </div>
                         </div>
-
                         {/* Submit button */}
                         <Button
                             type="submit"
