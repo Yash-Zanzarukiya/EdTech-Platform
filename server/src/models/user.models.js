@@ -36,6 +36,9 @@ const userSchema = new Schema(
         gradYear: {
             type: Number,
         },
+        bio: {
+            type: String,
+        },
         role: {
             type: String,
             default: 'user',

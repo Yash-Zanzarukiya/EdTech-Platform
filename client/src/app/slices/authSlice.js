@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { axiosConfig, toastErrorMessage } from '@/utils';
+import { axiosConfig, toastErrorMessage, toastSuccessMessage } from '@/utils';
 const initialState = {
     loading: false,
     status: false,
@@ -15,6 +15,7 @@ export const signIn = createAsyncThunk(
                 identifier,
                 password,
             });
+            toastSuccessMessage('Login Successfully', response);
             return response.data.data;
         } catch (error) {
             toastErrorMessage('Sign In Failed', error);
@@ -26,6 +27,7 @@ export const signIn = createAsyncThunk(
 export const logout = createAsyncThunk('auth/logout', async () => {
     try {
         await axiosConfig.post('/auth/logout');
+        toastSuccessMessage('Logged out Successfully');
     } catch (error) {
         toastErrorMessage('Logout Failed', error);
         return null;
@@ -52,6 +54,38 @@ export const checkUsername = async (username) => {
         };
     }
 };
+
+export const updateUserProfile = createAsyncThunk(
+    'auth/updateUserProfile',
+    async (data) => {
+        const { fullName, university, gradYear, branch, bio } = data;
+        try {
+            const response = await axiosConfig.patch('/user/profile', {
+                fullName,
+                university,
+                gradYear,
+                branch,
+                bio,
+            });
+
+            const formData = new FormData(
+                document.getElementById('personal-info-form')
+            );
+
+            const res = await axiosConfig.patch('/user/avatar', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            toastSuccessMessage('Profile Updated Successfully', response);
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Update Profile Failed', error);
+            return null;
+        }
+    }
+);
 
 const authSlice = createSlice({
     name: 'auth',
@@ -98,6 +132,20 @@ const authSlice = createSlice({
         builder.addCase(getUser.rejected, (state) => {
             state.loading = false;
             state.userData = null;
+            state.status = false;
+        });
+
+        // update profile
+        builder.addCase(updateUserProfile.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(updateUserProfile.fulfilled, (state, action) => {
+            state.loading = false;
+            state.userData = action.payload;
+            state.status = true;
+        });
+        builder.addCase(updateUserProfile.rejected, (state) => {
+            state.loading = false;
             state.status = false;
         });
     },

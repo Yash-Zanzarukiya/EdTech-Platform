@@ -10,7 +10,7 @@ import {
 // TODO: Add controller according to user model
 
 const updateUserProfile = asyncHandler(async (req, res) => {
-    const { fullName, gradYear, university, branch } = req.body;
+    const { fullName, gradYear, university, branch, bio } = req.body;
 
     const user = await User.findById(req.user?._id);
 
@@ -22,11 +22,13 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
     if (fullName) user.fullName = fullName;
 
-    if (gradYear) user.gradYear = gradYear;
+    if (gradYear) user.gradYear = parseInt(gradYear);
 
     if (university) user.university = university;
 
     if (branch) user.branch = branch;
+
+    if (bio) user.bio = bio;
 
     let updatedUserData = await user.save();
 

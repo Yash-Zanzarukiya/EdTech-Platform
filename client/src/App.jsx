@@ -8,6 +8,8 @@ import {
     SignIn,
     SignUp,
     UserDashboard,
+    Explore,
+    TestingPage,
 } from './pages';
 import { Toaster } from './components/ui/toaster';
 import { FirstLoading, RootContainer } from './components';
@@ -44,8 +46,11 @@ function App() {
                     <Route path="sign-in" element={<SignIn />} />
                     <Route path="sign-up" element={<SignUp />} />
                     <Route path="about" element={<About />} />
+                    <Route path="explore" element={<Explore />} />
+                    <Route path="explore" element={<Explore />} />
                     <Route path="certificate" element={<Certificate />} />
                     <Route path="user-dashboard" element={<UserDashboard />} />
+                    <Route path="testing" element={<TestingPage />} />
                     <Route
                         path="admin-dashboard"
                         element={<AdminDashboard />}

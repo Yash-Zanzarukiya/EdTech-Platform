@@ -5,6 +5,8 @@ import UserDashboard from './Dashboard/UserDashboard';
 import AdminDashboard from './Dashboard/AdminDashboard';
 import About from './About';
 import Certificate from './Misc/Certificate';
+import Explore from './Explore';
+import TestingPage from './TestingPage';
 
 export {
     Home,
@@ -14,4 +16,6 @@ export {
     UserDashboard,
     AdminDashboard,
     Certificate,
+    Explore,
+    TestingPage,
 };

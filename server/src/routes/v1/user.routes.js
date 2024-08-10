@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import { userController } from '../../controllers/index.js';
-import { verifyJWT } from '../../middlewares/index.js';
+import { upload, verifyJWT } from '../../middlewares/index.js';
 
 const router = Router();
 
+router.route('/profile').patch(verifyJWT, userController.updateUserProfile);
+router.route('/profile/:identifier').get(userController.getUserProfile);
 router
-    .route('/profile/:identifier')
-    .get(userController.getUserProfile)
-    .patch(verifyJWT, userController.updateUserProfile);
+    .route('/avatar')
+    .patch(verifyJWT, upload.single('avatar'), userController.updateUserAvatar);
 
 export default router;

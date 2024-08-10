@@ -97,15 +97,15 @@ const signIn = asyncHandler(async (req, res) => {
 });
 
 const me = asyncHandler(async (req, res) => {
-    const token = req.cookies.token;
-    if (!token) {
-        throw new ApiError(
-            StatusCodes.UNAUTHORIZED,
-            'Token not found, please login to continue'
-        );
-    }
-    const user = await User.decodedToken(token);
-    handleResponse(res, StatusCodes.OK, user, 'User fetched successfully');
+    // const token = req.cookies.token;
+    // if (!token) {
+    //     throw new ApiError(
+    //         StatusCodes.UNAUTHORIZED,
+    //         'Token not found, please login to continue'
+    //     );
+    // }
+    // const user = await User.decodedToken(token);
+    handleResponse(res, StatusCodes.OK, req?.user, 'User fetched successfully');
 });
 
 const logout = asyncHandler(async (_, res) => {
