@@ -1,27 +1,51 @@
 import { StatusCodes } from 'http-status-codes';
-import { Topic } from '../models/index.js';
+import { Course, Topic } from '../models/index.js';
 import { asyncHandler, handleResponse } from '../utils/index.js';
+import mongoose from 'mongoose';
 
 const getAllTopics = asyncHandler(async (_, res) => {
     const topics = await Topic.find({});
     handleResponse(res, StatusCodes.OK, topics, 'Topics fetched successfully');
 });
 
-// create topics
-const createTopics = asyncHandler(async (req, res) => {
-    const { topics } = req.body;
-    const createdTopics = [];
+// create topics from string
+export const getTopics = async (topicsString, courseId) => {
+    let topics = [];
 
-    topics.map(async (topic) => {
-        createdTopics.push(await Topic.create({ name: topic }));
-    });
+    if (!topicsString) {
+        // TODO: Generalize this code to be used in other places
+        topics = await Course.aggregate([
+            { $match: { _id: new mongoose.Types.ObjectId(courseId) } },
+            {
+                $lookup: {
+                    from: 'topics',
+                    localField: 'topics',
+                    foreignField: '_id',
+                    as: 'topics',
+                },
+            },
+            { $project: { _id: 0, topics: 1 } },
+        ]);
+        return topics[0].topics;
+    }
 
-    handleResponse(
-        res,
-        StatusCodes.CREATED,
-        createdTopics,
-        'Topics created successfully'
-    );
-});
+    const topicsArray = topicsString.toLowerCase().split(',');
 
-export default { getAllTopics, createTopics };
+    const existingTopics = await Topic.find({ name: { $in: topicsArray } });
+
+    for (const topic of topicsArray) {
+        const existingTopic = existingTopics.find(
+            (t) => t.name.toLowerCase() === topic.toLowerCase()
+        );
+
+        if (existingTopic) {
+            topics.push(existingTopic);
+        } else {
+            topics.push(await Topic.create({ name: topic }));
+        }
+    }
+
+    return topics;
+};
+
+export default { getAllTopics };

@@ -10,7 +10,7 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { signUpSchema } from '@/schema';
-import { useAuthRedirect, useCustomForm } from '@/hooks';
+import { useAuthRedirect, useCustomForm, useUniqueUsername } from '@/hooks';
 import { APP_NAME } from '@/constant';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
@@ -20,7 +20,6 @@ import { Loader2 } from 'lucide-react';
 import { signUp } from '@/app/slices/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useUniqueUsername } from './useUniqueUsername';
 
 function SignUp() {
     useAuthRedirect();

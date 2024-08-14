@@ -1,3 +1,4 @@
+import HeroSection from '@/components/Misc/HeroSection';
 import { useAuthRedirect } from '@/hooks';
 import { Link } from 'react-router-dom';
 
@@ -5,6 +6,8 @@ function Home() {
     return (
         <div className=" grow bg-gray-50 dark:bg-gray-900">
             <main className="flex-1">
+                <HeroSection />
+                <hr />
                 <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
                     <div className="container px-4 md:px-6">
                         <div className="flex flex-col items-center space-y-4 text-center">

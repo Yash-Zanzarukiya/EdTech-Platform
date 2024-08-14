@@ -12,9 +12,9 @@ const courseSchema = new Schema(
         thumbnail: {
             type: String,
         },
-        isPublished: {
-            type: Boolean,
-            default: true,
+        status: {
+            type: String,
+            default: 'drafted',
         },
         price: {
             type: Number,
@@ -35,5 +35,7 @@ const courseSchema = new Schema(
     },
     { timestamps: true }
 );
+
+courseSchema.index({ topics: 1 });
 
 export const Course = mongoose.model('Course', courseSchema);

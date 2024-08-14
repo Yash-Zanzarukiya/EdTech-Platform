@@ -9,66 +9,79 @@ import {
 } from '../utils/index.js';
 import { cloudinary } from '../utils/index.js';
 import { StatusCodes } from 'http-status-codes';
-
-// TODO: modify according to course model
+import { getTopics } from './topic.controller.js';
 
 const createCourse = asyncHandler(async (req, res) => {
     const { name, description, price, duration } = req.body;
 
-    validateFields(req, { body: ['name', 'description', 'price'] });
+    validateFields(req, { body: ['name', 'description', 'price', 'duration'] });
 
     const photoLocalPath = req.file?.path;
 
-    if (!photoLocalPath) throw new ApiError(400, 'All fields required');
+    if (!photoLocalPath)
+        throw new ApiError(StatusCodes.BAD_REQUEST, 'Thumbnail file required');
 
     const photo = await cloudinary.uploadPhotoOnCloudinary(photoLocalPath);
 
-    if (!photo) throw new ApiError(500, 'Error Accured While uploading File');
+    if (!photo)
+        throw new ApiError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            'Error Occurred While uploading thumbnail file'
+        );
 
     const course = await Course.create({
         name,
         description,
         thumbnail: photo.url,
-        price,
-        duration,
+        price: parseInt(price),
+        duration: parseInt(duration),
         owner: req.user?._id,
     });
 
     if (!course)
         throw new ApiError(
             StatusCodes.INTERNAL_SERVER_ERROR,
-            'Error while creating Course'
+            'An Error Occurred while creating Course'
         );
 
     handleResponse(
         res,
         StatusCodes.CREATED,
         course,
-        'course Created Successfully'
+        'Course Created Successfully'
     );
 });
 
-const getCourseById = asyncHandler(async (req, res) => {
-    const { courseId } = req.params;
+const getCourses = asyncHandler(async (req, res) => {
+    const { courseId, ownerId, status, search = '' } = req.query;
+    const matchStage = {};
 
-    validateIds(courseId);
+    if (courseId) {
+        validateIds(courseId);
+        matchStage._id = new mongoose.Types.ObjectId(courseId);
+    }
+
+    if (ownerId) {
+        validateIds(ownerId);
+        matchStage.owner = new mongoose.Types.ObjectId(ownerId);
+    }
+
+    if (status) matchStage.status = status;
+
+    if (search) matchStage.name = { $regex: search, $options: 'i' };
 
     const course = await Course.aggregate([
-        {
-            $match: {
-                _id: new mongoose.Types.ObjectId(courseId),
-            },
-        },
+        { $match: { ...matchStage } },
         {
             $lookup: {
-                from: 'sections',
-                localField: '_id',
-                foreignField: 'course',
-                as: 'sections',
+                from: 'topics',
+                localField: 'topics',
+                foreignField: '_id',
+                as: 'topics',
                 pipeline: [
                     {
-                        $sort: {
-                            createdAt: 1,
+                        $project: {
+                            name: 1,
                         },
                     },
                 ],
@@ -83,128 +96,25 @@ const getCourseById = asyncHandler(async (req, res) => {
                 pipeline: [
                     {
                         $project: {
-                            fullName: 1,
                             username: 1,
+                            fullName: 1,
                             avatar: 1,
+                            email: 1,
+                            bio: 1,
                         },
                     },
                 ],
             },
         },
-        {
-            $unwind: '$owner',
-        },
-        {
-            $project: {
-                name: 1,
-                description: 1,
-                thumbnail: 1,
-                price: 1,
-                isPublished: 1,
-                owner: 1,
-                duration: 1,
-                sections: 1,
-            },
-        },
+        { $unwind: '$owner' },
     ]);
 
-    if (!course[0]?.isPublished)
-        throw new ApiError(StatusCodes.BAD_REQUEST, 'Course not published');
-
-    handleResponse(res, StatusCodes.OK, course[0], 'course sent successfully');
-});
-
-const getAllCoursesByOwner = asyncHandler(async (req, res) => {
-    const { userId } = req.params;
-
-    validateIds(userId);
-
-    const course = await Course.aggregate([
-        {
-            $match: {
-                owner: new mongoose.Types.ObjectId(userId),
-            },
-        },
-        {
-            $lookup: {
-                from: 'users',
-                localField: 'owner',
-                foreignField: '_id',
-                as: 'owner',
-                pipeline: [
-                    {
-                        $project: {
-                            fullName: 1,
-                            username: 1,
-                            avatar: 1,
-                        },
-                    },
-                ],
-            },
-        },
-        {
-            $unwind: '$owner',
-        },
-        {
-            $project: {
-                name: 1,
-                description: 1,
-                thumbnail: 1,
-                price: 1,
-                isPublished: 1,
-                duration: 1,
-                owner: 1,
-                createdAt: 1,
-                updatedAt: 1,
-            },
-        },
-    ]);
-
-    handleResponse(res, StatusCodes.OK, course, 'Courses sent successfully');
-});
-
-const getAllCourses = asyncHandler(async (_, res) => {
-    const course = await Course.aggregate([
-        {
-            $match: {
-                isPublished: true,
-            },
-        },
-        {
-            $lookup: {
-                from: 'users',
-                localField: 'owner',
-                foreignField: '_id',
-                as: 'owner',
-                pipeline: [
-                    {
-                        $project: {
-                            fullName: 1,
-                            username: 1,
-                            avatar: 1,
-                        },
-                    },
-                ],
-            },
-        },
-        {
-            $unwind: '$owner',
-        },
-        {
-            $project: {
-                name: 1,
-                description: 1,
-                thumbnail: 1,
-                price: 1,
-                owner: 1,
-                duration: 1,
-                createdAt: 1,
-                updatedAt: 1,
-            },
-        },
-    ]);
-
-    handleResponse(res, StatusCodes.OK, course, 'Courses sent successfully');
+    handleResponse(
+        res,
+        StatusCodes.OK,
+        courseId ? course[0] : course,
+        'Courses sent successfully'
+    );
 });
 
 const deleteCourse = asyncHandler(async (req, res) => {
@@ -212,45 +122,77 @@ const deleteCourse = asyncHandler(async (req, res) => {
 
     validateIds(courseId);
 
+    // TODO: delete videos, sections etc. related to this course
+
     const course = await Course.findByIdAndDelete(courseId);
 
-    if (!course) throw new ApiError(500, 'Error while deleting section');
+    if (!course)
+        throw new ApiError(
+            StatusCodes.NOT_FOUND,
+            'Course not found or already deleted'
+        );
+
+    await cloudinary.deleteImageOnCloudinary(course.thumbnail);
 
     handleResponse(res, StatusCodes.OK, course, 'Course deleted successfully');
 });
 
-const togglePublishStatus = asyncHandler(async (req, res) => {
+const updateCourse = asyncHandler(async (req, res) => {
     const { courseId } = req.params;
+    const { name, description, price, duration, status, topics } = req.body;
 
     validateIds(courseId);
 
     const course = await Course.findById(courseId);
-
     if (!course) throw new ApiError(StatusCodes.NOT_FOUND, 'Course not found');
 
-    course.isPublished = !course.isPublished;
+    const photoLocalPath = req.file?.path;
+
+    if (photoLocalPath) {
+        await cloudinary.deleteImageOnCloudinary(course.thumbnail);
+
+        const photo = await cloudinary.uploadPhotoOnCloudinary(photoLocalPath);
+
+        if (!photo)
+            throw new ApiError(
+                StatusCodes.INTERNAL_SERVER_ERROR,
+                'Something went wrong While uploading thumbnail file'
+            );
+
+        course.thumbnail = photo.url;
+    }
+
+    const topicsArray = await getTopics(topics?.trim(), courseId);
+
+    if (topics) {
+        course.topics = topicsArray.map((topic) => topic._id);
+    }
+
+    course.name = name ?? course.name;
+    course.description = description ?? course.description;
+    course.price = price ? parseInt(price) : course.price;
+    course.duration = duration ? parseInt(duration) : course.duration;
+    course.status = status ?? course.status;
 
     const updatedCourse = await course.save();
 
     if (!updatedCourse)
         throw new ApiError(
             StatusCodes.INTERNAL_SERVER_ERROR,
-            'Error while toggling'
+            'Something went wrong while updating course'
         );
 
     handleResponse(
         res,
         StatusCodes.OK,
-        updatedCourse,
-        'Course status toggled successfully'
+        { ...updatedCourse._doc, topics: topicsArray },
+        'Course updated successfully'
     );
 });
 
 export default {
     createCourse,
-    getCourseById,
     deleteCourse,
-    togglePublishStatus,
-    getAllCourses,
-    getAllCoursesByOwner,
+    getCourses,
+    updateCourse,
 };

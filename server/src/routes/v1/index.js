@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import healthRouter from './health.routes.js';
 import authRouter from './auth.routes.js';
 import userRouter from './user.routes.js';
 import purchaseRouter from './purchase.routes.js';
@@ -10,6 +11,7 @@ import videoRouter from './video.routes.js';
 
 const v1Router = Router();
 
+v1Router.use('/health', healthRouter);
 v1Router.use('/auth', authRouter);
 v1Router.use('/user', userRouter);
 v1Router.use('/purchase', purchaseRouter);

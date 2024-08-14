@@ -72,11 +72,13 @@ export const updateUserProfile = createAsyncThunk(
                 document.getElementById('personal-info-form')
             );
 
-            const res = await axiosConfig.patch('/user/avatar', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+            if (formData.get('avatar')?.name) {
+                const res = await axiosConfig.patch('/user/avatar', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+            }
 
             toastSuccessMessage('Profile Updated Successfully', response);
             return response.data.data;

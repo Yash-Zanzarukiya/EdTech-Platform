@@ -1,4 +1,4 @@
 import signInSchema from './signInSchema';
 import signUpSchema, { usernameValidation } from './signUpSchema';
-
-export { signInSchema, signUpSchema, usernameValidation };
+import courseFormSchema from './courseFormSchema';
+export { signInSchema, signUpSchema, usernameValidation, courseFormSchema };

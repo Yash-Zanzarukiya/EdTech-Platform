@@ -1,4 +1,5 @@
 import authSlice from './authSlice';
 import userSlice from './userSlice';
-
-export { authSlice, userSlice };
+import courseSlice from './courseSlice';
+import topicSlice from './topicSlice';
+export { authSlice, userSlice, courseSlice, topicSlice };

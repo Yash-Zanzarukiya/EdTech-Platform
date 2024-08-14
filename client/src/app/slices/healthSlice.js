@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { useToast } from '@/components/ui/use-toast';
-import { axiosConfig } from '@/utils';
+import { axiosConfig, toastErrorMessage } from '@/utils';
 
 const initialState = {
     loading: false,
@@ -9,15 +8,11 @@ const initialState = {
 };
 
 export const healthCheck = createAsyncThunk('health/healthCheck', async () => {
-    const { toast } = useToast();
     try {
         await axiosConfig.get(`/health`);
     } catch (error) {
-        toast({
-            title: 'Oops! Our Server is Sick... 🤒',
-            duration: 2000,
-        });
-        console.log(error);
+        console.log({ error });
+        toastErrorMessage('Oops! Our Server is Sick... 🤒', error);
     }
 });
 

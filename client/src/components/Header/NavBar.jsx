@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { ModeToggle } from '../mode-toggle';
 
 const NavBar = () => {
     const withoutAuthNavItems = [
@@ -34,7 +35,7 @@ const NavBar = () => {
         },
         {
             label: 'Exams',
-            path: '/exams',
+            path: '/sign-up',
         },
         {
             label: 'About',
@@ -57,6 +58,10 @@ const NavBar = () => {
         {
             label: 'Testing',
             path: '/testing',
+        },
+        {
+            label: 'Instructor',
+            path: '/instructor/dashboard',
         },
     ];
 
@@ -161,6 +166,8 @@ const NavBar = () => {
                         />
                     </div>
                 </form>
+                {/* THEME */}
+                <ModeToggle />
                 {/* PROFILE DROPDOWN */}
                 {userData ? (
                     <DropdownMenu>
