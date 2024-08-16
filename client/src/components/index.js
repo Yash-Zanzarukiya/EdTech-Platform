@@ -4,7 +4,7 @@ import RootContainer from './Misc/RootContainer';
 import PersonalInfoForm from './Profile/PersonalInfoForm';
 import InstructorContainer from './Misc/InstructorContainer';
 import CourseRow from './Instructor/CourseRow';
-import CourseContent from './Instructor/CourseContent';
+import CourseCurriculum from './Instructor/CourseCurriculum';
 import CourseForm from './Instructor/CourseForm';
 import EditCourse from './Instructor/EditCourse';
 import CoursePreview from './Instructor/CoursePreview';
@@ -16,7 +16,7 @@ export {
     InstructorContainer,
     PersonalInfoForm,
     CourseRow,
-    CourseContent,
+    CourseCurriculum,
     CourseForm,
     CoursePreview,
     EditCourse,

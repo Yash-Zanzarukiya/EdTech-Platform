@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Course } from '../models/index.js';
+import { Course, Section, Video } from '../models/index.js';
 import {
     asyncHandler,
     ApiError,
@@ -10,6 +10,7 @@ import {
 import { cloudinary } from '../utils/index.js';
 import { StatusCodes } from 'http-status-codes';
 import { getTopics } from './topic.controller.js';
+import { VIDEO_STATUS } from '../constants.js';
 
 const createCourse = asyncHandler(async (req, res) => {
     const { name, description, price, duration } = req.body;
@@ -89,6 +90,41 @@ const getCourses = asyncHandler(async (req, res) => {
         },
         {
             $lookup: {
+                from: 'sections',
+                localField: '_id',
+                foreignField: 'course',
+                as: 'sections',
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: 'videos',
+                            localField: 'videos.video',
+                            foreignField: '_id',
+                            as: 'videos',
+                            pipeline: [
+                                {
+                                    $lookup: {
+                                        from: 'topics',
+                                        localField: 'topics',
+                                        foreignField: '_id',
+                                        as: 'topics',
+                                        pipeline: [
+                                            {
+                                                $project: {
+                                                    name: 1,
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $lookup: {
                 from: 'users',
                 localField: 'owner',
                 foreignField: '_id',
@@ -122,8 +158,6 @@ const deleteCourse = asyncHandler(async (req, res) => {
 
     validateIds(courseId);
 
-    // TODO: delete videos, sections etc. related to this course
-
     const course = await Course.findByIdAndDelete(courseId);
 
     if (!course)
@@ -133,6 +167,37 @@ const deleteCourse = asyncHandler(async (req, res) => {
         );
 
     await cloudinary.deleteImageOnCloudinary(course.thumbnail);
+
+    // TODO: delete quizzes, progress, purchase of the course
+
+    const sections = await Section.find({ course: courseId });
+
+    if (sections?.length > 0) {
+        for (let i = 0; i < sections.length; i++) {
+            const section = await Section.findByIdAndDelete(sections[i]._id);
+
+            const videos = section?.videos;
+
+            if (videos?.length > 0) {
+                for (let j = 0; j < videos.length; j++) {
+                    // delete video if it's status is not public
+                    const video = await Video.findOneAndDelete({
+                        _id: videos[j].video,
+                        status: { $ne: VIDEO_STATUS.PUBLIC },
+                    });
+                    // delete video from cloudinary
+                    if (video) {
+                        await cloudinary.deleteVideoOnCloudinary(
+                            video.videoFile
+                        );
+                        await cloudinary.deleteImageOnCloudinary(
+                            video.thumbnail
+                        );
+                    }
+                }
+            }
+        }
+    }
 
     handleResponse(res, StatusCodes.OK, course, 'Course deleted successfully');
 });

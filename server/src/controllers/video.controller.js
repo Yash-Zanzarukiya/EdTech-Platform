@@ -1,4 +1,4 @@
-import { Video, Topic } from '../models/index.js';
+import { Video } from '../models/index.js';
 import {
     ApiError,
     handleResponse,
@@ -6,11 +6,12 @@ import {
     cloudinary,
     validateIds,
     validateFields,
+    checkOneField,
 } from '../utils/index.js';
 import { StatusCodes } from 'http-status-codes';
 const { uploadPhotoOnCloudinary, uploadVideoOnCloudinary } = cloudinary;
-
-// TODO: look in to publish status
+import { getTopics } from './topic.controller.js';
+import { toggleVideoToSection } from './section.controller.js';
 
 const getAllVideos = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, query = '', userId, all } = req.query;
@@ -129,11 +130,11 @@ const getAllVideos = asyncHandler(async (req, res) => {
 });
 
 const publishAVideo = asyncHandler(async (req, res) => {
-    const { title, description, topics } = req.body;
-    const { sectionId } = req.params;
+    const { title, description, topics, sectionId } = req.body;
 
-    validateIds(sectionId);
-    validateFields(req, { body: ['title', 'description', 'topics'] });
+    validateFields(req, { body: ['title'] });
+
+    if (sectionId) validateIds(sectionId);
 
     let videoFileLocalFilePath = '';
     if (req.files && req.files.videoFile && req.files.videoFile.length > 0)
@@ -155,7 +156,6 @@ const publishAVideo = asyncHandler(async (req, res) => {
             'Thumbnail File Must be Required'
         );
 
-    // const { cldnry_res, summary } = await uploadVideoOnCloudinary(videoFileLocalFilePath);
     const cldnry_res = await uploadVideoOnCloudinary(videoFileLocalFilePath);
 
     if (!cldnry_res)
@@ -171,22 +171,17 @@ const publishAVideo = asyncHandler(async (req, res) => {
             'An Error while uploading thumbnail file'
         );
 
-    // TODO : Implement this check this
-    let topicRes;
-    if (topics?.length > 0) {
-        topicRes = await Topic.create(
-            topics.map((topic) => ({ name: topic.trim(), video: video._id }))
-        );
-    }
+    const topicsArray = await getTopics(topics?.trim());
+    const topicIds = topicsArray.map((topic) => topic._id);
 
     const video = await Video.create({
         videoFile: cldnry_res.url,
-        // summary,
         title,
         description: description || '',
-        duration: cldnry_res.duration,
         thumbnail: thumbnailFile.url,
-        owner: req.user._id,
+        topics: topicIds || [],
+        duration: cldnry_res.duration,
+        owner: req.user?._id,
     });
 
     if (!video)
@@ -195,10 +190,12 @@ const publishAVideo = asyncHandler(async (req, res) => {
             'An Error Occurred while Publishing Video'
         );
 
+    await toggleVideoToSection(sectionId, video._id);
+
     handleResponse(
         res,
         StatusCodes.OK,
-        { video, topicRes },
+        { ...video._doc, topics: topicsArray, sectionId },
         'Video published successfully'
     );
 });
@@ -217,42 +214,40 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 const updateVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
-    const { title, description } = req.body;
+    const { title, description, topics, publishStatus, sectionId } = req.body;
 
     validateIds(videoId);
-    validateFields(req, { body: ['title', 'description'] });
 
     const thumbnailLocalFilePath = req.file?.path;
-    if (!title && !description && !thumbnailLocalFilePath)
-        throw new ApiError(
-            StatusCodes.BAD_REQUEST,
-            'At-least one field required'
-        );
 
-    //  check only owner can modify video
+    if (!thumbnailLocalFilePath)
+        checkOneField(req, ['title', 'description', 'topics', 'publishStatus']);
+
     const video = await Video.findById(videoId);
     if (!video) throw new ApiError(StatusCodes.NOT_FOUND, 'video not found');
 
-    if (video.owner.toString() !== req.user?._id.toString())
-        throw new ApiError(
-            StatusCodes.UNAUTHORIZED,
-            'Only owner can modify video details'
-        );
-
-    //Update based on data sent
-    let thumbnail;
+    let thumbnail = '';
     if (thumbnailLocalFilePath) {
         thumbnail = await uploadPhotoOnCloudinary(thumbnailLocalFilePath);
         if (!thumbnail)
             throw new ApiError(
                 StatusCodes.INTERNAL_SERVER_ERROR,
-                'An Error Occurred while uploading photo'
+                'Something went wrong while uploading thumbnail'
             );
     }
 
     if (title) video.title = title;
     if (description) video.description = description;
     if (thumbnail) video.thumbnail = thumbnail.url;
+    if (publishStatus) video.publishStatus = publishStatus;
+
+    let topicsArray = [];
+    if (topics?.trim()) {
+        topicsArray = await getTopics(topics.trim());
+        video.topics = topicsArray.map((topic) => topic._id);
+    } else {
+        video.topics = topicsArray;
+    }
 
     // Save in database
     const updatedVideo = await video.save({ validateBeforeSave: false });
@@ -266,20 +261,26 @@ const updateVideo = asyncHandler(async (req, res) => {
     handleResponse(
         res,
         StatusCodes.OK,
-        updatedVideo,
+        { ...updatedVideo._doc, topics: topicsArray, sectionId },
         'Video updated successfully'
     );
 });
 
-// TODO: Complete this
 const deleteVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
 
     validateIds(videoId);
 
+    //TODO: delete transcript and progresses
+
     const findRes = await Video.findByIdAndDelete(videoId);
 
-    if (!findRes) throw new ApiError(400, 'Video not found');
+    if (!findRes) throw new ApiError(StatusCodes.NOT_FOUND, 'Video Not Found');
+
+    await cloudinary.deleteVideoOnCloudinary(findRes.videoFile);
+    await cloudinary.deleteImageOnCloudinary(findRes.thumbnail);
+
+    await toggleVideoToSection(null, videoId, false);
 
     handleResponse(res, StatusCodes.OK, findRes, 'Video deleted successfully');
 });

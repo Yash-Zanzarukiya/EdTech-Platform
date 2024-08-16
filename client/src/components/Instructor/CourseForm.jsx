@@ -22,17 +22,21 @@ import { courseFormSchema } from '@/schema';
 import { createCourse, updateCourse } from '@/app/slices/courseSlice';
 import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function CourseForm({ updateForm = false }) {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    // FIXME Fix 'Expected number, received string' error in price and duration.
 
     const { loading, courseData: course } = useSelector(({ course }) => course);
 
     let form = useCustomForm(courseFormSchema, {
-        name: course ? course.name : '',
-        price: course ? course.price : '',
-        duration: course ? course.duration : '',
-        description: course ? course.description : '',
+        name: course && updateForm ? course.name : '',
+        price: course && updateForm ? parseInt(course.price) : 0,
+        duration: course && updateForm ? parseInt(course.duration) : 0,
+        description: course && updateForm ? course.description : '',
     });
 
     useEffect(() => {
@@ -45,8 +49,14 @@ export default function CourseForm({ updateForm = false }) {
     }, [course]);
 
     function onSubmit(data) {
-        if (course) dispatch(updateCourse({ courseId: course._id, data }));
-        else dispatch(createCourse(data));
+        if (course) {
+            dispatch(updateCourse({ courseId: course._id, data }));
+        } else {
+            dispatch(createCourse(data)).then((res) => {
+                res.payload &&
+                    navigate(`/instructor/courses/${res.payload._id}`);
+            });
+        }
     }
 
     return (
@@ -117,6 +127,7 @@ export default function CourseForm({ updateForm = false }) {
                                     <FormField
                                         control={form.control}
                                         name="price"
+                                        type="number"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Price</FormLabel>
@@ -137,6 +148,7 @@ export default function CourseForm({ updateForm = false }) {
                                     <FormField
                                         control={form.control}
                                         name="duration"
+                                        type="number"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel>Duration</FormLabel>

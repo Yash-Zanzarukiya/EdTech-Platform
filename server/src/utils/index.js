@@ -9,7 +9,7 @@ import { sendMail } from './send-mail.js';
 import { validateIds } from './validateIds.js';
 import { asyncHandler } from './asyncHandler.js';
 import cloudinary from './cloudinary.js';
-
+import checkOneField from './checkOneField.js';
 export {
     isEmail,
     isPassword,
@@ -23,4 +23,5 @@ export {
     validateIds,
     asyncHandler,
     cloudinary,
+    checkOneField,
 };

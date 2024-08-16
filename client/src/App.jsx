@@ -17,7 +17,8 @@ import {
 } from './pages';
 import { Toaster } from './components/ui/toaster';
 import {
-    CourseContent,
+    CourseCurriculum,
+    CourseForm,
     CoursePreview,
     CourseTopics,
     EditCourse,
@@ -27,6 +28,7 @@ import {
 } from './components';
 import { useToast } from '@/components/ui/use-toast';
 import { useInitialLoading } from './hooks';
+import HeroFormSignUpForm from './pages/Auth/HeroFormSignUpForm';
 
 let toastMessage;
 
@@ -63,11 +65,12 @@ function App() {
                     <Route path="courses/:courseId" element={<CoursePage />}>
                         <Route path="" element={<EditCourse />} />
                         <Route path="topics" element={<CourseTopics />} />
-                        <Route path="content" element={<CourseContent />} />
+                        <Route path="content" element={<CourseCurriculum />} />
                         <Route path="preview" element={<CoursePreview />} />
                     </Route>
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="add-course" element={<AddCourse />} />
+                    <Route path="add-course/new" element={<CourseForm />} />
                 </Route>
             </Routes>
         </>

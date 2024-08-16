@@ -6,9 +6,10 @@ import {
     CpuIcon,
     PlusIcon,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function AddCourse() {
+    const navigate = useNavigate();
     return (
         <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-md text-center">
@@ -22,7 +23,7 @@ export default function AddCourse() {
                     </p>
                 </div>
                 <div className="mt-6">
-                    <Button>
+                    <Button to={'new'} onClick={() => navigate('new')}>
                         <PlusIcon className="mr-2 h-4 w-4" />
                         Add Course
                     </Button>

@@ -14,6 +14,4 @@ const topicSchema = new Schema(
     { timestamps: true }
 );
 
-topicSchema.index({ _id: 1 });
-
 export const Topic = mongoose.model('Topic', topicSchema);

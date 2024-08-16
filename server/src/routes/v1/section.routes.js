@@ -2,26 +2,16 @@ import { Router } from 'express';
 import { verifyJWT } from '../../middlewares/index.js';
 import { sectionController } from '../../controllers/index.js';
 
-const {
-    createSection,
-    getCourseSections,
-    getSectionById,
-    addVideoToSection,
-    removeVideoFromSection,
-    deleteSection,
-} = sectionController;
-
 const router = Router();
 
-router.route('/course/:courseId').get(getCourseSections);
-router.route('/create/:courseId').post(verifyJWT, createSection);
-router.route('/add/:sectionId/:videoId').patch(verifyJWT, addVideoToSection);
+router.route('/course/:courseId').get(sectionController.getCourseSections);
 router
-    .route('/remove/:sectionId/:videoId')
-    .patch(verifyJWT, removeVideoFromSection);
+    .route('/create/:courseId')
+    .post(verifyJWT, sectionController.createSection);
 router
     .route('/:sectionId')
-    .get(getSectionById)
-    .delete(verifyJWT, deleteSection);
+    .get(sectionController.getSectionById)
+    .patch(verifyJWT, sectionController.updateSection)
+    .delete(verifyJWT, sectionController.deleteSection);
 
 export default router;

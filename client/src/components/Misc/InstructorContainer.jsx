@@ -70,10 +70,9 @@ function InstructorContainer() {
                         {/* NAV-ITEMS */}
 
                         {navItems.map((item, index) => (
-                            <Tooltip>
+                            <Tooltip key={index + Date.now()}>
                                 <TooltipTrigger asChild>
                                     <NavLink
-                                        key={index}
                                         to={item.path}
                                         end
                                         className={({ isActive }) =>

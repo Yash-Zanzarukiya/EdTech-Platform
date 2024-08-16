@@ -1,8 +1,25 @@
 export const APP_NAME = 'EdTech';
 
-export const USER_ROLES = ['user', 'admin'];
-export const VIDEO_STATUS = ['public', 'private', 'unpublished'];
-export const COURSE_STATUS = ['published', 'unpublished', 'drafted'];
+export const USER_ROLES = { USER: 'user', ADMIN: 'admin' };
+
+export const VIDEO_STATUS = {
+    PUBLIC: 'public',
+    PRIVATE: 'private',
+    UNPUBLISHED: 'unpublished',
+};
+
+export const SECTION_STATUS = {
+    PUBLISHED: 'published',
+    UNPUBLISHED: 'unpublished',
+};
+
+export const SECTION_TYPES = { LECTURE: 'lecture', QUIZ: 'quiz' };
+
+export const COURSE_STATUS = {
+    PUBLISHED: 'published',
+    UNPUBLISHED: 'unpublished',
+    DRAFTED: 'drafted',
+};
 
 export const AUTH_ERRORS = {
     EMAIL_ALREADY_REGISTERED: 'Email already registered',

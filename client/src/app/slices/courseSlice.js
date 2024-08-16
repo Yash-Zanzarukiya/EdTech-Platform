@@ -96,6 +96,112 @@ export const deleteCourse = createAsyncThunk(
     }
 );
 
+export const createSection = createAsyncThunk(
+    'course/createSection',
+    async ({ courseId, data }) => {
+        try {
+            const response = await axiosConfig.post(
+                `/section/create/${courseId}`,
+                data
+            );
+            toastSuccessMessage('Section Created', response);
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Section Creation Failed', error);
+            return null;
+        }
+    }
+);
+
+export const updateSection = createAsyncThunk(
+    'course/updateSection',
+    async ({ sectionId, data }) => {
+        try {
+            const response = await axiosConfig.patch(
+                `/section/${sectionId}`,
+                data
+            );
+            toastSuccessMessage('Section Updated', response);
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Section Updating Failed', error);
+            return null;
+        }
+    }
+);
+
+export const deleteSection = createAsyncThunk(
+    'course/deleteSection',
+    async (sectionId) => {
+        try {
+            const response = await axiosConfig.delete(`/section/${sectionId}`);
+            toastSuccessMessage('Section Deleted', response);
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Section Deletion Failed', error);
+            return null;
+        }
+    }
+);
+
+export const uploadLecture = createAsyncThunk(
+    'course/uploadLecture',
+    async (data) => {
+        try {
+            const formData = new FormData(
+                document.getElementById('lecture-data-form')
+            );
+            formData.append('topics', data['topics']);
+            formData.append('sectionId', data['sectionId']);
+
+            const response = await axiosConfig.post(
+                `/video/add/publish`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            toastSuccessMessage('Lecture Uploaded', response);
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Lecture Uploading Failed', error);
+            return null;
+        }
+    }
+);
+
+export const updateLecture = createAsyncThunk(
+    'course/updateLecture',
+    async (data) => {
+        try {
+            const formData = new FormData(
+                document.getElementById('lecture-data-form')
+            );
+            formData.append('topics', data['topics']);
+            formData.append('sectionId', data['sectionId']);
+
+            const response = await axiosConfig.patch(
+                `/video/${data.videoId}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            toastSuccessMessage('Lecture Details Saved', response);
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Lecture Updating Failed', error);
+            return null;
+        }
+    }
+);
+
 const courseSlice = createSlice({
     name: 'course',
     initialState,
@@ -158,6 +264,103 @@ const courseSlice = createSlice({
             state.courseData = action.payload;
         });
         builder.addCase(updateCourse.rejected, (state) => {
+            state.loading = false;
+            state.status = false;
+        });
+        // createSection
+        builder.addCase(createSection.pending, (state) => {
+            state.loading = true;
+            state.status = false;
+            state.courseData.sections = state.courseData.sections || [];
+        });
+        builder.addCase(createSection.fulfilled, (state, action) => {
+            state.loading = false;
+            state.status = true;
+            state.courseData.sections.push(action.payload);
+        });
+        builder.addCase(createSection.rejected, (state) => {
+            state.loading = false;
+            state.status = false;
+        });
+        // updateSection
+        builder.addCase(updateSection.pending, () => {});
+        builder.addCase(updateSection.fulfilled, (state, action) => {
+            state.loading = false;
+            state.status = true;
+            state.courseData.sections = state.courseData.sections.map(
+                (section) => {
+                    if (section._id === action.payload._id) {
+                        return { ...section, ...action.payload };
+                    }
+                    return section;
+                }
+            );
+        });
+        builder.addCase(updateSection.rejected, (state) => {
+            state.loading = false;
+            state.status = false;
+        });
+        // deleteSection
+        builder.addCase(deleteSection.pending, (state) => {
+            state.loading = true;
+            state.status = false;
+        });
+        builder.addCase(deleteSection.fulfilled, (state, action) => {
+            state.loading = false;
+            state.status = true;
+            state.courseData.sections = state.courseData.sections.filter(
+                (section) => section._id !== action.payload._id
+            );
+        });
+        builder.addCase(deleteSection.rejected, (state) => {
+            state.loading = false;
+            state.status = false;
+        });
+
+        // uploadLecture
+        builder.addCase(uploadLecture.pending, (state) => {
+            state.loading = true;
+            state.status = false;
+        });
+        builder.addCase(uploadLecture.fulfilled, (state, action) => {
+            state.loading = false;
+            state.status = true;
+            state.courseData.sections = state.courseData.sections.map(
+                (section) => {
+                    if (section._id === action.payload?.sectionId) {
+                        section.videos.push(action.payload);
+                    }
+                    return section;
+                }
+            );
+        });
+        builder.addCase(uploadLecture.rejected, (state) => {
+            state.loading = false;
+            state.status = false;
+        });
+        // updateLecture
+        builder.addCase(updateLecture.pending, () => {});
+        builder.addCase(updateLecture.fulfilled, (state, action) => {
+            state.loading = false;
+            state.status = true;
+            console.log(action.payload);
+            state.courseData.sections = state.courseData.sections.map(
+                (section) => {
+                    if (section._id === action.payload?.sectionId) {
+                        console.log({ section });
+                        section.videos = section.videos.map((video) => {
+                            if (video._id === action.payload._id) {
+                                console.log({ video });
+                                return action.payload;
+                            }
+                            return video;
+                        });
+                    }
+                    return section;
+                }
+            );
+        });
+        builder.addCase(updateLecture.rejected, (state) => {
             state.loading = false;
             state.status = false;
         });
