@@ -54,15 +54,49 @@ export const getCourses = createAsyncThunk(
     }
 );
 
+export const getInstructorCourses = createAsyncThunk(
+    'course/getInstructorCourses',
+    async ({ courseId }) => {
+        try {
+            const query = new URLSearchParams();
+            if (courseId) query.append('courseId', courseId);
+
+            const response = await axiosConfig.get(
+                `/course/instructor/get?${query.toString()}`
+            );
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Fetching Courses Failed', error);
+            return null;
+        }
+    }
+);
+
+export const getLearnerCourses = createAsyncThunk(
+    'course/getLearnerCourses',
+    async ({ courseId }) => {
+        try {
+            const query = new URLSearchParams();
+            if (courseId) query.append('courseId', courseId);
+
+            const response = await axiosConfig.get(
+                `/course/learner/get?${query.toString()}`
+            );
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Fetching Courses Failed', error);
+            return null;
+        }
+    }
+);
+
 export const updateCourse = createAsyncThunk(
     'course/updateCourse',
     async ({ courseId, data }) => {
         try {
-            const formData = new FormData();
-            for (const key in data) {
-                console.log({ key, value: data[key] });
-                formData.append(key, data[key]);
-            }
+            const formData = data.topics
+                ? data
+                : new FormData(document.getElementById('course-data-form'));
 
             const response = await axiosConfig.patch(
                 `/course/${courseId}`,
@@ -77,6 +111,25 @@ export const updateCourse = createAsyncThunk(
             return response.data.data;
         } catch (error) {
             toastErrorMessage('Course Updation Failed', error);
+            return null;
+        }
+    }
+);
+
+export const updateCourseStatus = createAsyncThunk(
+    'course/updateCourseStatus',
+    async ({ courseId, status }) => {
+        try {
+            const response = await axiosConfig.patch(
+                `/course/status/${courseId}`,
+                {
+                    status,
+                }
+            );
+            toastSuccessMessage(`Course ${status} Successfully`, response);
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Course Status Updation Failed', error);
             return null;
         }
     }
@@ -182,6 +235,7 @@ export const updateLecture = createAsyncThunk(
             );
             formData.append('topics', data['topics']);
             formData.append('sectionId', data['sectionId']);
+            if (data.status) formData.append('status', data['status']);
 
             const response = await axiosConfig.patch(
                 `/video/${data.videoId}`,
@@ -218,6 +272,36 @@ const courseSlice = createSlice({
             state.courseData = action.payload;
         });
         builder.addCase(createCourse.rejected, (state) => {
+            state.loading = false;
+            state.status = false;
+        });
+        // getLearnerCourses
+        builder.addCase(getLearnerCourses.pending, (state) => {
+            state.loading = true;
+            state.status = false;
+            state.courseData = null;
+        });
+        builder.addCase(getLearnerCourses.fulfilled, (state, action) => {
+            state.loading = false;
+            state.status = true;
+            state.courseData = action.payload;
+        });
+        builder.addCase(getLearnerCourses.rejected, (state) => {
+            state.loading = false;
+            state.status = false;
+        });
+        // getInstructorCourses
+        builder.addCase(getInstructorCourses.pending, (state) => {
+            state.loading = true;
+            state.status = false;
+            state.courseData = null;
+        });
+        builder.addCase(getInstructorCourses.fulfilled, (state, action) => {
+            state.loading = false;
+            state.status = true;
+            state.courseData = action.payload;
+        });
+        builder.addCase(getInstructorCourses.rejected, (state) => {
             state.loading = false;
             state.status = false;
         });
@@ -261,10 +345,25 @@ const courseSlice = createSlice({
         builder.addCase(updateCourse.fulfilled, (state, action) => {
             state.loading = false;
             state.status = true;
-            state.courseData = action.payload;
+            state.courseData = {
+                ...action.payload,
+                sections: state.courseData.sections,
+            };
         });
         builder.addCase(updateCourse.rejected, (state) => {
             state.loading = false;
+            state.status = false;
+        });
+        // updateCourseStatus
+        builder.addCase(updateCourseStatus.pending, () => {});
+        builder.addCase(updateCourseStatus.fulfilled, (state, action) => {
+            state.status = true;
+            state.courseData = {
+                ...state.courseData,
+                status: action.payload.status,
+            };
+        });
+        builder.addCase(updateCourseStatus.rejected, (state) => {
             state.status = false;
         });
         // createSection
@@ -343,14 +442,11 @@ const courseSlice = createSlice({
         builder.addCase(updateLecture.fulfilled, (state, action) => {
             state.loading = false;
             state.status = true;
-            console.log(action.payload);
             state.courseData.sections = state.courseData.sections.map(
                 (section) => {
                     if (section._id === action.payload?.sectionId) {
-                        console.log({ section });
                         section.videos = section.videos.map((video) => {
                             if (video._id === action.payload._id) {
-                                console.log({ video });
                                 return action.payload;
                             }
                             return video;

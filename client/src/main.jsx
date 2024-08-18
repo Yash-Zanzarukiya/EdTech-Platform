@@ -4,13 +4,16 @@ import './index.css';
 import AppRouter from './AppRouter.jsx';
 import { Provider } from 'react-redux';
 import { store } from './app/store.js';
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from '@/components/theme-provider';
+import { TooltipProvider } from './components/ui/tooltip.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <Provider store={store}>
         <AppRouter>
-            <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                <App />
+            <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+                <TooltipProvider>
+                    <App />
+                </TooltipProvider>
             </ThemeProvider>
         </AppRouter>
     </Provider>

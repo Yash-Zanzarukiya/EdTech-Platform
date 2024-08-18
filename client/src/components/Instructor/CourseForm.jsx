@@ -22,7 +22,7 @@ import { courseFormSchema } from '@/schema';
 import { createCourse, updateCourse } from '@/app/slices/courseSlice';
 import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 export default function CourseForm({ updateForm = false }) {
     const dispatch = useDispatch();

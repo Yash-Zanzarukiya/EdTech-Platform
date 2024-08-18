@@ -61,7 +61,7 @@ export default function HeroFormSignUpForm() {
                                         <div className="flex-shrink-0">
                                             <img
                                                 className="h-8 w-8 rounded-full"
-                                                src="https://placehold.co/100x100"
+                                                src="https://ui.shadcn.com/avatars/03.png"
                                                 alt="Image Description"
                                             />
                                         </div>

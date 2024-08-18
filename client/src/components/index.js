@@ -9,6 +9,15 @@ import CourseForm from './Instructor/CourseForm';
 import EditCourse from './Instructor/EditCourse';
 import CoursePreview from './Instructor/CoursePreview';
 import CourseTopics from './Instructor/CourseTopics';
+import ProfileDropdown from './Header/ProfileDropdown';
+import CourseSidebar from './CourseLearning/CourseSidebar';
+import CourseNavbar from '@/components/CourseLearning/CourseNavbar';
+import CourseTabsSection from '@/components/CourseLearning/CourseTabsSection';
+import VideoComponent from '@/components/CourseLearning/VideoComponent';
+import FirstCoursePublish from '@/components/Instructor/FirstCoursePublish';
+import ToggleCoursePublish from '@/components/Instructor/ToggleCoursePublish';
+import CourseMainSection from './CourseLearning/CourseMainSection';
+
 export {
     NavBar,
     FirstLoading,
@@ -21,4 +30,12 @@ export {
     CoursePreview,
     EditCourse,
     CourseTopics,
+    ProfileDropdown,
+    FirstCoursePublish,
+    ToggleCoursePublish,
+    CourseSidebar,
+    CourseNavbar,
+    CourseTabsSection,
+    VideoComponent,
+    CourseMainSection,
 };

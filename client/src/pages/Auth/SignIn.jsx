@@ -29,8 +29,8 @@ function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
 
     const form = useCustomForm(signInSchema, {
-        identifier: '',
-        password: '',
+        identifier: 'yashpz',
+        password: 'Yash@123',
     });
 
     async function onSubmit(values) {

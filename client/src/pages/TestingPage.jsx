@@ -1,9 +1,9 @@
 import React from 'react';
-import CourseContent from './InstructorPages/CoursePage';
+import { PersonalInfoForm } from '@/components';
 function TestingPage() {
     return (
         <>
-            <CourseContent />
+            <PersonalInfoForm />
         </>
     );
 }

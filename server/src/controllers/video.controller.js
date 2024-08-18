@@ -214,14 +214,14 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 const updateVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
-    const { title, description, topics, publishStatus, sectionId } = req.body;
+    const { title, description, topics, status, sectionId } = req.body;
 
     validateIds(videoId);
 
     const thumbnailLocalFilePath = req.file?.path;
 
     if (!thumbnailLocalFilePath)
-        checkOneField(req, ['title', 'description', 'topics', 'publishStatus']);
+        checkOneField(req, ['title', 'description', 'topics', 'status']);
 
     const video = await Video.findById(videoId);
     if (!video) throw new ApiError(StatusCodes.NOT_FOUND, 'video not found');
@@ -239,7 +239,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     if (title) video.title = title;
     if (description) video.description = description;
     if (thumbnail) video.thumbnail = thumbnail.url;
-    if (publishStatus) video.publishStatus = publishStatus;
+    if (status) video.status = status;
 
     let topicsArray = [];
     if (topics?.trim()) {
@@ -255,7 +255,7 @@ const updateVideo = asyncHandler(async (req, res) => {
     if (!updatedVideo)
         throw new ApiError(
             StatusCodes.INTERNAL_SERVER_ERROR,
-            'An Error Occurred while updating thumbnail'
+            'Something went wrong while updating video'
         );
 
     handleResponse(
@@ -285,37 +285,10 @@ const deleteVideo = asyncHandler(async (req, res) => {
     handleResponse(res, StatusCodes.OK, findRes, 'Video deleted successfully');
 });
 
-const togglePublishStatus = asyncHandler(async (req, res) => {
-    const { videoId } = req.params;
-    const { publishStatus } = req.body;
-
-    validateIds(videoId);
-
-    const video = await Video.findById(videoId);
-    if (!video) throw new ApiError(StatusCodes.NOT_FOUND, 'Video not found');
-
-    video.publishStatus = publishStatus;
-    const updatedVideo = await video.save();
-
-    if (!updatedVideo)
-        throw new ApiError(
-            StatusCodes.INTERNAL_SERVER_ERROR,
-            'An Error Occurred while Saving status'
-        );
-
-    handleResponse(
-        res,
-        StatusCodes.OK,
-        { publishStatus: updatedVideo.publishStatus },
-        'Video status saved successfully'
-    );
-});
-
 export default {
     getAllVideos,
     publishAVideo,
     getVideoById,
     updateVideo,
     deleteVideo,
-    togglePublishStatus,
 };

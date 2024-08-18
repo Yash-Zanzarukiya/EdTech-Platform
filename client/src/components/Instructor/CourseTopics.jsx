@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import {
     Card,
     CardHeader,
@@ -9,42 +9,34 @@ import {
 } from '@/components/ui/card';
 import { Button } from '../ui/button';
 import MultiSelect from '../ui/MultiSelect';
-import { getCourses, updateCourse } from '@/app/slices/courseSlice';
+import { updateCourse } from '@/app/slices/courseSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
-import { useAllTopics } from '@/hooks';
+import { useAllTopics, useCourseDataInstructor } from '@/hooks';
 
 function CourseTopics() {
+    useCourseDataInstructor();
+
     const dispatch = useDispatch();
-    const { courseId } = useParams();
     const topicsRef = useRef();
 
     const { loading, courseData } = useSelector(({ course }) => course);
+
     const courseTopics = useMemo(
         () => courseData?.topics?.map((item) => item.name) || [],
         [courseData]
     );
 
-    const { topicData } = useAllTopics();
-    const allTopics = useMemo(
-        () => topicData?.map((item) => item.name) || [],
-        [topicData]
-    );
-
-    useEffect(() => {
-        if (!courseData) dispatch(getCourses({ courseId }));
-    }, [courseData, courseId]);
+    const { topicsNames: allTopics } = useAllTopics();
 
     function onSubmit() {
         const data = topicsRef.current.getSelectedValues();
         dispatch(
             updateCourse({
-                courseId,
+                courseId: courseData._id,
                 data: { topics: data.join(',') },
             })
         );
-        console.log('Submitted');
     }
 
     return (

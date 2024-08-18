@@ -1,19 +1,10 @@
 import { Router } from 'express';
 import { videoController } from '../../controllers/index.js';
-const {
-    getAllVideos,
-    publishAVideo,
-    getVideoById,
-    updateVideo,
-    deleteVideo,
-    togglePublishStatus,
-} = videoController;
-
 import { verifyJWT, upload } from '../../middlewares/index.js';
 
 const router = Router();
 
-router.route('/').get(getAllVideos);
+router.route('/').get(videoController.getAllVideos);
 router.route('/add/publish').post(
     verifyJWT,
     upload.fields([
@@ -26,15 +17,13 @@ router.route('/add/publish').post(
             maxCount: 1,
         },
     ]),
-    publishAVideo
+    videoController.publishAVideo
 );
 
 router
     .route('/:videoId')
-    .get(getVideoById)
-    .delete(verifyJWT, deleteVideo)
-    .patch(verifyJWT, upload.single('thumbnail'), updateVideo);
-
-router.route('/toggle/publish/:videoId').patch(verifyJWT, togglePublishStatus);
+    .get(videoController.getVideoById)
+    .delete(verifyJWT, videoController.deleteVideo)
+    .patch(verifyJWT, upload.single('thumbnail'), videoController.updateVideo);
 
 export default router;

@@ -14,11 +14,15 @@ import {
     AddCourse,
     CoursePage,
     Analytics,
+    CoursePublish,
+    CourseExam,
+    CourseLearning,
 } from './pages';
 import { Toaster } from './components/ui/toaster';
 import {
     CourseCurriculum,
     CourseForm,
+    CourseMainSection,
     CoursePreview,
     CourseTopics,
     EditCourse,
@@ -48,29 +52,38 @@ function App() {
                     <Route path="" element={<Home />} />
                     <Route path="sign-in" element={<SignIn />} />
                     <Route path="sign-up" element={<SignUp />} />
+                    {/* <Route path="sign-up" element={<HeroFormSignUpForm />} /> */}
                     <Route path="about" element={<About />} />
                     <Route path="explore" element={<Explore />} />
                     <Route path="certificate" element={<Certificate />} />
                     <Route path="user-dashboard" element={<UserDashboard />} />
+                    <Route path="courses" element={<Explore />} />
                     <Route path="testing" element={<TestingPage />} />
-                    <Route path="courses" element={<TestingPage />} />
                     <Route
                         path="admin-dashboard"
                         element={<AdminDashboard />}
                     />
                 </Route>
                 <Route path="/instructor" element={<InstructorContainer />}>
-                    <Route path="dashboard" element={<TestingPage />} />
-                    <Route path="courses" element={<AllCourses />}></Route>
+                    <Route path="dashboard" element={<UserDashboard />} />
+                    <Route path="courses" element={<AllCourses />} />
                     <Route path="courses/:courseId" element={<CoursePage />}>
                         <Route path="" element={<EditCourse />} />
                         <Route path="topics" element={<CourseTopics />} />
-                        <Route path="content" element={<CourseCurriculum />} />
+                        <Route
+                            path="curriculum"
+                            element={<CourseCurriculum />}
+                        />
+                        <Route path="exam" element={<CourseExam />} />
+                        <Route path="publish" element={<CoursePublish />} />
                         <Route path="preview" element={<CoursePreview />} />
                     </Route>
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="add-course" element={<AddCourse />} />
                     <Route path="add-course/new" element={<CourseForm />} />
+                </Route>
+                <Route path="/courses/:courseId" element={<CourseLearning />}>
+                    <Route path=":videoId" element={<CourseMainSection />} />
                 </Route>
             </Routes>
         </>

@@ -10,7 +10,12 @@ import {
 import { cloudinary } from '../utils/index.js';
 import { StatusCodes } from 'http-status-codes';
 import { getTopics } from './topic.controller.js';
-import { VIDEO_STATUS } from '../constants.js';
+import {
+    COURSE_STATUS,
+    GET_COURSE_TYPE,
+    SECTION_STATUS,
+    VIDEO_STATUS,
+} from '../constants.js';
 
 const createCourse = asyncHandler(async (req, res) => {
     const { name, description, price, duration } = req.body;
@@ -53,8 +58,16 @@ const createCourse = asyncHandler(async (req, res) => {
     );
 });
 
+// TODO : Complete it
 const getCourses = asyncHandler(async (req, res) => {
-    const { courseId, ownerId, status, search = '' } = req.query;
+    const {
+        courseId,
+        ownerId,
+        status,
+        search = '',
+        type = GET_COURSE_TYPE.PREVIEW,
+    } = req.query;
+
     const matchStage = {};
 
     if (courseId) {
@@ -71,9 +84,14 @@ const getCourses = asyncHandler(async (req, res) => {
 
     if (search) matchStage.name = { $regex: search, $options: 'i' };
 
-    const course = await Course.aggregate([
-        { $match: { ...matchStage } },
-        {
+    const pipeline = [];
+
+    // Add filters
+    pipeline.push({ $match: { ...matchStage } });
+
+    // Fetch Course Topics
+    if (type !== GET_COURSE_TYPE.INSTRUCTOR_LIST) {
+        pipeline.push({
             $lookup: {
                 from: 'topics',
                 localField: 'topics',
@@ -87,8 +105,12 @@ const getCourses = asyncHandler(async (req, res) => {
                     },
                 ],
             },
-        },
-        {
+        });
+    }
+
+    // Fetch Sections and Videos and video Topics
+    if (type === GET_COURSE_TYPE.CURRICULUM) {
+        pipeline.push({
             $lookup: {
                 from: 'sections',
                 localField: '_id',
@@ -122,7 +144,247 @@ const getCourses = asyncHandler(async (req, res) => {
                     },
                 ],
             },
+        });
+    }
+
+    // Fetch Owner Details
+    if (
+        type !== GET_COURSE_TYPE.INSTRUCTOR_LIST &&
+        type !== GET_COURSE_TYPE.CURRICULUM
+    ) {
+        pipeline.push(
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'owner',
+                    foreignField: '_id',
+                    as: 'owner',
+                    pipeline: [
+                        {
+                            $project: {
+                                username: 1,
+                                fullName: 1,
+                                avatar: 1,
+                                email: 1,
+                                bio: 1,
+                            },
+                        },
+                    ],
+                },
+            },
+            { $unwind: '$owner' }
+        );
+    }
+
+    const course = await Course.aggregate(pipeline);
+
+    handleResponse(
+        res,
+        StatusCodes.OK,
+        courseId ? course[0] : course,
+        'Courses sent successfully'
+    );
+});
+
+const getInstructorCourses = asyncHandler(async (req, res) => {
+    const { courseId } = req.query;
+
+    const matchStage = {};
+
+    if (courseId) {
+        validateIds(courseId);
+        matchStage._id = new mongoose.Types.ObjectId(courseId);
+    }
+
+    const pipeline = [];
+
+    // Add filters
+    pipeline.push({ $match: { ...matchStage } });
+
+    // Fetch Course Topics, Sections and videos and it's topics
+    if (courseId) {
+        pipeline.push(
+            {
+                $lookup: {
+                    from: 'topics',
+                    localField: 'topics',
+                    foreignField: '_id',
+                    as: 'topics',
+                    pipeline: [
+                        {
+                            $project: {
+                                name: 1,
+                            },
+                        },
+                    ],
+                },
+            },
+            {
+                $lookup: {
+                    from: 'sections',
+                    localField: '_id',
+                    foreignField: 'course',
+                    as: 'sections',
+                    pipeline: [
+                        {
+                            $lookup: {
+                                from: 'videos',
+                                localField: 'videos.video',
+                                foreignField: '_id',
+                                as: 'videos',
+                                pipeline: [
+                                    {
+                                        $lookup: {
+                                            from: 'topics',
+                                            localField: 'topics',
+                                            foreignField: '_id',
+                                            as: 'topics',
+                                            pipeline: [
+                                                {
+                                                    $project: {
+                                                        name: 1,
+                                                    },
+                                                },
+                                            ],
+                                        },
+                                    },
+                                ],
+                            },
+                        },
+                    ],
+                },
+            }
+        );
+    }
+
+    // Fetch Owner Details
+    if (courseId) {
+        pipeline.push(
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'owner',
+                    foreignField: '_id',
+                    as: 'owner',
+                    pipeline: [
+                        {
+                            $project: {
+                                username: 1,
+                                fullName: 1,
+                                avatar: 1,
+                                email: 1,
+                                bio: 1,
+                            },
+                        },
+                    ],
+                },
+            },
+            { $unwind: '$owner' }
+        );
+    }
+
+    const courses = await Course.aggregate(pipeline);
+
+    handleResponse(
+        res,
+        StatusCodes.OK,
+        courseId ? courses[0] : courses,
+        'Course Details sent successfully'
+    );
+});
+
+const getLearnerCourse = asyncHandler(async (req, res) => {
+    const { courseId } = req.query;
+    validateIds(courseId);
+
+    const matchStage = { _id: new mongoose.Types.ObjectId(courseId) };
+
+    matchStage.status = COURSE_STATUS.PUBLISHED;
+
+    const course = await Course.aggregate([
+        {
+            $match: { ...matchStage },
         },
+        // Fetch Topics
+        {
+            $lookup: {
+                from: 'topics',
+                localField: 'topics',
+                foreignField: '_id',
+                as: 'topics',
+                pipeline: [
+                    {
+                        $project: {
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        // Fetch Sections which are published and has at-least one video and Videos
+        {
+            $lookup: {
+                from: 'sections',
+                localField: '_id',
+                foreignField: 'course',
+                as: 'sections',
+                pipeline: [
+                    {
+                        $match: {
+                            status: SECTION_STATUS.PUBLISHED,
+                            videos: { $exists: true, $ne: [] },
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'videos',
+                            localField: 'videos.video',
+                            foreignField: '_id',
+                            as: 'videos',
+                            pipeline: [
+                                // check status is not unpublished
+                                {
+                                    $match: {
+                                        status: {
+                                            $ne: VIDEO_STATUS.UNPUBLISHED,
+                                        },
+                                    },
+                                },
+                                {
+                                    $lookup: {
+                                        from: 'topics',
+                                        localField: 'topics',
+                                        foreignField: '_id',
+                                        as: 'topics',
+                                        pipeline: [
+                                            {
+                                                $project: {
+                                                    name: 1,
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        $match: {
+                            videos: { $exists: true, $ne: [] },
+                        },
+                    },
+                    // Add Section total duration
+                    {
+                        $addFields: {
+                            totalDuration: {
+                                $sum: '$videos.duration',
+                            },
+                        },
+                    },
+                ],
+            },
+        },
+        // Fetch Owner Details
         {
             $lookup: {
                 from: 'users',
@@ -145,12 +407,13 @@ const getCourses = asyncHandler(async (req, res) => {
         { $unwind: '$owner' },
     ]);
 
-    handleResponse(
-        res,
-        StatusCodes.OK,
-        courseId ? course[0] : course,
-        'Courses sent successfully'
-    );
+    if (!course || course.length === 0)
+        throw new ApiError(
+            StatusCodes.NOT_FOUND,
+            'Course not found or Published'
+        );
+
+    handleResponse(res, StatusCodes.OK, course[0], 'Course sent successfully');
 });
 
 const deleteCourse = asyncHandler(async (req, res) => {
@@ -255,9 +518,40 @@ const updateCourse = asyncHandler(async (req, res) => {
     );
 });
 
+const updateCourseStatus = asyncHandler(async (req, res) => {
+    const { courseId } = req.params;
+    const { status } = req.body;
+
+    validateFields(req, { body: ['status'] });
+    validateIds(courseId);
+
+    const course = await Course.findById(courseId);
+    if (!course) throw new ApiError(StatusCodes.NOT_FOUND, 'Course not found');
+
+    course.status = status;
+
+    const updatedCourse = await course.save();
+
+    if (!updatedCourse)
+        throw new ApiError(
+            StatusCodes.INTERNAL_SERVER_ERROR,
+            'Something went wrong while updating course'
+        );
+
+    handleResponse(
+        res,
+        StatusCodes.OK,
+        { _id: updatedCourse._id, status: updatedCourse.status },
+        'Course updated successfully'
+    );
+});
+
 export default {
     createCourse,
     deleteCourse,
     getCourses,
+    getLearnerCourse,
+    getInstructorCourses,
     updateCourse,
+    updateCourseStatus,
 };

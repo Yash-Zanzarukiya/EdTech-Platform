@@ -163,7 +163,7 @@ function SectionHeader({ section }) {
                                     disabled={isSubmitting}
                                     className="ml-1 p-1 size-fit bg-transparent shadow-none hover:bg-transparent"
                                 >
-                                    <Trash className="size-5 text-red-700 hover:text-red-600" />
+                                    <Trash className="size-5 text-destructive hover:text-destructive/60" />
                                 </Button>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
@@ -189,7 +189,7 @@ function SectionHeader({ section }) {
                                         <Button
                                             onClick={handleDelete}
                                             disabled={isSubmitting}
-                                            className="text-red-700"
+                                            variant="destructive"
                                         >
                                             Delete Section
                                         </Button>

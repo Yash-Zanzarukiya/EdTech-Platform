@@ -104,7 +104,7 @@ function SignUp() {
                                                     className={`text-sm ${
                                                         isUsernameAvailable
                                                             ? 'text-green-500'
-                                                            : 'text-red-500'
+                                                            : 'text-destructive'
                                                     }`}
                                                 >
                                                     {usernameMessage}

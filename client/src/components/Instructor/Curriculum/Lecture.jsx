@@ -1,24 +1,16 @@
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import { LectureForm } from '.';
-
+import React from 'react';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
 } from '@/components/ui/accordion';
+import { LectureForm } from '.';
 
 function Lecture({ lecture, sectionId }) {
     return (
-        <Card>
+        <Card className="bg-muted/5">
             <CardHeader className="p-4">
                 <CardTitle>
                     <Accordion type="single" collapsible className="w-full">

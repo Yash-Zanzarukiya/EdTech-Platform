@@ -49,7 +49,7 @@ function AddContent({ sectionId }) {
                     <Button
                         variant="outline"
                         size="sm"
-                        className="text-red-600"
+                        className="text-destructive"
                         onClick={() => setState(States.ADD_CONTENT)}
                     >
                         Cancel

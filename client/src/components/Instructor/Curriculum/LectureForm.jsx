@@ -1,10 +1,4 @@
-import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-    CardContent,
-} from '@/components/ui/card';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -16,13 +10,19 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { useDispatch } from 'react-redux';
 import { useAllTopics, useCustomForm } from '@/hooks';
 import { lectureSchema } from '@/schema';
 import { updateLecture, uploadLecture } from '@/app/slices/courseSlice';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import MultiSelect from '@/components/ui/MultiSelect';
 
 export default function LectureForm({
@@ -67,6 +67,7 @@ export default function LectureForm({
             sectionId,
             videoId: lecture?._id,
         };
+
         if (lecture) {
             dispatch(updateLecture(lectureData)).then(() =>
                 setIsSubmitting(() => false)
@@ -80,11 +81,34 @@ export default function LectureForm({
     }
 
     return (
-        <Card>
-            <CardHeader className="pb-2 pt-4 px-4 font-semibold text-lg">
+        <Card className="bg-transparent">
+            <CardHeader className=" relative pb-2 pt-4 px-4 font-semibold text-lg">
                 {lecture ? 'Update Lecture Content' : 'Add New Lecture'}
+                {lecture && (
+                    <Select
+                        onValueChange={(value) => {
+                            onSubmit({ status: value });
+                        }}
+                        disabled={isSubmitting}
+                        defaultValue={lecture.status}
+                    >
+                        <SelectTrigger className=" absolute w-fit h-8 px-2 text-xs mr-2 right-2">
+                            <SelectValue
+                                className="h-2"
+                                placeholder="Select Publish Status"
+                            />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="public">Public</SelectItem>
+                            <SelectItem value="private">Private</SelectItem>
+                            <SelectItem value="unpublished">
+                                UnPublished
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                )}
             </CardHeader>
-            <CardContent className="px-4 pb-4">
+            <CardContent className="px-4 pb-4 pt-2">
                 <Form {...form}>
                     <form
                         id="lecture-data-form"
@@ -239,92 +263,3 @@ export default function LectureForm({
         </Card>
     );
 }
-
-// import { Button } from '@/components/ui/button';
-// import {
-//     Card,
-//     CardContent,
-//     CardDescription,
-//     CardHeader,
-//     CardTitle,
-// } from '@/components/ui/card';
-// import {
-//     Form,
-//     FormControl,
-//     FormField,
-//     FormItem,
-//     FormLabel,
-//     FormMessage,
-// } from '@/components/ui/form';
-// import { Input } from '@/components/ui/input';
-// import { useCustomForm } from '@/hooks';
-// import { sectionSchema } from '@/schema';
-// import { Loader2 } from 'lucide-react';
-// import { useState } from 'react';
-
-// export default function LectureForm({ section }) {
-//     const [isSubmitting, setIsSubmitting] = useState(false);
-
-//     const form = useCustomForm(sectionSchema, {
-//         name: section ? section.name : '',
-//     });
-
-//     async function onSubmit(data) {
-//         setIsSubmitting(() => true);
-//         // dispatch();
-//     }
-
-//     return (
-//         <Card>
-//             <CardHeader className="pb-2 pt-4 px-4">
-//                 <CardTitle>New Lecture</CardTitle>
-//             </CardHeader>
-//             <CardContent className="px-4 pb-4">
-//                 <Form {...form}>
-//                     <form
-//                         onSubmit={form.handleSubmit(onSubmit)}
-//                         className="space-y-1"
-//                     >
-//                         <FormField
-//                             control={form.control}
-//                             name="title"
-//                             render={({ field }) => (
-//                                 <FormItem className="mb-2">
-//                                     <FormLabel>Title</FormLabel>
-//                                     <FormControl>
-//                                         <Input
-//                                             {...field}
-//                                             placeholder="Enter title of the lecture"
-//                                         />
-//                                     </FormControl>
-//                                     <FormMessage />
-//                                 </FormItem>
-//                             )}
-//                         />
-// <Button
-//     type="submit"
-//     disabled={isSubmitting}
-//     className="mr-2"
-// >
-//     {isSubmitting ? (
-//         <>
-//             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-//             Please wait
-//         </>
-//     ) : (
-//         'Add Lecture'
-//     )}
-// </Button>
-// <Button
-//     type="button"
-//     variant="outline"
-//     className="text-red-500"
-// >
-//     Cancel
-// </Button>
-//                     </form>
-//                 </Form>
-//             </CardContent>
-//         </Card>
-//     );
-// }

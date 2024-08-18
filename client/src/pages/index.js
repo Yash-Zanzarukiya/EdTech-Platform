@@ -11,6 +11,10 @@ import AddCourse from './InstructorPages/AddCourse';
 import AllCourses from './InstructorPages/AllCourses';
 import CoursePage from './InstructorPages/CoursePage';
 import Analytics from './InstructorPages/Analytics';
+import CoursePublish from './InstructorPages/CoursePublish';
+import CourseExam from './InstructorPages/CourseExam';
+import CourseLearning from './CourseLearning';
+
 export {
     TestingPage,
     Home,
@@ -25,4 +29,7 @@ export {
     AddCourse,
     CoursePage,
     Analytics,
+    CoursePublish,
+    CourseExam,
+    CourseLearning,
 };

@@ -19,6 +19,14 @@ export const COURSE_STATUS = {
     PUBLISHED: 'published',
     UNPUBLISHED: 'unpublished',
     DRAFTED: 'drafted',
+    DELETED: 'deleted',
+};
+
+export const GET_COURSE_TYPE = {
+    INSTRUCTOR_LIST: 'instructorList',
+    CURRICULUM: 'curriculum',
+    PREVIEW: 'preview',
+    CARD: 'card',
 };
 
 export const AUTH_ERRORS = {

@@ -10,7 +10,15 @@ function useAllTopics() {
         dispatch(getAllTopics());
     }, []);
 
-    return { topicData, topicsLoading: loading };
+    const topicsNames = [];
+    const topicsIds = [];
+
+    topicData?.forEach((topic) => {
+        topicsNames.push(topic.name);
+        topicsIds.push(topic._id);
+    });
+
+    return { topicData, topicsNames, topicsIds, topicsLoading: loading };
 }
 
 export default useAllTopics;

@@ -6,10 +6,18 @@ import {
     CpuIcon,
     PlusIcon,
 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
 export default function AddCourse() {
     const navigate = useNavigate();
+
+    const { setRouteName } = useOutletContext();
+
+    useEffect(() => {
+        setRouteName('Add Course');
+    }, [setRouteName]);
+
     return (
         <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-md text-center">
@@ -29,7 +37,6 @@ export default function AddCourse() {
                     </Button>
                 </div>
             </div>
-            {/* Popular Categories */}
             <div className="grid gap-2 mt-8">
                 <h2 className="text-xl text-center font-semibold">
                     Popular Categories

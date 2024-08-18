@@ -9,9 +9,19 @@ router
     .get(courseController.getCourses) // Get courses
     .post(verifyJWT, upload.single('thumbnail'), courseController.createCourse); // Create course
 
+router.route('/learner/get').get(verifyJWT, courseController.getLearnerCourse);
+
+router
+    .route('/instructor/get')
+    .get(verifyJWT, courseController.getInstructorCourses);
+
 router
     .route('/:courseId')
     .patch(verifyJWT, upload.single('thumbnail'), courseController.updateCourse) // Update course
     .delete(verifyJWT, courseController.deleteCourse); // Delete course
+
+router
+    .route('/status/:courseId')
+    .patch(verifyJWT, courseController.updateCourseStatus);
 
 export default router;

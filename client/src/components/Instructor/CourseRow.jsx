@@ -73,7 +73,7 @@ function CourseRow({ course }) {
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-500">
+                        <DropdownMenuItem className="text-destructive">
                             Delete
                         </DropdownMenuItem>
                     </DropdownMenuContent>

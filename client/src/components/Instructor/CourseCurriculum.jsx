@@ -1,20 +1,18 @@
-import { useSelector } from 'react-redux';
-import { Button } from '@/components/ui/button';
 import { Section, AddSection } from './Curriculum';
 import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from '../ui/card';
 import { Separator } from '../ui/separator';
+import { useCourseDataInstructor } from '@/hooks';
 
 export default function CourseCurriculum() {
-    const { courseData } = useSelector(({ course }) => course);
+    const { courseData } = useCourseDataInstructor();
     return (
-        <Card x-chunk="dashboard-04-chunk-1" className="p-4 pt-2">
+        <Card x-chunk="dashboard-04-chunk-1" className="p-4 pt-2 bg-muted/5">
             <CardHeader>
                 <CardTitle className="text-3xl font-bold">
                     Course Curriculum
@@ -50,26 +48,5 @@ export default function CourseCurriculum() {
                 </main>
             </CardContent>
         </Card>
-    );
-}
-
-function UploadIcon(props) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="17 8 12 3 7 8" />
-            <line x1="12" x2="12" y1="3" y2="15" />
-        </svg>
     );
 }
