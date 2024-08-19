@@ -53,8 +53,8 @@ function SignUp() {
     }
 
     return (
-        <div className="flex font-Inter justify-center items-center grow bg-gradient-to-r from-gray-700 to-black">
-            <div className="w-full max-w-xl p-8 pt-10 space-y-6 bg-white rounded-lg shadow-md">
+        <div className="flex font-Inter justify-center items-center grow bg-background">
+            <div className="w-full max-w-xl p-8 pt-10 space-y-6 rounded-lg border shadow-md">
                 {/* Headers */}
                 <div className="text-center">
                     <h1 className="text-4xl font-bold tracking-tighter lg:text-5xl mb-4">

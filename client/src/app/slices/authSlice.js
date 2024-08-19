@@ -15,7 +15,7 @@ export const signIn = createAsyncThunk(
                 identifier,
                 password,
             });
-            toastSuccessMessage('Login Successfully', response);
+            toastSuccessMessage('Welcome Back', response);
             return response.data.data;
         } catch (error) {
             toastErrorMessage('Sign In Failed', error);

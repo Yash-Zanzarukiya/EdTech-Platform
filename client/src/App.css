@@ -1,0 +1,8 @@
+.course-main-section {
+    max-height: calc(100vh - 64px);
+    scrollbar-width: none;
+}
+.course-sidebar-section {
+    max-height: calc(100vh - 64px);
+    scrollbar-width: none;
+}

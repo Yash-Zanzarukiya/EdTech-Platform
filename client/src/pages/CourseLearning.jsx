@@ -26,22 +26,22 @@ function CourseLearning() {
     }
 
     return (
-        <div className="flex h-screen w-full flex-col bg-muted/40">
+        <div className="flex max-h-screen w-full flex-col bg-muted/40">
             <CourseNavbar activeVideo={activeVideo} courseData={courseData} />
-            <div className="flex flex-col sm:gap-4">
-                <main className="grid flex-1 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                    <div className="col-span-2 border bg-background">
-                        <Outlet
-                            context={{ courseData, activeSection, activeVideo }}
-                        />
-                    </div>
+            <main className="grow relative flex w-full">
+                <section className="grow overflow-y-auto course-main-section">
+                    <Outlet
+                        context={{ courseData, activeSection, activeVideo }}
+                    />
+                </section>
+                <aside className="max-w-md w-full hidden lg:block overflow-y-auto course-sidebar-section">
                     <CourseSidebar
                         sections={courseData.sections}
                         activeSection={activeSection}
                         activeVideo={activeVideo}
                     />
-                </main>
-            </div>
+                </aside>
+            </main>
         </div>
     );
 }
