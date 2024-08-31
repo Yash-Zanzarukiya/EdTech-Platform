@@ -22,7 +22,7 @@ function Lecture({ lecture, sectionId }) {
                                 Lecture {lecture?.order} :{' '}
                                 {lecture?.title || 'Default Name'}
                             </AccordionTrigger>
-                            <AccordionContent className="mt-2">
+                            <AccordionContent className="mt-4">
                                 <LectureForm
                                     lecture={lecture}
                                     sectionId={sectionId}

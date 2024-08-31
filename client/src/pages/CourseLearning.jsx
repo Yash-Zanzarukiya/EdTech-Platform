@@ -10,6 +10,8 @@ function CourseLearning() {
 
     if (!courseData || loading) return <div>Loading...</div>;
 
+    if (courseData.sections.length == 0) return <div>No videos found</div>;
+
     let activeVideo = null;
     let activeSection = courseData.sections.find((section) =>
         section.videos.find((video) => {

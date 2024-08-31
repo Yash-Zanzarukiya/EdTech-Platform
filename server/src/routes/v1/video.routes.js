@@ -4,7 +4,7 @@ import { verifyJWT, upload } from '../../middlewares/index.js';
 
 const router = Router();
 
-router.route('/').get(videoController.getAllVideos);
+router.route('/').get(verifyJWT, videoController.getAllVideos);
 router.route('/add/publish').post(
     verifyJWT,
     upload.fields([

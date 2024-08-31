@@ -47,11 +47,7 @@ export default function LectureForm({
         }
     }, [lecture]);
 
-    const { topicData } = useAllTopics();
-    const allTopics = useMemo(
-        () => topicData?.map((item) => item.name) || [],
-        [topicData]
-    );
+    const { topicsNames: allTopics } = useAllTopics();
 
     const lectureTopics = useMemo(
         () => lecture?.topics?.map((item) => item.name) || [],

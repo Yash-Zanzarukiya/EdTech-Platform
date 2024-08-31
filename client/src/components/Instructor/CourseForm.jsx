@@ -35,7 +35,6 @@ export default function CourseForm({ updateForm = false }) {
     let form = useCustomForm(courseFormSchema, {
         name: course && updateForm ? course.name : '',
         price: course && updateForm ? parseInt(course.price) : 0,
-        duration: course && updateForm ? parseInt(course.duration) : 0,
         description: course && updateForm ? course.description : '',
     });
 
@@ -43,7 +42,6 @@ export default function CourseForm({ updateForm = false }) {
         if (course) {
             form.setValue('name', course.name);
             form.setValue('price', course.price);
-            form.setValue('duration', course.duration);
             form.setValue('description', course.description);
         }
     }, [course]);
@@ -81,7 +79,7 @@ export default function CourseForm({ updateForm = false }) {
                         onSubmit={form.handleSubmit(onSubmit)}
                         className="grid grid-cols-1 md:grid-cols-2 gap-6"
                     >
-                        <div className="flex flex-col gap-4">
+                        <div className="grid gap-4">
                             {/* NAME */}
                             <div className="grid gap-2">
                                 <FormField
@@ -101,27 +99,30 @@ export default function CourseForm({ updateForm = false }) {
                                     )}
                                 />
                             </div>
-                            {/* THUMBNAIL */}
-                            <div className="grid gap-2">
-                                <FormField
-                                    control={form.control}
-                                    name="thumbnail"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                Course Thumbnail
-                                            </FormLabel>
-                                            <FormControl>
-                                                <Input type="file" {...field} />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
                         </div>
-                        <div className="flex flex-col gap-4">
-                            <div className="grid grid-cols gap-4">
+                        <div className="grid col-span-2 gap-2">
+                            <div className="grid grid-cols-2 gap-4">
+                                {/* THUMBNAIL */}
+                                <div className="grid gap-2">
+                                    <FormField
+                                        control={form.control}
+                                        name="thumbnail"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>
+                                                    Course Thumbnail
+                                                </FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        type="file"
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
                                 {/* PRICE */}
                                 <div className="grid gap-2">
                                     <FormField
@@ -135,27 +136,6 @@ export default function CourseForm({ updateForm = false }) {
                                                     <Input
                                                         type="number"
                                                         placeholder="INR"
-                                                        {...field}
-                                                    />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
-                                {/* Duration */}
-                                <div className="grid gap-2">
-                                    <FormField
-                                        control={form.control}
-                                        name="duration"
-                                        type="number"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Duration</FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="number"
-                                                        placeholder="In hours"
                                                         {...field}
                                                     />
                                                 </FormControl>
@@ -186,7 +166,11 @@ export default function CourseForm({ updateForm = false }) {
                                 )}
                             />
                         </div>
-                        <Button type="submit" disabled={loading}>
+                        <Button
+                            type="submit"
+                            disabled={loading}
+                            className="w-fit px-8"
+                        >
                             {loading && course ? (
                                 <>
                                     <Loader2 className="size-4 animate-spin mr-2" />

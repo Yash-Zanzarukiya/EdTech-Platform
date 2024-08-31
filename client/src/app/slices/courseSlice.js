@@ -94,9 +94,10 @@ export const updateCourse = createAsyncThunk(
     'course/updateCourse',
     async ({ courseId, data }) => {
         try {
-            const formData = data.topics
-                ? data
-                : new FormData(document.getElementById('course-data-form'));
+            const formData =
+                typeof data.topics === 'string'
+                    ? data
+                    : new FormData(document.getElementById('course-data-form'));
 
             const response = await axiosConfig.patch(
                 `/course/${courseId}`,
@@ -110,7 +111,7 @@ export const updateCourse = createAsyncThunk(
             toastSuccessMessage('Course Updated', response);
             return response.data.data;
         } catch (error) {
-            toastErrorMessage('Course Updation Failed', error);
+            toastErrorMessage('Course Updating Failed', error);
             return null;
         }
     }

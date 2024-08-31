@@ -14,6 +14,8 @@ import Analytics from './InstructorPages/Analytics';
 import CoursePublish from './InstructorPages/CoursePublish';
 import CourseExam from './InstructorPages/CourseExam';
 import CourseLearning from './CourseLearning';
+import CourseExplore from './CourseExplore';
+import PublicVideos from './InstructorPages/PublicVideos';
 
 export {
     TestingPage,
@@ -32,4 +34,6 @@ export {
     CoursePublish,
     CourseExam,
     CourseLearning,
+    CourseExplore,
+    PublicVideos,
 };

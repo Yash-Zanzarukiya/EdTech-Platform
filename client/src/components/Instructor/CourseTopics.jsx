@@ -8,15 +8,14 @@ import {
     CardFooter,
 } from '@/components/ui/card';
 import { Button } from '../ui/button';
-import MultiSelect from '../ui/MultiSelect';
-import { updateCourse } from '@/app/slices/courseSlice';
-import { useDispatch, useSelector } from 'react-redux';
 import { Loader2 } from 'lucide-react';
+import MultiSelect from '../ui/MultiSelect';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateCourse } from '@/app/slices/courseSlice';
 import { useAllTopics, useCourseDataInstructor } from '@/hooks';
 
 function CourseTopics() {
     useCourseDataInstructor();
-
     const dispatch = useDispatch();
     const topicsRef = useRef();
 
@@ -31,6 +30,7 @@ function CourseTopics() {
 
     function onSubmit() {
         const data = topicsRef.current.getSelectedValues();
+        
         dispatch(
             updateCourse({
                 courseId: courseData._id,

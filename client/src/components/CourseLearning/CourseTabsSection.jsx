@@ -2,16 +2,39 @@ import React from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { FileIcon } from 'lucide-react';
+import { CourseSidebar } from '..';
 
-function CourseTabsSection() {
+const tabList = [
+    { label: 'Course Content', value: 'courseContent', className: 'lg:hidden' },
+    { label: 'Description', value: 'description' },
+    { label: 'Comments', value: 'comments' },
+    { label: 'Resources', value: 'resources' },
+];
+
+// FIXME : Fix sidebar
+
+function CourseTabsSection({ courseData, activeSection, activeVideo }) {
     return (
         <div className="p-4">
             <Tabs defaultValue="description">
                 <TabsList>
-                    <TabsTrigger value="description">Description</TabsTrigger>
-                    <TabsTrigger value="comments">Comments</TabsTrigger>
-                    <TabsTrigger value="resources">Resources</TabsTrigger>
+                    {tabList.map((tab, index) => (
+                        <TabsTrigger
+                            key={index}
+                            value={tab.value}
+                            className={tab.className}
+                        >
+                            {tab.label}
+                        </TabsTrigger>
+                    ))}
                 </TabsList>
+                <TabsContent value="courseContent">
+                    <CourseSidebar
+                        sections={courseData.sections}
+                        activeSection={activeSection}
+                        activeVideo={activeVideo}
+                    />
+                </TabsContent>
                 <TabsContent value="description">
                     <div className="space-y-4">
                         <h2 className="text-2xl font-bold">

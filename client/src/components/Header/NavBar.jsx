@@ -1,20 +1,9 @@
 import { APP_NAME, ROLE } from '@/constant';
 import React, { useEffect, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '@/app/slices/authSlice';
-
-import { CircleUser, Menu, Package2, Search } from 'lucide-react';
-
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Menu, Package2, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ModeToggle } from '../mode-toggle';
@@ -57,6 +46,14 @@ const NavBar = () => {
             path: '/user-dashboard',
         },
         {
+            label: 'Explore',
+            path: '/explore',
+        },
+        {
+            label: 'Courses',
+            path: '/courses',
+        },
+        {
             label: 'Testing',
             path: '/testing',
         },
@@ -66,7 +63,6 @@ const NavBar = () => {
         },
     ];
 
-    const dispatch = useDispatch();
     const [navItems, setNavItems] = useState(withoutAuthNavItems);
     const { userData } = useSelector(({ auth }) => auth);
 

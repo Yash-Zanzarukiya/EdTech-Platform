@@ -1,9 +1,9 @@
 import React from 'react';
-import { PersonalInfoForm } from '@/components';
+import HeroFormSignUpForm from './Auth/HeroFormSignUpForm';
 function TestingPage() {
     return (
         <>
-            <PersonalInfoForm />
+            <HeroFormSignUpForm />
         </>
     );
 }

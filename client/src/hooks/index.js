@@ -7,6 +7,8 @@ import useAllTopics from './useAllTopics';
 import useDocTitle from './useDocTitle';
 import useCourseDataInstructor from './useCourseDataInstructor';
 import useLearnerCourse from './useCourse';
+import useAllCourses from './useAllCourses';
+import useAllVideos from './useAllVideos';
 
 export {
     useCustomForm,
@@ -18,4 +20,6 @@ export {
     useDocTitle,
     useCourseDataInstructor,
     useLearnerCourse,
+    useAllCourses,
+    useAllVideos
 };

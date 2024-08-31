@@ -13,16 +13,20 @@ import { formate } from '@/utils';
 function CourseSidebar({ sections = [], activeSection, activeVideo }) {
     return (
         <div className="max-h-full border bg-background py-1 px-1">
-            <h2 className="text-2xl font-bold">Course Content</h2>
-            <div className="mt-2 grid gap-[2px] border-b">
+            <h2 className="text-2xl font-bold px-3 py-1">Course Content</h2>
+            <div className="mt-2 grid gap-[2px] ">
                 {sections.map((section, index) => (
-                    <Accordion type="single" collapsible>
+                    <Accordion
+                        type="single"
+                        collapsible
+                        className={`${
+                            section._id === activeSection._id &&
+                            'border border-accent-foreground'
+                        }   `}
+                    >
                         <AccordionItem value="section-1">
                             <AccordionTrigger
-                                className={`${
-                                    section._id === activeSection._id &&
-                                    'bg-muted'
-                                } p-2 hover:bg-muted/60 hover:no-underline`}
+                                className={`p-2 hover:bg-muted/60 hover:no-underline border-b`}
                             >
                                 <div className="flex flex-col w-full text-accent-foreground">
                                     <span className="flex items-center gap-1">
@@ -48,16 +52,20 @@ function CourseSidebar({ sections = [], activeSection, activeVideo }) {
                                     </span>
                                 </div>
                             </AccordionTrigger>
-                            <AccordionContent className="bg-muted/20 p-0 pt-[2px] grid gap-[2px]">
+                            <AccordionContent
+                                className={`${
+                                    section._id === activeSection._id && 'border-t border-muted-foreground/30'
+                                } bg-muted/20 p-0 pt-[2px] grid gap-[2px]`}
+                            >
                                 {section.videos.map((video, index) => (
                                     <div
                                         className={`${
                                             video._id === activeVideo._id &&
-                                            'bg-muted/80'
+                                            'text-blue-500'
                                         } p-1 border-b rounded hover:bg-muted/60`}
                                     >
                                         <Link to={`${video._id}`}>
-                                            <div className="flex items-center rounded-md px-2 py-3 text-sm font-medium text-foreground">
+                                            <div className="flex items-center rounded-md px-2 py-2 text-xs font-medium ">
                                                 <div className="flex items-center gap-2">
                                                     <Checkbox
                                                         defaultChecked={false}
@@ -83,7 +91,7 @@ function CourseSidebar({ sections = [], activeSection, activeVideo }) {
                         </AccordionItem>
                     </Accordion>
                 ))}
-                {Array(15)
+                {/* {Array(15)
                     .fill()
                     .map((_, index) => (
                         <Accordion type="single" collapsible>
@@ -140,7 +148,7 @@ function CourseSidebar({ sections = [], activeSection, activeVideo }) {
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
-                    ))}
+                    ))} */}
             </div>
         </div>
     );

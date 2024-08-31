@@ -6,17 +6,20 @@ import {
     DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { MountainIcon } from 'lucide-react';
+import { MountainIcon, Package2 } from 'lucide-react';
 import { DotsVerticalIcon } from '@radix-ui/react-icons';
 import { ModeToggle } from '../mode-toggle';
 import CourseProgress from './CourseProgress';
 import { ProfileDropdown } from '..';
+import { Link } from 'react-router-dom';
 
 function CourseNavbar({ courseData, activeVideo }) {
     return (
         <header className="sticky top-0 z-30 flex items-center gap-4 border-b px-4 py-3 sm:static sm:border-0 sm:px-6">
             <div className="flex items-center gap-6">
-                <MountainIcon className="h-6 w-6" />
+                <Link to={'/courses'}>
+                    <Package2 className="h-6 w-6" />
+                </Link>
                 <span className="text-lg font-semibold">
                     {courseData.name} - {activeVideo.title}
                 </span>

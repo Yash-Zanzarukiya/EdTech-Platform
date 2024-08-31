@@ -5,7 +5,7 @@ import { AddContent, Lecture } from '.';
 
 function Section({ section }) {
     return (
-        <Card className='bg-muted/5'>
+        <Card className="bg-muted/5">
             <SectionHeader section={section} />
             <CardContent className="flex flex-col gap-y-2">
                 {section?.videos?.map((lecture, index) => (

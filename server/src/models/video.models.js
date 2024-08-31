@@ -18,12 +18,6 @@ const videoSchema = new Schema(
         thumbnail: {
             type: String,
         },
-        topics: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'Topic',
-            },
-        ],
         duration: {
             type: Number,
             required: true,
@@ -33,9 +27,14 @@ const videoSchema = new Schema(
             enum: VIDEO_STATUS,
             default: VIDEO_STATUS.PRIVATE,
         },
+        section: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Section',
+        },
         owner: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
+            required: true,
         },
     },
     {

@@ -96,7 +96,10 @@ function SignUp() {
                                     {/* Unique username check response */}
                                     <FormDescription>
                                         {isUsernameChecking ? (
-                                            <Loader2 className=" animate-spin" />
+                                            <span className="flex items-center gap-1">
+                                                <Loader2 className="animate-spin size-4" />
+                                                Checking username...
+                                            </span>
                                         ) : (
                                             username &&
                                             usernameMessage && (

@@ -19,6 +19,7 @@ import { Button } from '../ui/button';
 import { ModeToggle } from '../mode-toggle';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ProfileDropdown } from '..';
+import { AiFillYoutube } from 'react-icons/ai';
 
 const navItems = [
     {
@@ -41,6 +42,11 @@ const navItems = [
         path: 'add-course',
         icon: <PlusCircle className="h-5 w-5" />,
     },
+    {
+        label: 'Public Videos',
+        path: 'videos',
+        icon: <AiFillYoutube className="h-5 w-5" />,
+    },
 ];
 
 function InstructorContainer() {
@@ -60,7 +66,6 @@ function InstructorContainer() {
                     {navItems.map((item, index) => (
                         <NavLink
                             to={item.path}
-                            end
                             className={({ isActive }) =>
                                 `${
                                     isActive

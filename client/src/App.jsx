@@ -17,6 +17,8 @@ import {
     CoursePublish,
     CourseExam,
     CourseLearning,
+    CourseExplore,
+    PublicVideos,
 } from './pages';
 import { Toaster } from './components/ui/toaster';
 import {
@@ -57,7 +59,7 @@ function App() {
                     <Route path="explore" element={<Explore />} />
                     <Route path="certificate" element={<Certificate />} />
                     <Route path="user-dashboard" element={<UserDashboard />} />
-                    <Route path="courses" element={<Explore />} />
+                    <Route path="courses" element={<CourseExplore />} />
                     <Route path="testing" element={<TestingPage />} />
                     <Route
                         path="admin-dashboard"
@@ -78,6 +80,7 @@ function App() {
                         <Route path="publish" element={<CoursePublish />} />
                         <Route path="preview" element={<CoursePreview />} />
                     </Route>
+                    <Route path="videos" element={<PublicVideos />} />
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="add-course" element={<AddCourse />} />
                     <Route path="add-course/new" element={<CourseForm />} />

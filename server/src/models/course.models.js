@@ -19,15 +19,6 @@ const courseSchema = new Schema(
         price: {
             type: Number,
         },
-        duration: {
-            type: Number,
-        },
-        topics: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'Topic',
-            },
-        ],
         owner: {
             type: Schema.Types.ObjectId,
             ref: 'User',

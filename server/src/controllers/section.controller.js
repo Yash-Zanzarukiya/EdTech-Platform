@@ -1,18 +1,19 @@
 import mongoose from 'mongoose';
-import { Section, Video } from '../models/index.js';
+import { CourseSections, Section, SectionContent } from '../models/index.js';
 import {
     ApiError,
     handleResponse,
     asyncHandler,
     validateFields,
     validateIds,
-    cloudinary,
+    checkOneField,
 } from '../utils/index.js';
 import { StatusCodes } from 'http-status-codes';
 import { VIDEO_STATUS } from '../constants.js';
+import { videoController } from './index.js';
 
 const createSection = asyncHandler(async (req, res) => {
-    const { name } = req.body;
+    const { name, order = 1 } = req.body;
     const { courseId } = req.params;
 
     validateFields(req, { body: ['name'] });
@@ -23,10 +24,16 @@ const createSection = asyncHandler(async (req, res) => {
         course: courseId,
     });
 
+    await CourseSections.create({
+        section: section._id,
+        course: courseId,
+        order,
+    });
+
     if (!section)
         throw new ApiError(
             StatusCodes.INTERNAL_SERVER_ERROR,
-            'An Error occurred while creating section'
+            'Something went wrong while creating section'
         );
 
     handleResponse(
@@ -38,9 +45,10 @@ const createSection = asyncHandler(async (req, res) => {
 });
 
 const updateSection = asyncHandler(async (req, res) => {
-    const { name, order, status } = req.body;
+    const { name, status } = req.body;
     const { sectionId } = req.params;
 
+    checkOneField(req, ['name', 'status']);
     validateIds(sectionId);
 
     const section = await Section.findById(sectionId);
@@ -48,9 +56,8 @@ const updateSection = asyncHandler(async (req, res) => {
     if (!section)
         throw new ApiError(StatusCodes.NOT_FOUND, 'Section Not Found');
 
-    section.name = name || section.name;
-    section.order = order || section.order;
-    section.status = status || section.status;
+    if (name) section.name = name;
+    if (status) section.status = status;
 
     const updatedSection = await section.save();
 
@@ -66,107 +73,76 @@ const updateSection = asyncHandler(async (req, res) => {
         {
             _id: updatedSection._id,
             name: updatedSection.name,
-            order: updatedSection.order,
             status: updatedSection.status,
         },
         'Section Updated Successfully'
     );
 });
 
-export const toggleVideoToSection = async (
-    sectionId,
-    videoId,
-    toggle = true
-) => {
-    validateIds(videoId);
-
-    if (sectionId) {
-        const section = toggle
-            ? await Section.findByIdAndUpdate(
-                  sectionId,
-                  {
-                      $addToSet: {
-                          videos: { video: videoId },
-                      },
-                  },
-                  {
-                      new: true,
-                  }
-              )
-            : await Section.findByIdAndUpdate(
-                  sectionId,
-                  {
-                      $pull: {
-                          videos: { video: videoId },
-                      },
-                  },
-                  {
-                      new: true,
-                  }
-              );
-        if (!section)
-            throw new ApiError(
-                StatusCodes.INTERNAL_SERVER_ERROR,
-                'An Error Occurred while toggling video'
-            );
-    } else {
-        await Section.findOneAndUpdate(
-            {
-                videos: {
-                    $elemMatch: { video: videoId },
-                },
-            },
-            {
-                $pull: {
-                    videos: { video: videoId },
-                },
-            },
-            {
-                new: true,
-            }
-        );
-    }
-
-    return true;
-};
-
 const deleteSection = asyncHandler(async (req, res) => {
     const { sectionId } = req.params;
 
-    validateIds(sectionId);
-
-    const section = await Section.findByIdAndDelete(sectionId);
-
-    if (!section)
-        throw new ApiError(
-            StatusCodes.INTERNAL_SERVER_ERROR,
-            'An Error Occurred while deleting section'
-        );
-
-    const videos = section.videos;
-
-    if (videos?.length > 0) {
-        for (let j = 0; j < videos.length; j++) {
-            // delete video if it's status is not public
-            const video = await Video.findOneAndDelete({
-                _id: videos[j].video,
-                status: { $ne: VIDEO_STATUS.PUBLIC },
-            });
-            // delete video from cloudinary
-            if (video) {
-                await cloudinary.deleteVideoOnCloudinary(video.videoFile);
-                await cloudinary.deleteImageOnCloudinary(video.thumbnail);
-            }
-        }
-    }
+    const deletedSection = await deleteOneSection(sectionId);
 
     handleResponse(
         res,
         StatusCodes.OK,
-        section,
-        'section deleted successfully'
+        deletedSection,
+        'Section deleted successfully'
     );
 });
+
+const deleteOneSection = async (sectionId) => {
+    validateIds(sectionId);
+
+    const deletedSection = await Section.findByIdAndDelete(sectionId);
+
+    if (!deletedSection)
+        throw new ApiError(StatusCodes.NOT_FOUND, 'Section not found');
+
+    await CourseSections.findOneAndDelete({ section: deletedSection._id });
+
+    // delete all videos in the section
+    const videos = await SectionContent.deleteMany({
+        section: deletedSection._id,
+        video: { $exists: true },
+    });
+
+    if (videos.length) {
+        for (let j = 0; j < videos.length; j++) {
+            await videoController.deleteOneVideo(videos[j].video, {
+                status: { $ne: VIDEO_STATUS.PUBLIC },
+            });
+        }
+    }
+
+    return deletedSection;
+};
+
+const deleteManySections = async (sectionIds = []) => {
+    if (!sectionIds.length) return;
+
+    const deletedSections = await Section.deleteMany({
+        _id: { $in: sectionIds },
+    });
+
+    if (deletedSections.length) {
+        for (let i = 0; i < deletedSections.length; i++) {
+            const sectionVideos = await SectionContent.find({
+                section: { $in: sectionIds },
+                video: { $exists: true },
+            });
+
+            const videoIds = sectionVideos.map((video) => video.video) || [];
+
+            await videoController.deleteManyVideos(videoIds, {
+                status: { $ne: VIDEO_STATUS.PUBLIC },
+            });
+        }
+    }
+
+    return deletedSections;
+};
 
 // NOT USED
 const getCourseSections = asyncHandler(async (req, res) => {
@@ -264,4 +240,6 @@ export default {
     getCourseSections,
     getSectionById,
     deleteSection,
+    deleteOneSection,
+    deleteManySections,
 };

@@ -3,11 +3,16 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useOutletContext, useParams } from 'react-router-dom';
 
-function useCourseDataInstructor() {
-    const dispatch = useDispatch();
-
-    const { courseId } = useParams();
+function useCourseDataInstructor(routeName) {
     const { setRouteName, courseData } = useOutletContext();
+
+    if (routeName) {
+        setRouteName(routeName);
+        return;
+    }
+
+    const dispatch = useDispatch();
+    const { courseId } = useParams();
 
     useEffect(() => {
         if (courseData && courseData?._id == courseId)

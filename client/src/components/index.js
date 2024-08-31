@@ -17,6 +17,8 @@ import VideoComponent from '@/components/CourseLearning/VideoComponent';
 import FirstCoursePublish from '@/components/Instructor/FirstCoursePublish';
 import ToggleCoursePublish from '@/components/Instructor/ToggleCoursePublish';
 import CourseMainSection from './CourseLearning/CourseMainSection';
+import CourseCard from './CourseListings/CourseCard';
+import PublicVideosTable from './Instructor/PublicVideosTable';
 
 export {
     NavBar,
@@ -38,4 +40,6 @@ export {
     CourseTabsSection,
     VideoComponent,
     CourseMainSection,
+    CourseCard,
+    PublicVideosTable,
 };

@@ -1,26 +1,24 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
 const progressSchema = new Schema(
-  {
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+    {
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        video: {
+            type: Schema.Types.ObjectId,
+            ref: 'Video',
+            required: true,
+        },
+        progress: {
+            type: Number,
+            required: true,
+            default: 100,
+        },
     },
-    course: {
-      type: Schema.Types.ObjectId,
-      ref: "Course",
-    },
-    video: {
-      type: Schema.Types.ObjectId,
-      ref: "Video",
-    },
-    progress: {
-      type: Number,
-      required: true,
-      default: 100,
-    },
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
-export const Progress = mongoose.model("Progress", progressSchema);
+export const Progress = mongoose.model('Progress', progressSchema);

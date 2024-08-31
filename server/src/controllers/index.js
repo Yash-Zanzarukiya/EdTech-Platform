@@ -7,6 +7,8 @@ import progressController from './progress.controller.js';
 import topicController from './topic.controller.js';
 import sectionController from './section.controller.js';
 import videoController from './video.controller.js';
+import sectionContent from './sectionContent.js';
+import topicList from './topicList.js';
 
 export {
     checkHealth,
@@ -18,4 +20,6 @@ export {
     topicController,
     sectionController,
     videoController,
+    sectionContent,
+    topicList,
 };
