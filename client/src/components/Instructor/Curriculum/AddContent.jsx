@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, PlusIcon } from 'lucide-react';
-import { LectureForm, QuizForm } from '.';
+import { LectureForm, QuizForm, YTVideoForm } from '.';
+import { useSelector } from 'react-redux';
+import { Plus, Video } from 'lucide-react';
+import { AiFillYoutube, AiOutlineBulb } from 'react-icons/ai';
 
 const States = {
     ADD_CONTENT: 'AddContent',
     CONTENT_OPTIONS: 'ContentOptions',
     LECTURE_FORM: 'LectureForm',
+    YT_VIDEO_FORM: 'YTVideoForm',
     QUIZ_FORM: 'QuizForm',
 };
 
 function AddContent({ sectionId }) {
     const [state, setState] = useState(States.ADD_CONTENT);
-
+    const { userData } = useSelector(({ auth }) => auth);
     return (
         <div>
             {/* Add content */}
@@ -30,12 +33,23 @@ function AddContent({ sectionId }) {
             {/* Content options */}
             {state === States.CONTENT_OPTIONS && (
                 <div className="flex items-center gap-2">
+                    {(userData.role === 'admin' ||
+                        userData.username === 'yashpz') && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setState(States.YT_VIDEO_FORM)}
+                        >
+                            <AiFillYoutube className="size-4 mr-2 text-red-500" />
+                            YouTube
+                        </Button>
+                    )}
                     <Button
                         variant="outline"
                         size="sm"
                         onClick={() => setState(States.LECTURE_FORM)}
                     >
-                        <PlusIcon className="h-4 w-4 mr-1" />
+                        <Video className="h-4 w-4 mr-2 text-purple-500" />
                         Lecture
                     </Button>
                     <Button
@@ -43,7 +57,7 @@ function AddContent({ sectionId }) {
                         size="sm"
                         onClick={() => setState(States.QUIZ_FORM)}
                     >
-                        <PlusIcon className="h-4 w-4 mr-1" />
+                        <AiOutlineBulb className="h-4 w-4 mr-1 text-yellow-400" />
                         Quiz
                     </Button>
                     <Button
@@ -68,6 +82,14 @@ function AddContent({ sectionId }) {
             {/* Quiz Form */}
             {state === States.QUIZ_FORM && (
                 <QuizForm
+                    sectionId={sectionId}
+                    cancelAction={() => setState(States.CONTENT_OPTIONS)}
+                />
+            )}
+
+            {/* YouTube Video Form */}
+            {state === States.YT_VIDEO_FORM && (
+                <YTVideoForm
                     sectionId={sectionId}
                     cancelAction={() => setState(States.CONTENT_OPTIONS)}
                 />

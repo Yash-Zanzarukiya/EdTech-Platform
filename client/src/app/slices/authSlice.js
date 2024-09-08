@@ -58,26 +58,38 @@ export const checkUsername = async (username) => {
 export const updateUserProfile = createAsyncThunk(
     'auth/updateUserProfile',
     async (data) => {
-        const { fullName, university, gradYear, branch, bio } = data;
+        const {
+            fullName,
+            university,
+            gradYear,
+            branch,
+            bio,
+            avatar,
+            profileStatus,
+        } = data;
+
         try {
             const response = await axiosConfig.patch('/user/profile', {
-                fullName,
+                profileStatus,
                 university,
+                fullName,
                 gradYear,
                 branch,
                 bio,
             });
 
-            const formData = new FormData(
-                document.getElementById('personal-info-form')
-            );
+            if (avatar) {
+                const formData = new FormData(
+                    document.getElementById('personal-info-form')
+                );
 
-            if (formData.get('avatar')?.name) {
-                const res = await axiosConfig.patch('/user/avatar', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
+                if (formData.get('avatar')?.name) {
+                    await axiosConfig.patch('/user/avatar', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                    });
+                }
             }
 
             toastSuccessMessage('Profile Updated Successfully', response);

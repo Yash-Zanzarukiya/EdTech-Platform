@@ -227,6 +227,20 @@ export const uploadLecture = createAsyncThunk(
     }
 );
 
+export const addYTLecture = createAsyncThunk(
+    'course/addYTLecture',
+    async (data) => {
+        try {
+            const response = await axiosConfig.post(`/video/add/yt`, data);
+            toastSuccessMessage('Lecture Uploaded', response);
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Lecture Uploading Failed', error);
+            return null;
+        }
+    }
+);
+
 export const updateLecture = createAsyncThunk(
     'course/updateLecture',
     async (data) => {
@@ -416,7 +430,6 @@ const courseSlice = createSlice({
             state.loading = false;
             state.status = false;
         });
-
         // uploadLecture
         builder.addCase(uploadLecture.pending, (state) => {
             state.loading = true;
@@ -435,6 +448,30 @@ const courseSlice = createSlice({
             );
         });
         builder.addCase(uploadLecture.rejected, (state) => {
+            state.loading = false;
+            state.status = false;
+        });
+        // addYTLecture
+        builder.addCase(addYTLecture.pending, (state) => {
+            state.loading = true;
+            state.status = false;
+        });
+        builder.addCase(addYTLecture.fulfilled, (state, action) => {
+            console.log(action.payload);
+            state.status = true;
+            state.courseData.sections = state.courseData.sections.map(
+                (section) => {
+                    if (section._id === action.payload?.sectionId) {
+                        const newVideos = action.payload.videos;
+                        if (newVideos?.length)
+                            section.videos.push(...newVideos);
+                    }
+                    return section;
+                }
+            );
+            state.loading = false;
+        });
+        builder.addCase(addYTLecture.rejected, (state) => {
             state.loading = false;
             state.status = false;
         });

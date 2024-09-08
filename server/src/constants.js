@@ -29,6 +29,12 @@ export const GET_COURSE_TYPE = {
     CARD: 'card',
 };
 
+export const PROFILE_STATUS = {
+    PENDING: 'pending',
+    GOAL: 'goal',
+    COMPLETED: 'completed',
+};
+
 export const AUTH_ERRORS = {
     EMAIL_ALREADY_REGISTERED: 'Email already registered',
     REPOSITORY_LAYER: 'Something went wrong in the auth repository',

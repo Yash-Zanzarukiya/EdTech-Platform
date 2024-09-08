@@ -3,6 +3,8 @@ import signUpSchema, { usernameValidation } from './signUpSchema';
 import courseFormSchema from './courseFormSchema';
 import sectionSchema from './sectionSchema';
 import lectureSchema from './lectureSchema';
+import userProfileSchema from './userProfileSchema';
+import youtubeVideoSchema from './youtubeVideoSchema';
 export {
     signInSchema,
     signUpSchema,
@@ -10,4 +12,6 @@ export {
     courseFormSchema,
     sectionSchema,
     lectureSchema,
+    userProfileSchema,
+    youtubeVideoSchema,
 };

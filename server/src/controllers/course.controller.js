@@ -294,7 +294,7 @@ const getCourses = asyncHandler(async (req, res) => {
 const getInstructorCourses = asyncHandler(async (req, res) => {
     const { courseId } = req.query;
 
-    const matchStage = {};
+    const matchStage = { owner: req.user?._id };
 
     if (courseId) {
         validateIds(courseId);

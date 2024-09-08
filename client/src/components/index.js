@@ -19,8 +19,11 @@ import ToggleCoursePublish from '@/components/Instructor/ToggleCoursePublish';
 import CourseMainSection from './CourseLearning/CourseMainSection';
 import CourseCard from './CourseListings/CourseCard';
 import PublicVideosTable from './Instructor/PublicVideosTable';
+import SetGoal from './User/SetGoal';
+import GetStarted from './Misc/GetStarted';
 
 export {
+    GetStarted,
     NavBar,
     FirstLoading,
     RootContainer,
@@ -42,4 +45,5 @@ export {
     CourseMainSection,
     CourseCard,
     PublicVideosTable,
+    SetGoal,
 };

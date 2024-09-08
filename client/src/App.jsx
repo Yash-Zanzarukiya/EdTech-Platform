@@ -19,6 +19,7 @@ import {
     CourseLearning,
     CourseExplore,
     PublicVideos,
+    WelcomePage,
 } from './pages';
 import { Toaster } from './components/ui/toaster';
 import {
@@ -60,6 +61,7 @@ function App() {
                     <Route path="certificate" element={<Certificate />} />
                     <Route path="user-dashboard" element={<UserDashboard />} />
                     <Route path="courses" element={<CourseExplore />} />
+                    <Route path="welcome" element={<WelcomePage />} />
                     <Route path="testing" element={<TestingPage />} />
                     <Route
                         path="admin-dashboard"

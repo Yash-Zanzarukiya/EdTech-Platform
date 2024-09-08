@@ -16,6 +16,7 @@ import CourseExam from './InstructorPages/CourseExam';
 import CourseLearning from './CourseLearning';
 import CourseExplore from './CourseExplore';
 import PublicVideos from './InstructorPages/PublicVideos';
+import WelcomePage from './WelcomePage';
 
 export {
     TestingPage,
@@ -36,4 +37,5 @@ export {
     CourseLearning,
     CourseExplore,
     PublicVideos,
+    WelcomePage,
 };

@@ -24,14 +24,13 @@ function ProfileDropdown() {
                     size="icon"
                     className="rounded-full"
                 >
-                    {userData.avatar ? (
-                        <img
-                            src={userData.avatar}
-                            className="h-7 w-7 rounded-full"
-                        />
-                    ) : (
-                        <CircleUser className="h-5 w-5" />
-                    )}
+                    <img
+                        src={
+                            userData.avatar ??
+                            'https://ui.shadcn.com/avatars/04.png'
+                        }
+                        className="h-7 w-7 rounded-full"
+                    />
                     <span className="sr-only">Toggle user menu</span>
                 </Button>
             </DropdownMenuTrigger>

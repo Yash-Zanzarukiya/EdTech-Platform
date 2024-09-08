@@ -11,6 +11,10 @@ const TranscriptSchema = new Schema(
             type: String,
             required: true,
         },
+        summary: {
+            type: String,
+            default: '',
+        },
     },
     { timestamps: true }
 );

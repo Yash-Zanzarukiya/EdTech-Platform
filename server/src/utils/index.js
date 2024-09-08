@@ -10,6 +10,9 @@ import { validateIds } from './validateIds.js';
 import { asyncHandler } from './asyncHandler.js';
 import cloudinary from './cloudinary.js';
 import checkOneField from './checkOneField.js';
+import fetchVideoTranscript from './fetchTranscript.js';
+import fetchYouTubeVideos from './fetchYouTubeVideos.js';
+
 export {
     isEmail,
     isPassword,
@@ -24,4 +27,6 @@ export {
     asyncHandler,
     cloudinary,
     checkOneField,
+    fetchVideoTranscript,
+    fetchYouTubeVideos,
 };

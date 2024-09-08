@@ -5,6 +5,7 @@ import { verifyJWT, upload } from '../../middlewares/index.js';
 const router = Router();
 
 router.route('/').get(verifyJWT, videoController.getAllVideos);
+
 router.route('/add/publish').post(
     verifyJWT,
     upload.fields([
@@ -19,6 +20,8 @@ router.route('/add/publish').post(
     ]),
     videoController.publishAVideo
 );
+
+router.route('/add/yt').post(verifyJWT, videoController.saveYouTubeVideos);
 
 router
     .route('/:videoId')

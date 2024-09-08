@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 import { TOKEN_EXPIRY, TOKEN_SECRET } from '../config/serverConfig.js';
 import jwt from 'jsonwebtoken';
+import { PROFILE_STATUS } from '../constants.js';
 
 const userSchema = new Schema(
     {
@@ -42,6 +43,11 @@ const userSchema = new Schema(
         role: {
             type: String,
             default: 'user',
+        },
+        profileStatus: {
+            type: String,
+            enum: PROFILE_STATUS,
+            default: PROFILE_STATUS.PENDING,
         },
     },
     { timestamps: true }

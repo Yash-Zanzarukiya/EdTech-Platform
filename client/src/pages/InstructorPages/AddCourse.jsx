@@ -41,40 +41,40 @@ export default function AddCourse() {
                 <h2 className="text-xl text-center font-semibold">
                     Popular Categories
                 </h2>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
                     <Link
                         href="#"
-                        className="bg-muted p-4 rounded-md flex flex-col items-center justify-center gap-2 hover:bg-muted/50 transition-colors"
+                        className="bg-muted px-2 py-4 rounded-md flex flex-col items-center justify-center gap-2 hover:bg-muted/50 transition-colors"
                         prefetch={false}
                     >
-                        <CodeIcon className="w-8 h-8" />
-                        <span className="text-sm font-medium">Programming</span>
+                        <CodeIcon className="size-6" />
+                        <span className="text-xs font-medium">Programming</span>
                     </Link>
                     <Link
                         href="#"
-                        className="bg-muted p-4 rounded-md flex flex-col items-center justify-center gap-2 hover:bg-muted/50 transition-colors"
+                        className="bg-muted px-2 py-4 rounded-md flex flex-col items-center justify-center gap-2 hover:bg-muted/50 transition-colors"
                         prefetch={false}
                     >
-                        <BookOpenIcon className="w-8 h-8" />
-                        <span className="text-sm font-medium">Business</span>
+                        <BookOpenIcon className="size-6" />
+                        <span className="text-xs font-medium">Business</span>
                     </Link>
                     <Link
                         href="#"
-                        className="bg-muted p-4 rounded-md flex flex-col items-center justify-center gap-2 hover:bg-muted/50 transition-colors"
+                        className="bg-muted px-2 py-4 rounded-md flex flex-col items-center justify-center gap-2 hover:bg-muted/50 transition-colors"
                         prefetch={false}
                     >
-                        <CpuIcon className="w-8 h-8" />
-                        <span className="text-sm font-medium">
+                        <CpuIcon className="size-6" />
+                        <span className="text-xs font-medium">
                             IT & Software
                         </span>
                     </Link>
                     <Link
                         href="#"
-                        className="bg-muted p-4 rounded-md flex flex-col items-center justify-center gap-2 hover:bg-muted/50 transition-colors"
+                        className="bg-muted px-2 py-4 rounded-md flex flex-col items-center justify-center gap-2 hover:bg-muted/50 transition-colors"
                         prefetch={false}
                     >
-                        <BrushIcon className="w-8 h-8" />
-                        <span className="text-sm font-medium">Design</span>
+                        <BrushIcon className="size-6" />
+                        <span className="text-xs font-medium">Design</span>
                     </Link>
                 </div>
             </div>
