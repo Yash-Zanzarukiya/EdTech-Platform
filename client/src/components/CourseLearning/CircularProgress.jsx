@@ -3,6 +3,7 @@ import React from 'react';
 const CircularProgress = ({ value = 60, max = 100, size = 15 }) => {
     const circumference = 2 * Math.PI * size;
     const progress = ((max - value) / max) * circumference;
+    const percentage = Math.round((value / max) * 100);
 
     return (
         <div className="flex size-10 items-center justify-center mt-[1px]">
@@ -31,7 +32,7 @@ const CircularProgress = ({ value = 60, max = 100, size = 15 }) => {
             </svg>
             <div className="absolute flex items-center justify-center">
                 <span className="text-[10px] font-semibold tracking-tighter">
-                    {value}%
+                    {percentage}%
                 </span>
             </div>
         </div>

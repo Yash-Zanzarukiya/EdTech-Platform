@@ -456,7 +456,7 @@ const getLearnerCourse = asyncHandler(async (req, res) => {
                 ],
             },
         },
-        // Fetch Sections which are published and has at-least one video and Videos
+        // Fetch Sections which are published and has at-least one video and Videos with progress
         {
             $lookup: {
                 from: 'coursesections',
@@ -529,6 +529,43 @@ const getLearnerCourse = asyncHandler(async (req, res) => {
                                                                 ],
                                                             },
                                                         },
+                                                        {
+                                                            $lookup: {
+                                                                from: 'progresses',
+                                                                localField:
+                                                                    '_id',
+                                                                foreignField:
+                                                                    'video',
+                                                                as: 'progress',
+                                                                pipeline: [
+                                                                    {
+                                                                        $match: {
+                                                                            user: req
+                                                                                .user
+                                                                                ?._id,
+                                                                        },
+                                                                    },
+                                                                ],
+                                                            },
+                                                        },
+                                                        {
+                                                            $addFields: {
+                                                                progress: {
+                                                                    $cond: {
+                                                                        if: {
+                                                                            $eq: [
+                                                                                {
+                                                                                    $size: '$progress',
+                                                                                },
+                                                                                0,
+                                                                            ],
+                                                                        },
+                                                                        then: 0,
+                                                                        else: 100,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
                                                     ],
                                                 },
                                             },
@@ -566,6 +603,25 @@ const getLearnerCourse = asyncHandler(async (req, res) => {
                                         },
                                     },
                                 },
+                                // count completed videos
+                                {
+                                    $addFields: {
+                                        completedVideos: {
+                                            $size: {
+                                                $filter: {
+                                                    input: '$videos',
+                                                    as: 'video',
+                                                    cond: {
+                                                        $eq: [
+                                                            '$$video.progress',
+                                                            100,
+                                                        ],
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
                             ],
                         },
                     },
@@ -584,6 +640,26 @@ const getLearnerCourse = asyncHandler(async (req, res) => {
                         },
                     },
                 ],
+            },
+        },
+        // add total videos and completed videos of course
+        {
+            $addFields: {
+                // sum of section -> videos[]
+                totalVideos: {
+                    $sum: {
+                        $map: {
+                            input: '$sections',
+                            as: 'section',
+                            in: {
+                                $size: '$$section.videos',
+                            },
+                        },
+                    },
+                },
+                completedVideos: {
+                    $sum: '$sections.completedVideos',
+                },
             },
         },
         // Fetch Owner Details

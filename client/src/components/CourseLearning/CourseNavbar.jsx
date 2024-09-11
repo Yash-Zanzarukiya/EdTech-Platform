@@ -25,7 +25,10 @@ function CourseNavbar({ courseData, activeVideo }) {
                 </span>
             </div>
             <div className="ml-auto flex items-center gap-2">
-                <CourseProgress total={100} completed={64} />
+                <CourseProgress
+                    total={courseData.totalVideos}
+                    completed={courseData.completedVideos}
+                />
                 <ModeToggle />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>

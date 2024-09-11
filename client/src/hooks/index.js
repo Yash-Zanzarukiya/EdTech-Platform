@@ -9,6 +9,7 @@ import useCourseDataInstructor from './useCourseDataInstructor';
 import useLearnerCourse from './useCourse';
 import useAllCourses from './useAllCourses';
 import useAllVideos from './useAllVideos';
+import useAllPublicVideos from './useAllPublicVideos';
 
 export {
     useCustomForm,
@@ -21,5 +22,6 @@ export {
     useCourseDataInstructor,
     useLearnerCourse,
     useAllCourses,
-    useAllVideos
+    useAllVideos,
+    useAllPublicVideos,
 };

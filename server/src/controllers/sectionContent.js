@@ -22,11 +22,13 @@ const toggleVideoToSectionContent = async (
         });
     }
 
-    if (!section)
-        throw new ApiError(
-            StatusCodes.INTERNAL_SERVER_ERROR,
-            'Something went wrong while toggling video'
-        );
+    if (!section) {
+        return false;
+        // throw new ApiError(
+        //     StatusCodes.INTERNAL_SERVER_ERROR,
+        //     'Something went wrong while toggling video'
+        // );
+    }
 
     return true;
 };

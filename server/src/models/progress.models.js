@@ -7,6 +7,11 @@ const progressSchema = new Schema(
             ref: 'User',
             required: true,
         },
+        course: {
+            type: Schema.Types.ObjectId,
+            ref: 'Course',
+            required: true,
+        },
         video: {
             type: Schema.Types.ObjectId,
             ref: 'Video',

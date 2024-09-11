@@ -3,9 +3,11 @@ const formateDuration = (duration) => {
     const minutes = Math.floor((duration % 3600) / 60);
     const seconds = Math.floor(duration % 60);
 
-    const durationString = `${hours > 0 ? `${hours} hrs ` : ''}${
-        minutes > 0 ? `${minutes} min ` : ''
-    }${hours < 1 ? `${seconds} sec` : ''}`;
+    const durationString = `${hours > 0 ? `${hours} h ` : ''}${
+        minutes > 0
+            ? (hours > 1 && minutes < 10 ? `0` : ``) + `${minutes} m `
+            : ''
+    }${hours < 1 ? (seconds < 10 ? `0` : ``) + `${seconds} s` : ''}`;
 
     return durationString;
 };

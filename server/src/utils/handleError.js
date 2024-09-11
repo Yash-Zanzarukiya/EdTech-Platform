@@ -4,7 +4,7 @@ import { ApiResponse } from './ApiResponse.js';
 import { AUTH_ERRORS } from '../constants.js';
 
 function handleError(error, res) {
-    console.log('ERROR :: ' + error.message);
+    console.log('ERROR :: ' + error);
     if (error instanceof ApiError) {
         res.status(error.statusCode).json(
             new ApiResponse(error.statusCode, null, error.message)

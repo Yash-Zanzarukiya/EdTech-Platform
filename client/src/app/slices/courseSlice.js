@@ -272,6 +272,24 @@ export const updateLecture = createAsyncThunk(
     }
 );
 
+export const updateProgress = createAsyncThunk(
+    'course/updateProgress',
+    async (data) => {
+        const { courseId, videoId } = data;
+        try {
+            const response = await axiosConfig.patch(
+                `/progress/toggle/${courseId}/${videoId}`,
+                data
+            );
+            toastSuccessMessage('Progress Saved', response);
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Failed to save progress', error);
+            return null;
+        }
+    }
+);
+
 export const deleteLecture = createAsyncThunk(
     'course/deleteLecture',
     async (videoId) => {
@@ -511,6 +529,41 @@ const courseSlice = createSlice({
         });
         builder.addCase(updateLecture.rejected, (state) => {
             state.loading = false;
+            state.status = false;
+        });
+        // updateProgress
+        builder.addCase(updateProgress.pending, () => {});
+        builder.addCase(updateProgress.fulfilled, (state, action) => {
+            state.status = true;
+            const res = action.payload;
+            if (!res) return;
+
+            const videoId = res.videoId;
+            const progress = res.progress;
+
+            state.courseData.sections = state.courseData.sections.map(
+                (section) => {
+                    section.videos = section.videos.map((video) => {
+                        if (video._id === videoId) {
+                            video.progress = progress;
+
+                            section.completedVideos =
+                                progress === 100
+                                    ? section.completedVideos + 1
+                                    : section.completedVideos - 1;
+                        }
+                        return video;
+                    });
+                    return section;
+                }
+            );
+
+            state.courseData.completedVideos =
+                progress === 100
+                    ? state.courseData.completedVideos + 1
+                    : state.courseData.completedVideos - 1;
+        });
+        builder.addCase(updateProgress.rejected, (state) => {
             state.status = false;
         });
         // deleteLecture

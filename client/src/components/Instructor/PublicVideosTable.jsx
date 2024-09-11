@@ -7,7 +7,7 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, PlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -65,7 +65,7 @@ export default function PublicVideosTable({ data, columns }) {
                 />
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto">
+                        <Button variant="outline" className="ml-auto mr-3">
                             Columns <ChevronDown className="ml-2 h-4 w-4" />
                         </Button>
                     </DropdownMenuTrigger>
@@ -89,8 +89,14 @@ export default function PublicVideosTable({ data, columns }) {
                             })}
                     </DropdownMenuContent>
                 </DropdownMenu>
+                <Button>
+                    <span className="sm:hidden">
+                        <PlusIcon />
+                    </span>
+                    <span className="hidden sm:block">Upload Video</span>
+                </Button>
             </div>
-            <div className="rounded-md border px-4 py-1">
+            <div className="rounded-md border px-1 py">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (

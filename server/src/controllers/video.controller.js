@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { Transcript, Video } from '../models/index.js';
+import { Progress, Transcript, Video } from '../models/index.js';
 import {
     ApiError,
     handleResponse,
@@ -16,21 +16,19 @@ import { getTopics } from './topic.controller.js';
 import { topicList, sectionContent } from './index.js';
 import mongoose from 'mongoose';
 import { getStreamUrl } from '../utils/fetchYouTubeVideos.js';
+import { VIDEO_STATUS } from '../constants.js';
 
 const getAllVideos = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, query = '', owner, status } = req.query;
-
-    const options = {
-        page: parseInt(page, 10),
-        limit: parseInt(limit, 10),
-    };
 
     const matchStage = {};
     const pipeline = [];
 
     if (owner) {
-        if (owner == 'me') matchStage.owner = req.user?._id;
-        else {
+        if (owner == 'me') {
+            matchStage.owner = req.user?._id;
+            match.$or = [{ status: VIDEO_STATUS.PUBLIC }, { section: null }];
+        } else {
             validateIds(owner);
             matchStage.owner = owner;
         }
@@ -91,6 +89,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
             duration: 1,
             thumbnail: 1,
             status: 1,
+            section: 1,
             owner: 1,
             createdAt: 1,
         },
@@ -104,42 +103,44 @@ const getAllVideos = asyncHandler(async (req, res) => {
         allVideos,
         'Videos fetched successfully'
     );
+});
 
-    // await Video.aggregatePaginate(allVideos, options, function (err, results) {
-    //     if (!err) {
-    //         const {
-    //             docs,
-    //             totalDocs,
-    //             limit,
-    //             page,
-    //             totalPages,
-    //             pagingCounter,
-    //             hasPrevPage,
-    //             hasNextPage,
-    //             prevPage,
-    //             nextPage,
-    //         } = results;
+const getAllPublicVideos = asyncHandler(async (req, res) => {
+    const pipeline = [];
 
-    //         handleResponse(
-    //             res,
-    //             StatusCodes.OK,
-    //             {
-    //                 videos: docs,
-    //                 totalDocs,
-    //                 limit,
-    //                 page,
-    //                 totalPages,
-    //                 pagingCounter,
-    //                 hasPrevPage,
-    //                 hasNextPage,
-    //                 prevPage,
-    //                 nextPage,
-    //             },
-    //             'Videos fetched successfully'
-    //         );
-    //     } else
-    //         throw new ApiError(StatusCodes.INTERNAL_SERVER_ERROR, err.message);
-    // });
+    pipeline.push({
+        $match: {
+            owner: req.user?._id,
+            $or: [{ status: VIDEO_STATUS.PUBLIC }, { section: null }],
+        },
+    });
+
+    pipeline.push({
+        $sort: {
+            createdAt: -1,
+        },
+    });
+
+    pipeline.push({
+        $project: {
+            id: { $toString: '$_id' },
+            title: 1,
+            duration: 1,
+            thumbnail: 1,
+            status: 1,
+            section: 1,
+            createdAt: 1,
+        },
+    });
+
+    const allVideos = await Video.aggregate(pipeline);
+
+    handleResponse(
+        res,
+        StatusCodes.OK,
+        allVideos,
+        'Videos fetched successfully'
+    );
 });
 
 const getVideoById = asyncHandler(async (req, res) => {
@@ -352,7 +353,6 @@ const getYTStreamURL = asyncHandler(async (req, res) => {
     );
 });
 
-//TODO: delete transcript and progresses
 const deleteOneVideo = async (videoId, conditions = {}) => {
     validateIds(videoId);
 
@@ -375,8 +375,7 @@ const deleteOneVideo = async (videoId, conditions = {}) => {
     await sectionContent.toggleVideoToSectionContent(null, videoId, false);
     await topicList.saveVideoTopics(videoId, []);
     await Transcript.findByIdAndDelete(videoId);
-
-    console.log({ deletedVideo });
+    await Progress.deleteMany({ video: videoId });
 
     return deletedVideo;
 };
@@ -393,11 +392,13 @@ const deleteManyVideos = async (videoIds = [], conditions = {}) => {
         for (let i = 0; i < deletedVideos.length; i++) {
             const { videoFile, thumbnail, _id } = deletedVideos[i];
 
-            await Transcript.findByIdAndDelete(_id);
-            await topicList.saveVideoTopics(_id, []);
             await cloudinary.deleteImageOnCloudinary(thumbnail);
             await cloudinary.deleteVideoOnCloudinary(videoFile);
+
             await sectionContent.toggleVideoToSectionContent(null, _id, false);
+            await topicList.saveVideoTopics(_id, []);
+            await Transcript.findByIdAndDelete(_id);
+            await Progress.deleteMany({ video: _id });
         }
     }
 
@@ -406,6 +407,7 @@ const deleteManyVideos = async (videoIds = [], conditions = {}) => {
 
 export default {
     getAllVideos,
+    getAllPublicVideos,
     publishAVideo,
     getVideoById,
     updateVideo,

@@ -15,12 +15,11 @@ import { updateCourse } from '@/app/slices/courseSlice';
 
 export default function CourseExam() {
     const { courseData } = useCourseDataInstructor();
-
     const defaultStatus = courseData?.hasExam || false;
 
-    const [status, setStatus] = useState(defaultStatus);
-    const [isSubmitting, setIsSubmitting] = useState(defaultStatus);
     const dispatch = useDispatch();
+    const [status, setStatus] = useState(defaultStatus);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (courseData) setStatus(courseData.hasExam);

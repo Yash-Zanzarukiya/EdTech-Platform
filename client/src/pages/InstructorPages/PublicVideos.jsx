@@ -9,11 +9,31 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import { PublicVideosTable } from '@/components';
-import { useAllVideos, useCourseDataInstructor } from '@/hooks';
+import { useAllPublicVideos, useCourseDataInstructor } from '@/hooks';
 import { Badge } from '@/components/ui/badge';
 import { formate } from '@/utils';
 import { Separator } from '@/components/ui/separator';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import { useDispatch } from 'react-redux';
+import { deletePublicVideo, updatePublicVideo } from '@/app/slices/videoSlice';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const columns = [
     {
@@ -58,13 +78,41 @@ export const columns = [
     {
         accessorKey: 'status',
         header: 'Status',
-        cell: ({ row }) => (
-            <div>
-                <Badge variant="outline" className="capitalize">
-                    {row.getValue('status')}
-                </Badge>
-            </div>
-        ),
+        cell: ({ row }) => {
+            const video = row.original;
+            const dispatch = useDispatch();
+
+            const onSubmit = (data) =>
+                dispatch(updatePublicVideo({ ...data, videoId: video._id }));
+
+            return (
+                <Select
+                    onValueChange={(value) => {
+                        onSubmit({ status: value });
+                    }}
+                    defaultValue={video.status}
+                >
+                    <SelectTrigger className="w-fit h-8 px-2 text-xs mr-2">
+                        <SelectValue
+                            className="h-2"
+                            placeholder="Select Publish Status"
+                        />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="public">Public</SelectItem>
+                        {video.section && (
+                            <SelectItem value="private">Private</SelectItem>
+                        )}
+                        <SelectItem value="unpublished">UnPublished</SelectItem>
+                    </SelectContent>
+                </Select>
+            );
+            // (
+            //     <Badge variant="outline" className="capitalize">
+            //         {row.getValue('status')}
+            //     </Badge>
+            // );
+        },
     },
     {
         accessorKey: 'createdAt',
@@ -91,25 +139,56 @@ export const columns = [
         id: 'actions',
         enableHiding: false,
         cell: ({ row }) => {
+            const dispatch = useDispatch();
             const video = row.original;
+            const handleDelete = () => dispatch(deletePublicVideo(video._id));
+
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>View</DropdownMenuItem>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">
-                            Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <Dialog>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>View</DropdownMenuItem>
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DialogTrigger asChild>
+                                <DropdownMenuItem className="text-destructive">
+                                    Delete
+                                </DropdownMenuItem>
+                            </DialogTrigger>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                            <DialogTitle>Are you absolutely sure?</DialogTitle>
+                            <DialogDescription>
+                                This action cannot be undone. It also deletes
+                                the video contents in this section. Are you sure
+                                you want to permanently delete this video from
+                                our servers?
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button variant="secondary">Cancel</Button>
+                            </DialogClose>
+                            <DialogClose asChild>
+                                <Button
+                                    onClick={handleDelete}
+                                    variant="destructive"
+                                >
+                                    Delete Video
+                                </Button>
+                            </DialogClose>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             );
         },
     },
@@ -118,12 +197,9 @@ export const columns = [
 export default function PublicVideos() {
     useCourseDataInstructor('Public Videos');
 
-    const { videoData, loading } = useAllVideos({
-        owner: 'me',
-        status: 'public',
-    });
+    const { videoData, loading } = useAllPublicVideos();
 
-    if (loading || !videoData) return <div>Loading...</div>;
+    if (loading || !videoData) return <Skeleton />;
 
     return (
         <div className="w-full p-6 pt-0 ">
