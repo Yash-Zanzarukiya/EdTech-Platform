@@ -21,7 +21,7 @@ import CourseCard from './CourseListings/CourseCard';
 import PublicVideosTable from './Instructor/PublicVideosTable';
 import SetGoal from './User/SetGoal';
 import GetStarted from './Misc/GetStarted';
-
+import YTPlaylistCourse from './Instructor/YTPlaylistCourse';
 export {
     GetStarted,
     NavBar,
@@ -46,4 +46,5 @@ export {
     CourseCard,
     PublicVideosTable,
     SetGoal,
+    YTPlaylistCourse,
 };

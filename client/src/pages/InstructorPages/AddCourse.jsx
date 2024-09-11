@@ -1,5 +1,7 @@
+import { YTPlaylistCourse } from '@/components';
 import { Button } from '@/components/ui/button';
 import {
+    Book,
     BookOpenIcon,
     BrushIcon,
     CodeIcon,
@@ -7,12 +9,16 @@ import {
     PlusIcon,
 } from 'lucide-react';
 import { useEffect } from 'react';
+import { AiFillYoutube } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 
 export default function AddCourse() {
     const navigate = useNavigate();
 
     const { setRouteName } = useOutletContext();
+
+    const username = useSelector((state) => state.auth.userData.username);
 
     useEffect(() => {
         setRouteName('Add Course');
@@ -30,11 +36,12 @@ export default function AddCourse() {
                         details below to get started.
                     </p>
                 </div>
-                <div className="mt-6">
-                    <Button to={'new'} onClick={() => navigate('new')}>
-                        <PlusIcon className="mr-2 h-4 w-4" />
+                <div className="mt-6 flex gap-3 justify-center">
+                    <Button onClick={() => navigate('new')}>
+                        <Book className="mr-1 h-4 w-4" />
                         Add Course
                     </Button>
+                    {username === 'yashpz' && <YTPlaylistCourse />}
                 </div>
             </div>
             <div className="grid gap-2 mt-8">

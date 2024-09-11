@@ -10,6 +10,46 @@ const youtube = google.youtube({
     auth: apiKey,
 });
 
+export async function getPlaylistWithContent(playlistId) {
+    // Fetch playlist details (name, description, thumbnail)
+    const playlistResponse = await youtube.playlists.list({
+        part: 'snippet',
+        id: playlistId,
+    });
+
+    const playlist = playlistResponse.data.items[0].snippet;
+    const playlistDetails = {
+        title: playlist.title,
+        description: playlist.description,
+        thumbnail: playlist.thumbnails?.default?.url,
+    };
+
+    let videoIds = [];
+    let nextPageToken = null;
+
+    do {
+        const response = await youtube.playlistItems.list({
+            part: 'contentDetails',
+            playlistId: playlistId,
+            maxResults: 50,
+            pageToken: nextPageToken,
+        });
+
+        // Extract video IDs from response
+        const items = response.data.items;
+        items.forEach((item) => {
+            videoIds.push(item.contentDetails.videoId);
+        });
+
+        // Get the next page token
+        nextPageToken = response.data.nextPageToken;
+    } while (nextPageToken);
+
+    const videos = await getVideoDetailsAndTranscripts(videoIds);
+
+    return { playlistDetails, videos };
+}
+
 async function getVideoDetailsAndTranscripts(videoUrls = []) {
     const videoIds = videoUrls
         .map((url) => extractVideoId(url))
@@ -82,6 +122,7 @@ async function getTranscript(videoId) {
 }
 
 function extractVideoId(url) {
+    if (url.length === 11) return url;
     const urlObj = new URL(url);
     const videoId = urlObj.searchParams.get('v');
     if (!videoId) {

@@ -18,6 +18,7 @@ const courseSchema = new Schema(
         },
         price: {
             type: Number,
+            default: 0,
         },
         hasExam: {
             type: Boolean,

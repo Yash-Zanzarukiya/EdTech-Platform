@@ -33,6 +33,20 @@ export const createCourse = createAsyncThunk(
     }
 );
 
+export const createPlaylistCourse = createAsyncThunk(
+    'course/createPlaylistCourse',
+    async (data) => {
+        try {
+            const response = await axiosConfig.post('/course/yt/add', data);
+            toastSuccessMessage('Course Created', response);
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Course Creation Failed', error);
+            return null;
+        }
+    }
+);
+
 export const getCourses = createAsyncThunk(
     'course/getCourses',
     async ({ courseId, ownerId, status, search }) => {
@@ -320,6 +334,21 @@ const courseSlice = createSlice({
             state.courseData = action.payload;
         });
         builder.addCase(createCourse.rejected, (state) => {
+            state.loading = false;
+            state.status = false;
+        });
+        //createPlaylistCourse
+        builder.addCase(createPlaylistCourse.pending, (state) => {
+            state.loading = true;
+            state.status = false;
+            state.courseData = null;
+        });
+        builder.addCase(createPlaylistCourse.fulfilled, (state, action) => {
+            state.loading = false;
+            state.status = true;
+            state.courseData = action.payload;
+        });
+        builder.addCase(createPlaylistCourse.rejected, (state) => {
             state.loading = false;
             state.status = false;
         });

@@ -11,6 +11,8 @@ router
 
 router.route('/learner/get').get(verifyJWT, courseController.getLearnerCourse);
 
+router.route('/yt/add').post(verifyJWT, courseController.addYTPlaylist);
+
 router
     .route('/instructor/get')
     .get(verifyJWT, courseController.getInstructorCourses);
