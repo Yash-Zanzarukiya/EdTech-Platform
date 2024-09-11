@@ -654,7 +654,7 @@ const deleteCourse = asyncHandler(async (req, res) => {
 
 const updateCourse = asyncHandler(async (req, res) => {
     const { courseId } = req.params;
-    const { name, description, price, status, topics } = req.body;
+    const { name, description, price, status, topics, hasExam } = req.body;
 
     validateIds(courseId);
 
@@ -689,6 +689,7 @@ const updateCourse = asyncHandler(async (req, res) => {
         course.description = description ?? course.description;
         course.price = price ? parseInt(price) : course.price;
         course.status = status ?? course.status;
+        course.hasExam = hasExam ?? course.hasExam;
 
         updatedCourse = await course.save();
 

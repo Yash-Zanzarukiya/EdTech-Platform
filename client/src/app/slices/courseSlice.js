@@ -95,7 +95,8 @@ export const updateCourse = createAsyncThunk(
     async ({ courseId, data }) => {
         try {
             const formData =
-                typeof data.topics === 'string'
+                typeof data.topics === 'string' ||
+                typeof data.hasExam === 'boolean'
                     ? data
                     : new FormData(document.getElementById('course-data-form'));
 
@@ -266,6 +267,20 @@ export const updateLecture = createAsyncThunk(
             return response.data.data;
         } catch (error) {
             toastErrorMessage('Lecture Updating Failed', error);
+            return null;
+        }
+    }
+);
+
+export const deleteLecture = createAsyncThunk(
+    'course/deleteLecture',
+    async (videoId) => {
+        try {
+            const response = await axiosConfig.delete(`/video/${videoId}`);
+            toastSuccessMessage('Video Deleted', response);
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Video Deletion Failed', error);
             return null;
         }
     }
@@ -495,6 +510,32 @@ const courseSlice = createSlice({
             );
         });
         builder.addCase(updateLecture.rejected, (state) => {
+            state.loading = false;
+            state.status = false;
+        });
+        // deleteLecture
+        builder.addCase(deleteLecture.pending, (state, _) => {
+            state.loading = true;
+            state.status = false;
+        });
+        builder.addCase(deleteLecture.fulfilled, (state, action) => {
+            state.loading = false;
+            state.status = true;
+            const deletedVideo = action.payload;
+            console.log({ deletedVideo });
+            if (!deletedVideo) return;
+            state.courseData.sections = state.courseData.sections.map(
+                (section) => {
+                    if (section._id === deletedVideo?.section) {
+                        section.videos = section.videos.filter(
+                            (video) => video._id !== deletedVideo._id
+                        );
+                    }
+                    return section;
+                }
+            );
+        });
+        builder.addCase(deleteLecture.rejected, (state) => {
             state.loading = false;
             state.status = false;
         });

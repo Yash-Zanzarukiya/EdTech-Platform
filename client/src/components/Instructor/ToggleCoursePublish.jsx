@@ -28,11 +28,13 @@ function ToggleCoursePublish({ onSubmit, isSubmitting, courseData }) {
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
             <Card x-chunk="dashboard-04-chunk-1" className="p-8">
                 <CardHeader>
-                    <CardTitle className="text-xl md:text-2xl lg:text-3xl font-bold">
-                        Update Course Publish Status
-                        <h1 className="mt-4 text-lg font-bold tracking-tight text-foreground sm:text-xl md:text-2xl">
-                            {courseData?.name}
-                        </h1>
+                    <CardTitle>
+                        <span className="text-xl md:text-2xl lg:text-3xl tracking-tighter font-bold">
+                            Course Publish Status
+                        </span>
+                        <h3 className="mt-4 text-sm text-foreground">
+                            Update the publish status of the course
+                        </h3>
                     </CardTitle>
                 </CardHeader>
                 <CardContent>

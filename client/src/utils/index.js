@@ -3,6 +3,7 @@ import withRoleProtection from './withRoleProtection';
 import toastErrorMessage from './toastErrorMessage';
 import toastSuccessMessage from './toastSuccessMessage';
 import formate from './formate';
+import getStreamUrl from './getStreamURL';
 
 export {
     axiosConfig,
@@ -10,4 +11,5 @@ export {
     toastErrorMessage,
     toastSuccessMessage,
     formate,
+    getStreamUrl,
 };

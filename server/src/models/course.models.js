@@ -19,6 +19,10 @@ const courseSchema = new Schema(
         price: {
             type: Number,
         },
+        hasExam: {
+            type: Boolean,
+            default: false,
+        },
         owner: {
             type: Schema.Types.ObjectId,
             ref: 'User',

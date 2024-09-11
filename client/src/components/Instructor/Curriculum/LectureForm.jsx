@@ -11,6 +11,16 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import {
     Select,
     SelectContent,
     SelectItem,
@@ -20,7 +30,11 @@ import {
 import { useDispatch } from 'react-redux';
 import { useAllTopics, useCustomForm } from '@/hooks';
 import { lectureSchema } from '@/schema';
-import { updateLecture, uploadLecture } from '@/app/slices/courseSlice';
+import {
+    deleteLecture,
+    updateLecture,
+    uploadLecture,
+} from '@/app/slices/courseSlice';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import MultiSelect from '@/components/ui/MultiSelect';
@@ -75,6 +89,13 @@ export default function LectureForm({
             });
         }
     }
+
+    const handleDelete = () => {
+        setIsSubmitting(true);
+        dispatch(deleteLecture(lecture._id)).then(() => {
+            setIsSubmitting(false);
+        });
+    };
 
     return (
         <Card className="bg-transparent">
@@ -226,7 +247,7 @@ export default function LectureForm({
                         </div>
 
                         {/* Submit */}
-                        <div className="mt-1">
+                        <div className="mt-1 flex col-span-2">
                             <Button
                                 type="submit"
                                 disabled={isSubmitting}
@@ -251,6 +272,49 @@ export default function LectureForm({
                                 >
                                     Cancel
                                 </Button>
+                            )}
+                            {lecture && (
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button
+                                            disabled={isSubmitting}
+                                            variant="destructive"
+                                            className="ml-auto"
+                                        >
+                                            Delete Lecture
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="sm:max-w-[425px]">
+                                        <DialogHeader>
+                                            <DialogTitle>
+                                                Are you absolutely sure?
+                                            </DialogTitle>
+                                            <DialogDescription>
+                                                This action cannot be undone. It
+                                                also deletes the video contents
+                                                in this section. Are you sure
+                                                you want to permanently delete
+                                                this video from our servers?
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <DialogFooter>
+                                            <DialogClose asChild>
+                                                <Button variant="secondary">
+                                                    Cancel
+                                                </Button>
+                                            </DialogClose>
+                                            <DialogClose asChild>
+                                                <Button
+                                                    onClick={handleDelete}
+                                                    disabled={isSubmitting}
+                                                    variant="destructive"
+                                                >
+                                                    Delete Lecture
+                                                </Button>
+                                            </DialogClose>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
                             )}
                         </div>
                     </form>

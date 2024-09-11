@@ -15,6 +15,7 @@ const { uploadPhotoOnCloudinary, uploadVideoOnCloudinary } = cloudinary;
 import { getTopics } from './topic.controller.js';
 import { topicList, sectionContent } from './index.js';
 import mongoose from 'mongoose';
+import { getStreamUrl } from '../utils/fetchYouTubeVideos.js';
 
 const getAllVideos = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, query = '', owner, status } = req.query;
@@ -338,11 +339,24 @@ const saveYouTubeVideos = asyncHandler(async (req, res) => {
     );
 });
 
+const getYTStreamURL = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+
+    const streamURL = await getStreamUrl(videoId);
+
+    handleResponse(
+        res,
+        StatusCodes.OK,
+        streamURL,
+        'Stream URL sent successfully'
+    );
+});
+
 //TODO: delete transcript and progresses
 const deleteOneVideo = async (videoId, conditions = {}) => {
     validateIds(videoId);
 
-    const deletedVideo = await Video.deleteOne({
+    const deletedVideo = await Video.findOneAndDelete({
         _id: videoId,
         ...conditions,
     });
@@ -361,6 +375,8 @@ const deleteOneVideo = async (videoId, conditions = {}) => {
     await sectionContent.toggleVideoToSectionContent(null, videoId, false);
     await topicList.saveVideoTopics(videoId, []);
     await Transcript.findByIdAndDelete(videoId);
+
+    console.log({ deletedVideo });
 
     return deletedVideo;
 };
@@ -397,4 +413,5 @@ export default {
     deleteOneVideo,
     deleteManyVideos,
     saveYouTubeVideos,
+    getYTStreamURL,
 };

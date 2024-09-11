@@ -1,6 +1,7 @@
 import { google } from 'googleapis';
 import { YoutubeTranscript } from 'youtube-transcript';
 import { YOUTUBE_API_KEY } from '../config/serverConfig.js';
+import ytdl from 'ytdl-core';
 
 const apiKey = YOUTUBE_API_KEY;
 
@@ -24,7 +25,7 @@ async function getVideoDetailsAndTranscripts(videoUrls = []) {
     const transcriptsResults = await Promise.all(transcriptsPromises);
 
     // Combine the results into an array of objects
-    const results = videoUrls.map((url, index) => {
+    const results = videoIds.map((videoId, index) => {
         const details = videoDetailsResults[index];
         const transcript = transcriptsResults[index];
 
@@ -33,7 +34,7 @@ async function getVideoDetailsAndTranscripts(videoUrls = []) {
         const { snippet, contentDetails } = details;
 
         return {
-            videoFile: url,
+            videoFile: videoId,
             title: snippet.title,
             tags: snippet.tags,
             description: snippet.description.split('\n').join(' '),
@@ -116,6 +117,27 @@ function iso8601ToSeconds(duration) {
         seconds; // seconds
 
     return totalSeconds;
+}
+
+export async function getStreamUrl(videoId) {
+    try {
+        const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
+
+        const info = await ytdl.getInfo(youtubeUrl);
+
+        const format = ytdl.chooseFormat(info.formats, {
+            quality: 'highestaudio',
+        });
+
+        if (format && format.url) {
+            return format.url;
+        } else {
+            throw new Error('No suitable format found');
+        }
+    } catch (error) {
+        console.error('Error fetching stream URL:', error.message);
+        throw error;
+    }
 }
 
 export default getVideoDetailsAndTranscripts;

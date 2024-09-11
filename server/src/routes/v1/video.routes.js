@@ -23,6 +23,8 @@ router.route('/add/publish').post(
 
 router.route('/add/yt').post(verifyJWT, videoController.saveYouTubeVideos);
 
+router.route('/yt/stream/:videoId').get(videoController.getYTStreamURL);
+
 router
     .route('/:videoId')
     .get(videoController.getVideoById)

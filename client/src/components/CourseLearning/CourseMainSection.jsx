@@ -4,9 +4,10 @@ import { useOutletContext } from 'react-router-dom';
 
 function CourseMainSection() {
     const { courseData, activeSection, activeVideo } = useOutletContext();
+
     return (
         <>
-            <VideoComponent videoURL={activeVideo.videoFile} />
+            <VideoComponent videoURL={activeVideo?.videoFile} />
             <CourseTabsSection
                 courseData={courseData}
                 activeSection={activeSection}
