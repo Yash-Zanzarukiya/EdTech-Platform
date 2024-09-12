@@ -718,13 +718,13 @@ const deleteCourse = asyncHandler(async (req, res) => {
     await cloudinary.deleteImageOnCloudinary(deletedCourse.thumbnail);
 
     const sections = await CourseSections.find({ course: deletedCourse._id });
-    await CourseSections.deleteMany({ course: deletedCourse._id });
 
-    console.log({ sections });
     if (sections.length) {
         const sectionIds = sections.map((s) => s.section);
         await sectionController.deleteManySections(sectionIds);
     }
+
+    console.log(`Course ${deleteCourse.name} deleted successfully`);
 
     handleResponse(
         res,
@@ -822,7 +822,8 @@ const updateCourseStatus = asyncHandler(async (req, res) => {
 });
 
 const addYTPlaylist = asyncHandler(async (req, res) => {
-    const { playlistId } = req.body;
+    const { playlistId, courseTopics = '', videoTopics = '' } = req.body;
+    console.log({ playlistId, courseTopics, videoTopics });
 
     validateFields(req, { body: ['playlistId'] });
 
@@ -843,6 +844,11 @@ const addYTPlaylist = asyncHandler(async (req, res) => {
             StatusCodes.INTERNAL_SERVER_ERROR,
             'Something went wrong while creating Course'
         );
+
+    const { topicIds: courseTopicIds } = await getTopics(courseTopics);
+    await topicList.saveCourseTopics(course._id, courseTopicIds);
+
+    const { topicIds: videoTopicIds } = await getTopics(videoTopics);
 
     let sectionId = '';
     let createdVideos = [];
@@ -894,6 +900,8 @@ const addYTPlaylist = asyncHandler(async (req, res) => {
         createdVideos.push(video);
 
         await Transcript.create({ video: video._id, transcript });
+
+        await topicList.saveVideoTopics(video._id, videoTopicIds);
 
         if (sectionId) {
             await sectionContent.toggleVideoToSectionContent(

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import {
     CourseSections,
+    Progress,
     Section,
     SectionContent,
     Video,
@@ -86,13 +87,14 @@ const updateSection = asyncHandler(async (req, res) => {
 
 const deleteSection = asyncHandler(async (req, res) => {
     const { sectionId } = req.params;
+    validateIds(sectionId);
 
-    const deletedSection = await deleteOneSection(sectionId);
+    const deletedSection = await deleteManySections([sectionId]);
 
     handleResponse(
         res,
         StatusCodes.OK,
-        deletedSection,
+        deletedSection.length ? deletedSection[0] : {},
         'Section deleted successfully'
     );
 });
@@ -107,19 +109,23 @@ const deleteOneSection = async (sectionId) => {
 
     await CourseSections.findOneAndDelete({ section: deletedSection._id });
 
-    // delete all videos in the section
-    const videos = await SectionContent.deleteMany({
+    const videos = await SectionContent.find({
         section: deletedSection._id,
         video: { $exists: true },
     });
 
-    if (videos.length) {
-        for (let j = 0; j < videos.length; j++) {
-            await videoController.deleteOneVideo(videos[j].video, {
-                status: { $ne: VIDEO_STATUS.PUBLIC },
-            });
-        }
-    }
+    if (!videos.length) return deletedSection;
+
+    await SectionContent.deleteMany({
+        section: deletedSection._id,
+        video: { $exists: true },
+    });
+
+    const videoIds = videos.map((video) => video.video) || [];
+
+    await videoController.deleteManyVideos(videoIds, {
+        status: { $ne: VIDEO_STATUS.PUBLIC },
+    });
 
     return deletedSection;
 };
@@ -132,19 +138,19 @@ const deleteManySections = async (sectionIds = []) => {
         _id: { $in: sectionIds },
     });
 
+    if (!deletedSections.length) return [];
+
     await Section.deleteMany({
         _id: { $in: sectionIds },
     });
 
-    console.log({ deletedSections });
+    await CourseSections.deleteMany({ section: { $in: sectionIds } });
 
     if (deletedSections.length) {
         const sectionVideos = await SectionContent.find({
             section: { $in: sectionIds },
             video: { $exists: true },
         });
-
-        console.log({ sectionVideos });
 
         const videoIds = sectionVideos.map((video) => video.video) || [];
 
@@ -157,8 +163,6 @@ const deleteManySections = async (sectionIds = []) => {
             status: VIDEO_STATUS.PUBLIC,
         });
 
-        console.log({ publicVideos });
-
         if (publicVideos.length) {
             for (let j = 0; j < publicVideos.length; j++) {
                 await SectionContent.findOneAndDelete({
@@ -167,6 +171,12 @@ const deleteManySections = async (sectionIds = []) => {
 
                 publicVideos[j].section = null;
                 await publicVideos[j].save();
+
+                await Progress.deleteOne({ video: publicVideos[j]._id });
+
+                console.log(
+                    `Updated public video ${j + 1} out of ${publicVideos.length}`
+                );
             }
         }
     }

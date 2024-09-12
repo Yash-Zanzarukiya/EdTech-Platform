@@ -356,28 +356,9 @@ const getYTStreamURL = asyncHandler(async (req, res) => {
 const deleteOneVideo = async (videoId, conditions = {}) => {
     validateIds(videoId);
 
-    const deletedVideo = await Video.findOneAndDelete({
-        _id: videoId,
-        ...conditions,
-    });
+    const deletedVideo = await deleteManyVideos([videoId], conditions);
 
-    if (!deletedVideo) {
-        if (Object.keys(conditions).length > 0) {
-            return true;
-        } else {
-            throw new ApiError(StatusCodes.NOT_FOUND, 'Video Not Found');
-        }
-    }
-
-    await cloudinary.deleteVideoOnCloudinary(deletedVideo.videoFile);
-    await cloudinary.deleteImageOnCloudinary(deletedVideo.thumbnail);
-
-    await sectionContent.toggleVideoToSectionContent(null, videoId, false);
-    await topicList.saveVideoTopics(videoId, []);
-    await Transcript.findByIdAndDelete(videoId);
-    await Progress.deleteMany({ video: videoId });
-
-    return deletedVideo;
+    return deletedVideo.length ? deletedVideo[0] : {};
 };
 
 const deleteManyVideos = async (videoIds = [], conditions = {}) => {
@@ -405,10 +386,12 @@ const deleteManyVideos = async (videoIds = [], conditions = {}) => {
             await topicList.saveVideoTopics(_id, []);
             await Transcript.findOneAndDelete({ video: _id });
             await Progress.deleteMany({ video: _id });
+
+            console.log(
+                `deleted video ${i + 1} out of ${deletedVideos.length}`
+            );
         }
     }
-
-    console.log({ deletedVideos });
 
     return deletedVideos;
 };

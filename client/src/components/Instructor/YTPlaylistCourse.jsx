@@ -17,11 +17,17 @@ import { useRef, useState } from 'react';
 import { toastMessage } from '@/App';
 import { useDispatch } from 'react-redux';
 import { createPlaylistCourse } from '@/app/slices/courseSlice';
+import MultiSelect from '../ui/MultiSelect';
+import { useAllTopics } from '@/hooks';
 
 function YTPlaylistCourse() {
     const dispatch = useDispatch();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const { topicsNames } = useAllTopics();
+
+    const courseTopicRef = useRef();
+    const videoTopicRef = useRef();
     const idRef = useRef();
     const urlRef = useRef();
 
@@ -54,7 +60,16 @@ function YTPlaylistCourse() {
             playlistId = id;
         }
 
-        dispatch(createPlaylistCourse({ playlistId })).then(() => {
+        const courseTopics = courseTopicRef.current
+            .getSelectedValues()
+            ?.join(',');
+        const videoTopics = videoTopicRef.current
+            .getSelectedValues()
+            ?.join(',');
+
+        dispatch(
+            createPlaylistCourse({ playlistId, courseTopics, videoTopics })
+        ).then(() => {
             setIsSubmitting(false);
             idRef.current.value = '';
             urlRef.current.value = '';
@@ -69,7 +84,7 @@ function YTPlaylistCourse() {
                     YouTube
                 </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-xl">
                 <DialogHeader>
                     <DialogTitle>Add from YouTube</DialogTitle>
                     <DialogDescription>
@@ -78,7 +93,7 @@ function YTPlaylistCourse() {
                         Please add either Playlist ID or URL.
                     </DialogDescription>
                 </DialogHeader>
-                <div className="grid gap-4 py-4 ">
+                <div className="flex flex-col justify-end gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="playlistId" className="text-right">
                             ID
@@ -105,6 +120,24 @@ function YTPlaylistCourse() {
                             placeholder="https://www.youtube.com/playlist?list=34_charecters_long_playlistid"
                             className="col-span-3"
                         />
+                    </div>
+                    <div className="flex flex-col gap-2 w-full">
+                        <div className="flex ml-20 items-center justify-center gap-4 max-w-md">
+                            <Label className="text-right">Course</Label>
+                            <MultiSelect
+                                OPTIONS={topicsNames}
+                                DEFAULTS={[]}
+                                ref={courseTopicRef}
+                            />
+                        </div>
+                        <div className="flex ml-20 items-center justify-center gap-4 max-w-md">
+                            <Label className="text-right">Video</Label>
+                            <MultiSelect
+                                OPTIONS={topicsNames}
+                                DEFAULTS={[]}
+                                ref={videoTopicRef}
+                            />
+                        </div>
                     </div>
                 </div>
                 <DialogFooter>
