@@ -398,20 +398,14 @@ const courseSlice = createSlice({
             state.status = false;
         });
         // deleteCourse
-        builder.addCase(deleteCourse.pending, (state) => {
-            state.loading = true;
-            state.status = false;
-            state.courseData = null;
-        });
+        builder.addCase(deleteCourse.pending, (_) => {});
         builder.addCase(deleteCourse.fulfilled, (state, action) => {
-            state.loading = false;
             state.status = true;
             state.courseData = state.courseData.filter(
                 (course) => course._id !== action.payload._id
             );
         });
         builder.addCase(deleteCourse.rejected, (state) => {
-            state.loading = false;
             state.status = false;
         });
         // updateCourse

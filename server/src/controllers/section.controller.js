@@ -1,5 +1,10 @@
 import mongoose from 'mongoose';
-import { CourseSections, Section, SectionContent } from '../models/index.js';
+import {
+    CourseSections,
+    Section,
+    SectionContent,
+    Video,
+} from '../models/index.js';
 import {
     ApiError,
     handleResponse,
@@ -121,23 +126,48 @@ const deleteOneSection = async (sectionId) => {
 
 const deleteManySections = async (sectionIds = []) => {
     if (!sectionIds.length) return;
+    console.log({ sectionIds });
 
-    const deletedSections = await Section.deleteMany({
+    const deletedSections = await Section.find({
         _id: { $in: sectionIds },
     });
 
+    await Section.deleteMany({
+        _id: { $in: sectionIds },
+    });
+
+    console.log({ deletedSections });
+
     if (deletedSections.length) {
-        for (let i = 0; i < deletedSections.length; i++) {
-            const sectionVideos = await SectionContent.find({
-                section: { $in: sectionIds },
-                video: { $exists: true },
-            });
+        const sectionVideos = await SectionContent.find({
+            section: { $in: sectionIds },
+            video: { $exists: true },
+        });
 
-            const videoIds = sectionVideos.map((video) => video.video) || [];
+        console.log({ sectionVideos });
 
-            await videoController.deleteManyVideos(videoIds, {
-                status: { $ne: VIDEO_STATUS.PUBLIC },
-            });
+        const videoIds = sectionVideos.map((video) => video.video) || [];
+
+        await videoController.deleteManyVideos(videoIds, {
+            status: { $ne: VIDEO_STATUS.PUBLIC },
+        });
+
+        const publicVideos = await Video.find({
+            _id: { $in: videoIds },
+            status: VIDEO_STATUS.PUBLIC,
+        });
+
+        console.log({ publicVideos });
+
+        if (publicVideos.length) {
+            for (let j = 0; j < publicVideos.length; j++) {
+                await SectionContent.findOneAndDelete({
+                    video: publicVideos[j]._id,
+                });
+
+                publicVideos[j].section = null;
+                await publicVideos[j].save();
+            }
         }
     }
 

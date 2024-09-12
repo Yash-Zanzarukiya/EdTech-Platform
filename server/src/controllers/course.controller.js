@@ -718,13 +718,12 @@ const deleteCourse = asyncHandler(async (req, res) => {
     await cloudinary.deleteImageOnCloudinary(deletedCourse.thumbnail);
 
     const sections = await CourseSections.find({ course: deletedCourse._id });
+    await CourseSections.deleteMany({ course: deletedCourse._id });
 
+    console.log({ sections });
     if (sections.length) {
-        const sectionIds = sections.map((s) => s._id);
+        const sectionIds = sections.map((s) => s.section);
         await sectionController.deleteManySections(sectionIds);
-        // for (let i = 0; i < sections.length; i++) {
-        //     await sectionController.deleteOneSection(sections[i].section);
-        // }
     }
 
     handleResponse(

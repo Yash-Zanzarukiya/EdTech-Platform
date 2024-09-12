@@ -7,8 +7,6 @@ import {
     cloudinary,
 } from '../utils/index.js';
 
-// TODO: Add controller according to user model
-
 const updateUserProfile = asyncHandler(async (req, res) => {
     const { fullName, gradYear, university, branch, bio, profileStatus } =
         req.body;

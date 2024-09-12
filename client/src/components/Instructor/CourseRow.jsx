@@ -11,8 +11,20 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 import { TableCell, TableRow } from '@/components/ui/table';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { deleteCourse } from '@/app/slices/courseSlice';
 
 function CourseRow({ course }) {
     const formatCreationDate = (date) => {
@@ -27,6 +39,12 @@ function CourseRow({ course }) {
             // hour12: false,
         });
         return dateString;
+    };
+
+    const dispatch = useDispatch();
+
+    const handleDeleteCourse = () => {
+        dispatch(deleteCourse(course._id));
     };
 
     return (
@@ -59,25 +77,52 @@ function CourseRow({ course }) {
             </TableCell>
             {/* ACTIONS */}
             <TableCell>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button
-                            aria-haspopup="true"
-                            size="icon"
-                            variant="ghost"
-                        >
-                            <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">Toggle menu</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">
-                            Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <Dialog>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button
+                                aria-haspopup="true"
+                                size="icon"
+                                variant="ghost"
+                            >
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">Toggle menu</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem>Edit</DropdownMenuItem>
+                            <DialogTrigger asChild>
+                                <DropdownMenuItem className="text-destructive">
+                                    Delete
+                                </DropdownMenuItem>
+                            </DialogTrigger>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                            <DialogTitle>Are you absolutely sure?</DialogTitle>
+                            <DialogDescription>
+                                This action cannot be undone. This will
+                                permanently delete your Course and remove your
+                                data from our servers.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button variant="secondary">Cancel</Button>
+                            </DialogClose>
+                            <DialogClose asChild>
+                                <Button
+                                    onClick={handleDeleteCourse}
+                                    variant="destructive"
+                                >
+                                    Delete Video
+                                </Button>
+                            </DialogClose>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
             </TableCell>
         </TableRow>
     );

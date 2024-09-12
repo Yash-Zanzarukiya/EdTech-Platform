@@ -82,7 +82,7 @@ const deleteVideoOnCloudinary = async (URL) => {
     try {
         if (!URL) return false;
 
-        if (isYouTubeVideoUrl(URL)) return true;
+        if (URL.length === 11) return true;
 
         const VideoId = URL.match(
             /(?:image|video)\/upload\/v\d+\/edtech\/(photos|videos)\/(.+?)\.\w+$/

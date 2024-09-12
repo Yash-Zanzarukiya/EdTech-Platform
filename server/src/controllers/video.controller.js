@@ -382,8 +382,14 @@ const deleteOneVideo = async (videoId, conditions = {}) => {
 
 const deleteManyVideos = async (videoIds = [], conditions = {}) => {
     if (!videoIds.length) return true;
+    console.log({ videoIds });
 
-    const deletedVideos = await Video.deleteMany({
+    const deletedVideos = await Video.find({
+        _id: { $in: videoIds },
+        ...conditions,
+    });
+
+    await Video.deleteMany({
         _id: { $in: videoIds },
         ...conditions,
     });
@@ -397,10 +403,12 @@ const deleteManyVideos = async (videoIds = [], conditions = {}) => {
 
             await sectionContent.toggleVideoToSectionContent(null, _id, false);
             await topicList.saveVideoTopics(_id, []);
-            await Transcript.findByIdAndDelete(_id);
+            await Transcript.findOneAndDelete({ video: _id });
             await Progress.deleteMany({ video: _id });
         }
     }
+
+    console.log({ deletedVideos });
 
     return deletedVideos;
 };
