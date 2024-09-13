@@ -20,7 +20,7 @@ function CourseNavbar({ courseData, activeVideo }) {
                 <Link to={'/courses'}>
                     <Package2 className="h-6 w-6" />
                 </Link>
-                <span className="text-lg font-semibold">
+                <span className="text-lg font-semibold line-clamp-2">
                     {courseData.name} - {activeVideo.title}
                 </span>
             </div>

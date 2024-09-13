@@ -34,7 +34,7 @@ function CardHoverContent({ course }) {
                     </Badge>
                 ))}
             </div>
-            <p className=" text-xs">{course.description}</p>
+            <p className=" text-xs line-clamp-3">{course.description}</p>
             <div className="flex justify-between items-center">
                 <Button className="text-xs px-3 py-1">
                     <ShoppingCart className="size-[14px] mr-2" />

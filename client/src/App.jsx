@@ -36,6 +36,7 @@ import {
 import { useToast } from '@/components/ui/use-toast';
 import { useInitialLoading } from './hooks';
 import HeroFormSignUpForm from './pages/Auth/HeroFormSignUpForm';
+import Course from './pages/Course';
 
 let toastMessage;
 
@@ -63,6 +64,7 @@ function App() {
                     <Route path="courses" element={<CourseExplore />} />
                     <Route path="welcome" element={<WelcomePage />} />
                     <Route path="testing" element={<TestingPage />} />
+                    {/* <Route path = "course:/courseId" element={<CourseMainSection/>} /> */}
                     <Route
                         path="admin-dashboard"
                         element={<AdminDashboard />}
