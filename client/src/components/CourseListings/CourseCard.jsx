@@ -13,7 +13,7 @@ function CourseCard({ course }) {
         <HoverCard openDelay={250} closeDelay={250}>
             <HoverCardTrigger asChild>
                 <Link to={`/courses/${course._id}`}>
-                    <Card className="w-[250px] rounded-lg">
+                    <Card className="w-[250px] h-[300px] rounded-lg flex flex-col ">
                         <CardContent className="p-2 pb-2">
                             <img
                                 alt={course.name}
@@ -21,7 +21,7 @@ function CourseCard({ course }) {
                                 src={course.thumbnail}
                             />
                         </CardContent>
-                        <CardFooter className=" justify-between pb-3 px-4">
+                        <CardFooter className="pb-3 px-4">
                             <div className="flex flex-col">
                                 <h2 className=" text-md font-bold tracking-tighter ">
                                     {course.name}

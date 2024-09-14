@@ -12,7 +12,7 @@ function SectionVideoComponent({ video, isActive, order }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleProgress = (e) => {
-        console.log('here: ');
+        // console.log('here: ');
         setIsSubmitting(true);
         dispatch(
             updateProgress({
@@ -41,12 +41,6 @@ function SectionVideoComponent({ video, isActive, order }) {
                         </span>
                     </Link>
                 </div>
-                <Link
-                    className="flex grow text-transparent text-xs"
-                    to={`${video._id}`}
-                >
-                    H
-                </Link>
                 <div className="flex ml-auto items-center gap-2 text-muted-foreground">
                     <VideoIcon className="h-4 w-4" />
                     <span>

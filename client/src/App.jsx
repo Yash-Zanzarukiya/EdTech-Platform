@@ -68,6 +68,7 @@ function App() {
                     <Route path="courses" element={<CourseExplore />} />
                     <Route path="welcome" element={<WelcomePage />} />
                     <Route path="testing" element={<TestingPage />} />
+                    {/* <Route path = "course:/courseId" element={<CourseMainSection/>} /> */}
                     <Route
                         path="admin-dashboard"
                         element={<AdminDashboard />}
