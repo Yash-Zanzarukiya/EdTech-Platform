@@ -1,15 +1,9 @@
 import { z } from 'zod';
 
 const courseFormSchema = z.object({
-    name: z
-        .string()
-        .min(5, 'At least 5 characters required')
-        .max(50, 'At most 50 characters allowed'),
+    name: z.string().min(3, 'At least 3 characters required'),
     price: z.number().min(0, { message: 'Price must be a positive number' }),
-    description: z
-        .string()
-        .min(5, 'Description must be at least 5 characters')
-        .max(500, 'At most 500 characters allowed'),
+    description: z.string(),
     thumbnail: z.any(),
 });
 

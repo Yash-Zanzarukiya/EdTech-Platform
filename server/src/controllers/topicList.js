@@ -52,6 +52,30 @@ const saveCourseTopics = async (courseId, topicIds = []) => {
     return true;
 };
 
+const saveGoalTopics = async (goalId, topicIds = []) => {
+    validateIds(goalId);
+
+    // find if the goal already has topics or else create a new one and delete the topics that are not in the list
+
+    await TopicList.deleteMany({ goal: goalId, topic: { $nin: topicIds } });
+
+    if (!topicIds.length) return true;
+
+    const goalTopics = await TopicList.find({ goal: goalId });
+
+    for (const topic of topicIds) {
+        const existingTopic = goalTopics.find(
+            (t) => t.topic.toString() === topic.toString()
+        );
+
+        if (!existingTopic) {
+            await TopicList.create({ goal: goalId, topic });
+        }
+    }
+
+    return true;
+};
+
 const getCourseTopics = async (courseId) => {
     const topics = await TopicList.aggregate([
         {
@@ -135,9 +159,53 @@ const getVideoTopics = async (videoId) => {
     return { topics, topicIds };
 };
 
+const getGoalTopics = async (goalId) => {
+    const topics = await TopicList.aggregate([
+        {
+            $match: {
+                goal: new mongoose.Types.ObjectId(goalId),
+            },
+        },
+        {
+            $lookup: {
+                from: 'topics',
+                localField: 'topic',
+                foreignField: '_id',
+                as: 'topic',
+                pipeline: [
+                    {
+                        $project: {
+                            name: 1,
+                        },
+                    },
+                ],
+            },
+        },
+        {
+            $unwind: {
+                path: '$topic',
+                preserveNullAndEmptyArrays: true,
+            },
+        },
+        {
+            $project: {
+                _id: '$topic._id',
+                name: '$topic.name',
+            },
+        },
+    ]);
+
+    const topicIds =
+        (topics.length > 0 && topics[0].map((topic) => topic._id)) || [];
+
+    return { topics, topicIds };
+};
+
 export default {
     saveVideoTopics,
     saveCourseTopics,
+    saveGoalTopics,
     getCourseTopics,
     getVideoTopics,
+    getGoalTopics,
 };

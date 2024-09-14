@@ -9,6 +9,7 @@ import sectionController from './section.controller.js';
 import videoController from './video.controller.js';
 import sectionContent from './sectionContent.js';
 import topicList from './topicList.js';
+import goalController from './goal.controller.js';
 
 export {
     checkHealth,
@@ -20,6 +21,7 @@ export {
     topicController,
     sectionController,
     videoController,
+    goalController,
     sectionContent,
     topicList,
 };

@@ -105,6 +105,16 @@ const getAllVideos = asyncHandler(async (req, res) => {
     );
 });
 
+const getVideoDataSet = asyncHandler(async (req, res) => {
+    const AllVideos = [];
+    handleResponse(
+        res,
+        StatusCodes.OK,
+        AllVideos,
+        'Video DataSet Sent Successfully'
+    );
+});
+
 const getAllPublicVideos = asyncHandler(async (req, res) => {
     const pipeline = [];
 

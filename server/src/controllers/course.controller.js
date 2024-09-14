@@ -724,7 +724,7 @@ const deleteCourse = asyncHandler(async (req, res) => {
         await sectionController.deleteManySections(sectionIds);
     }
 
-    console.log(`Course ${deleteCourse.name} deleted successfully`);
+    console.log(`Course (${deletedCourse.name}) deleted successfully`);
 
     handleResponse(
         res,
@@ -823,10 +823,10 @@ const updateCourseStatus = asyncHandler(async (req, res) => {
 
 const addYTPlaylist = asyncHandler(async (req, res) => {
     const { playlistId, courseTopics = '', videoTopics = '' } = req.body;
-    console.log({ playlistId, courseTopics, videoTopics });
 
     validateFields(req, { body: ['playlistId'] });
 
+    console.log('Creating Course...');
     const { playlistDetails, videos } =
         await getPlaylistWithContent(playlistId);
 
@@ -912,7 +912,7 @@ const addYTPlaylist = asyncHandler(async (req, res) => {
         console.log(`Saved video ${i + 1} out of ${videos.length}`);
     }
 
-    console.log(`Course ${course.name}  saved successfully`);
+    console.log(`Course (${course.name}) saved successfully`);
 
     handleResponse(res, StatusCodes.OK, course, 'Course updated successfully');
 });

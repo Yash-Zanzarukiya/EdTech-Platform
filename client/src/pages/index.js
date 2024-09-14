@@ -17,6 +17,7 @@ import CourseLearning from './CourseLearning';
 import CourseExplore from './CourseExplore';
 import PublicVideos from './InstructorPages/PublicVideos';
 import WelcomePage from './WelcomePage';
+import UserGoals from './UserGoals';
 
 export {
     TestingPage,
@@ -38,4 +39,5 @@ export {
     CourseExplore,
     PublicVideos,
     WelcomePage,
+    UserGoals,
 };

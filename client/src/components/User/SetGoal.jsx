@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Card,
     CardHeader,
@@ -10,23 +10,61 @@ import {
 import { Button } from '@/components/ui/button';
 import MultiSelect from '@/components/ui/MultiSelect';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUserProfile } from '@/app/slices/authSlice';
+import {
+    createGoal,
+    updateGoal,
+    updateUserProfile,
+} from '@/app/slices/authSlice';
 import { PROFILE_STATUS } from '@/constant';
-import { useAllTopics } from '@/hooks';
+import { useAllTopics, useUserGoals } from '@/hooks';
 import { Goal, Loader2 } from 'lucide-react';
+import { Input } from '../ui/input';
+import { Label } from '@radix-ui/react-dropdown-menu';
+import { useNavigate, useParams } from 'react-router-dom';
 
-function SetGoal({ firstTime = false }) {
+function SetGoal({ firstTime = false, goal }) {
+    const { goalId } = useParams();
+    useUserGoals(goalId);
+
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const topicsRef = useRef();
+    const nameRef = useRef();
 
-    const { loading } = useSelector(({ auth }) => auth);
-
+    const { loading } = useSelector((state) => state.auth);
     const { topicsNames: allTopics } = useAllTopics();
 
-    function onSubmit() {
+    const [DEFAULTS, setDEFAULTS] = useState([]);
+
+    useEffect(() => {
+        if (!goal) return;
+        const def = goal.topics?.map((topic) => topic.name) || [];
+        setDEFAULTS(() => def);
+        if (nameRef.current) nameRef.current.value = goal.name;
+    }, [goal]);
+
+    const handleSubmit = () => {
+        if (goal) updateUserGoal();
+        else setGoal();
+    };
+
+    function setGoal() {
         if (firstTime) updateProfileStatus();
-        const data = topicsRef.current.getSelectedValues();
-        console.log(data);
+        const topics = topicsRef.current.getSelectedValues().join(',');
+        const name = nameRef.current.value;
+        const data = { name, topics };
+        dispatch(createGoal(data)).then(() => navigate('/goals'));
+    }
+
+    function updateUserGoal() {
+        console.log('updateUserGoal');
+        const topics = topicsRef.current.getSelectedValues().join(',');
+        const name = nameRef.current.value;
+        const data = { name, topics };
+
+        dispatch(updateGoal({ goalId: goal._id, data })).then(() =>
+            navigate('/goals')
+        );
     }
 
     function updateProfileStatus() {
@@ -40,7 +78,7 @@ function SetGoal({ firstTime = false }) {
             <Card x-chunk="dashboard-04-chunk-1" className="p-8 pb-4">
                 <CardHeader>
                     <CardTitle className="text-3xl font-bold flex">
-                        <span>{firstTime ? 'Set Goal' : 'Set New Goal'}</span>
+                        <span>{firstTime ? 'Set Goal' : 'Set a New Goal'}</span>
                         <Goal className="size-8 ml-2" />
                     </CardTitle>
                     <CardDescription>
@@ -50,17 +88,30 @@ function SetGoal({ firstTime = false }) {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <MultiSelect
-                        ref={topicsRef}
-                        OPTIONS={allTopics}
-                        DEFAULTS={[]}
-                    />
+                    <div className="grid gap-4">
+                        <div className="grid gap-1">
+                            <Label>Goal name</Label>
+                            <Input
+                                ref={nameRef}
+                                className="max-w-xs"
+                                placeholder="Name Your Goal"
+                            />
+                        </div>
+                        <div className="grid gap-1">
+                            <Label>Topics to learn</Label>
+                            <MultiSelect
+                                ref={topicsRef}
+                                OPTIONS={allTopics}
+                                DEFAULTS={DEFAULTS}
+                            />
+                        </div>
+                    </div>
                 </CardContent>
                 <CardFooter className="border-t px-6 py-4 gap-4">
                     <Button
                         type="submit"
                         disabled={loading}
-                        onClick={() => onSubmit()}
+                        onClick={handleSubmit}
                         className="w-fit"
                     >
                         {loading ? (

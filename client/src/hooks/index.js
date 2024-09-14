@@ -10,8 +10,10 @@ import useLearnerCourse from './useCourse';
 import useAllCourses from './useAllCourses';
 import useAllVideos from './useAllVideos';
 import useAllPublicVideos from './useAllPublicVideos';
+import useUserGoals from './useUserGoals';
 
 export {
+    useUserGoals,
     useCustomForm,
     useAuthRedirect,
     useRole,
