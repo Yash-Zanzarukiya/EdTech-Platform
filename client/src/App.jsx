@@ -40,6 +40,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { useInitialLoading } from './hooks';
 import HeroFormSignUpForm from './pages/Auth/HeroFormSignUpForm';
 import GoalForm from './components/User/GoalForm';
+import PublicVideoForm from './pages/PublicVideoForm';
 
 let toastMessage;
 
@@ -89,6 +90,10 @@ function App() {
                         <Route path="preview" element={<CoursePreview />} />
                     </Route>
                     <Route path="videos" element={<PublicVideos />} />
+                    <Route
+                        path="videos/:videoId"
+                        element={<PublicVideoForm />}
+                    />
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="add-course" element={<AddCourse />} />
                     <Route path="add-course/new" element={<CourseForm />} />
