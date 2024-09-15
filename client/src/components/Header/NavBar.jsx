@@ -162,9 +162,6 @@ const NavBar = () => {
                 </form>
                 {/* Cart */}
                 <Button size="icon" variant="ghost" className="relative">
-                    <span className="absolute right-0 top-0 size-3 flex items-center justify-center bg-primary text-primary-foreground rounded-full p-1 text-[0.6rem]">
-                        <span>2</span>
-                    </span>
                     <ShoppingCart />
                 </Button>
                 {/* THEME */}
