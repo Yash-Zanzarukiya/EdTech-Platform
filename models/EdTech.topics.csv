@@ -1,0 +1,65 @@
+_id,name,createdAt,updatedAt,__v
+66bc94f946ee577e0d311e19,express.js,2024-08-14T11:28:57.035Z,2024-08-14T11:28:57.035Z,0
+66bc94f946ee577e0d311e1b,node.js,2024-08-14T11:28:57.181Z,2024-08-14T11:28:57.181Z,0
+66bc94f946ee577e0d311e1d,mongodb,2024-08-14T11:28:57.279Z,2024-08-14T11:28:57.279Z,0
+66bc983472278a4cc68acb39,jwt,2024-08-14T11:42:44.072Z,2024-08-14T11:42:44.072Z,0
+66bcef6fea1bf801df98bf87,react.js,2024-08-14T17:54:55.079Z,2024-08-14T17:54:55.079Z,0
+66bcf621ea1bf801df98bfdc,next.js,2024-08-14T18:23:29.075Z,2024-08-14T18:23:29.075Z,0
+66bcf621ea1bf801df98bfde,typescript,2024-08-14T18:23:29.195Z,2024-08-14T18:23:29.195Z,0
+66bcf657ea1bf801df98bfea,authentication,2024-08-14T18:24:23.356Z,2024-08-14T18:24:23.356Z,0
+66bdc5fc534770d8a845319f,javascript,2024-08-15T09:10:20.807Z,2024-08-15T09:10:20.807Z,0
+66bdc5fc534770d8a84531a1,redux,2024-08-15T09:10:20.895Z,2024-08-15T09:10:20.895Z,0
+66bdd18b534770d8a845323a,python,2024-08-15T09:59:39.333Z,2024-08-15T09:59:39.333Z,0
+66c4d583dfffd4b735c1a34b,numpy,2024-08-20T17:42:27.828Z,2024-08-20T17:42:27.828Z,0
+66c4d627dfffd4b735c1a368,nlp,2024-08-20T17:45:11.459Z,2024-08-20T17:45:11.459Z,0
+66c8c50b7a8d485beef748d8,browser,2024-08-23T17:21:15.431Z,2024-08-23T17:21:15.431Z,0
+66c8c80e7a8d485beef7490a,web developement,2024-08-23T17:34:06.906Z,2024-08-23T17:34:06.906Z,0
+66c8c8387a8d485beef74917,backend developement,2024-08-23T17:34:48.129Z,2024-08-23T17:34:48.129Z,0
+66c8c8697a8d485beef74929,frontend developement,2024-08-23T17:35:37.477Z,2024-08-23T17:35:37.477Z,0
+66ddfdf2c3f117bd46b9b3f9,data structures,,,0
+66e2dd26ce0d26e4e8b3f34d,database,,,0
+66e2dd26ce0d26e4e8b3f34f,mongoose,,,0
+66e2dde6ce0d26e4e8b3f40f,react-router,,,0
+66e2de54ce0d26e4e8b3f41d,git,,,0
+66e2de54ce0d26e4e8b3f41f,github,,,0
+66e2de55ce0d26e4e8b3f421,version-control,,,0
+66e2e0c6ce0d26e4e8b3f8bc,tailwindcss,,,0
+66e2e0c7ce0d26e4e8b3f8be,css,,,0
+66e2e218ce0d26e4e8b3f925,dsa,,,0
+66e2e2e0ce0d26e4e8b3f937,arrays,,,0
+66e2e2e1ce0d26e4e8b3f939,linked list,,,0
+66e2e2e1ce0d26e4e8b3f93b,strings,,,0
+66e2e2e1ce0d26e4e8b3f93d,graph,,,0
+66e2e2e1ce0d26e4e8b3f93f,trees,,,0
+66e2e2e1ce0d26e4e8b3f941,dynamic programming,,,0
+66e2e2e1ce0d26e4e8b3f943,recursion,,,0
+66e2e2e1ce0d26e4e8b3f945,algorithms,,,0
+66e2e2e1ce0d26e4e8b3f947,binary search,,,0
+66e2e2e1ce0d26e4e8b3f949,stack,,,0
+66e2e2e1ce0d26e4e8b3f94b,queue,,,0
+66e2e5bdce0d26e4e8b400da,rust,,,0
+66e2e5bdce0d26e4e8b400dc,programming,,,0
+66e2e5bdce0d26e4e8b400de,programming language,,,0
+66e2e6a1ce0d26e4e8b401b6,video calling,,,0
+66e2e6a2ce0d26e4e8b401b8,web-rtc,,,0
+66e2e6a2ce0d26e4e8b401ba,socket.io,,,0
+66e2e6bfce0d26e4e8b401cd,web socket,,,0
+66e2e6dace0d26e4e8b401de,redux toolkit,,,0
+66e2ed2ece0d26e4e8b4027f,mobile developement,,,0
+66e2ed2ece0d26e4e8b40281,react native,,,0
+66e2ed2ece0d26e4e8b40283,cross platform,,,0
+66e2ed2ece0d26e4e8b40285,app developement,,,0
+66e2ed7cce0d26e4e8b4029a,projects,,,0
+66e2ee75ce0d26e4e8b40313,sql,,,0
+66e2ef15ce0d26e4e8b40323,machine learning,,,0
+66e2ef15ce0d26e4e8b40325,data science,,,0
+66e2ef16ce0d26e4e8b40327,eda,,,0
+66e2effbce0d26e4e8b404f2,data analysis,,,0
+66e2f195ce0d26e4e8b40500,solidity,,,0
+66e2f195ce0d26e4e8b40502,web3,,,0
+66e2f195ce0d26e4e8b40504,smart contracts,,,0
+66e2f195ce0d26e4e8b40506,blockchain,,,0
+66e2f195ce0d26e4e8b40508,foundry,,,0
+66e2f196ce0d26e4e8b4050a,hardhat,,,0
+66e2f196ce0d26e4e8b4050c,ethereum,,,0
+66e2f1ddce0d26e4e8b40528,web3 developement,,,0

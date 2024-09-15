@@ -26,4 +26,5 @@ export {
     useAllCourses,
     useAllVideos,
     useAllPublicVideos,
+    useVideoById,
 };

@@ -10,7 +10,7 @@ import { videoUpdateFun, videoUploadFun } from './courseSlice';
 const initialState = {
     loading: false,
     status: false,
-    videoData: null,
+    videoData: [],
 };
 
 export const getAllVideos = createAsyncThunk(
@@ -65,7 +65,6 @@ const videoSlice = createSlice({
         builder.addCase(getAllVideos.pending, (state) => {
             state.loading = true;
             state.status = false;
-            state.videoData = null;
         });
         builder.addCase(getAllVideos.fulfilled, (state, action) => {
             state.loading = false;
