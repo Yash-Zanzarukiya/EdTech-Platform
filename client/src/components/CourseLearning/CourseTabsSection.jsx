@@ -11,8 +11,6 @@ const tabList = [
     { label: 'Resources', value: 'resources' },
 ];
 
-// FIXME : Fix sidebar
-
 function CourseTabsSection({ courseData, activeSection, activeVideo }) {
     return (
         <div className="p-4">

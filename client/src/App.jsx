@@ -21,6 +21,7 @@ import {
     PublicVideos,
     WelcomePage,
     UserGoals,
+    PublicVideoWatch,
 } from './pages';
 import { Toaster } from './components/ui/toaster';
 import {
@@ -41,6 +42,7 @@ import { useInitialLoading } from './hooks';
 import HeroFormSignUpForm from './pages/Auth/HeroFormSignUpForm';
 import GoalForm from './components/User/GoalForm';
 import PublicVideoForm from './pages/PublicVideoForm';
+import Quiz from './components/Quiz';
 
 let toastMessage;
 
@@ -67,9 +69,22 @@ function App() {
                     <Route path="goals/:goalId" element={<GoalForm />} />
                     <Route path="user-dashboard" element={<UserDashboard />} />
                     <Route path="courses" element={<CourseExplore />} />
+                    <Route
+                        path="/courses/:courseId"
+                        element={<CourseLearning />}
+                    >
+                        <Route
+                            path=":videoId"
+                            element={<CourseMainSection />}
+                        />
+                    </Route>
+                    <Route
+                        path="videos/:videoId"
+                        element={<PublicVideoWatch />}
+                    />
                     <Route path="welcome" element={<WelcomePage />} />
                     <Route path="testing" element={<TestingPage />} />
-                    <Route path = "quiz" element={<Quiz/>} />
+                    <Route path="quiz" element={<Quiz />} />
                     <Route
                         path="admin-dashboard"
                         element={<AdminDashboard />}
@@ -97,9 +112,6 @@ function App() {
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="add-course" element={<AddCourse />} />
                     <Route path="add-course/new" element={<CourseForm />} />
-                </Route>
-                <Route path="/courses/:courseId" element={<CourseLearning />}>
-                    <Route path=":videoId" element={<CourseMainSection />} />
                 </Route>
             </Routes>
         </>

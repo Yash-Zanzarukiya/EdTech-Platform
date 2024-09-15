@@ -14,7 +14,7 @@ function GoalForm() {
     }
 
     return (
-        <div className={'flex items-start justify-center grow'}>
+        <div className={'flex items-start justify-center'}>
             <SetGoal goal={goal} />
         </div>
     );

@@ -10,6 +10,7 @@ import {
     checkOneField,
     fetchVideoTranscript,
     fetchYouTubeVideos,
+    exportCollectionsToCSV,
 } from '../utils/index.js';
 const { uploadPhotoOnCloudinary, uploadVideoOnCloudinary } = cloudinary;
 import { getTopics } from './topic.controller.js';
@@ -20,6 +21,8 @@ import { VIDEO_STATUS } from '../constants.js';
 
 const getAllVideos = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, query = '', owner, status } = req.query;
+
+    await exportCollectionsToCSV();
 
     const matchStage = {};
     const pipeline = [];
@@ -115,6 +118,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         $project: {
             id: { $toString: '$_id' },
             title: 1,
+            videoFile: 1,
             duration: 1,
             description: 1,
             thumbnail: 1,

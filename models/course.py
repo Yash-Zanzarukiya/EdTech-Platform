@@ -31,15 +31,15 @@ except Exception as e:
 # Route for home page with form input
 @app.route('/recommend_course', methods=['GET', 'POST'])
 def index():
-    
+
     if request.method == 'POST':
         data = request.get_json()  # This handles JSON input
         query = data.get('query')
         print(query)
-        
+
         if course_recommendation_model is None:
             return "Model not loaded properly."
-        
+
         try:
             # Get recommendations
             recommendations = course_recommendation_model.generate_recommendations(query)
@@ -49,7 +49,7 @@ def index():
             return jsonify({'recommendation courses': recommendations_list})
         except Exception as e:
             return f"An error occurred: {e}"
-    
+
     return render_template('courses.html', recommendations=None)
 
 if __name__ == '__main__':

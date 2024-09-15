@@ -2,7 +2,7 @@
 # import pickle
 # import pandas as pd
 # from sklearn.metrics.pairwise import cosine_similarity
-# import dill as pickle 
+# import dill as pickle
 
 # app = Flask(__name__)
 
@@ -116,7 +116,7 @@ def index():
         print(query)
         if recommendation_model is None:
             return "Model not loaded properly."
-        
+
         try:
             # Get recommendations
             recommendations = recommendation_model.generate_recommendations(query)
@@ -125,7 +125,7 @@ def index():
             return jsonify({'recommendations': recommendations_list})
         except Exception as e:
             return f"An error occurred: {e}"
-    
+
     return render_template('index.html', recommendations=None)
 
 if __name__ == '__main__':

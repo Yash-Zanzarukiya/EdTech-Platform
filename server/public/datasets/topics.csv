@@ -1,0 +1,65 @@
+_id,name,createdAt,updatedAt,__v
+66bc94f946ee577e0d311e19,express.js,Wed Aug 14 2024 16:58:57 GMT+0530 (India Standard Time),Wed Aug 14 2024 16:58:57 GMT+0530 (India Standard Time),0
+66bc94f946ee577e0d311e1b,node.js,Wed Aug 14 2024 16:58:57 GMT+0530 (India Standard Time),Wed Aug 14 2024 16:58:57 GMT+0530 (India Standard Time),0
+66bc94f946ee577e0d311e1d,mongodb,Wed Aug 14 2024 16:58:57 GMT+0530 (India Standard Time),Wed Aug 14 2024 16:58:57 GMT+0530 (India Standard Time),0
+66bc983472278a4cc68acb39,jwt,Wed Aug 14 2024 17:12:44 GMT+0530 (India Standard Time),Wed Aug 14 2024 17:12:44 GMT+0530 (India Standard Time),0
+66bcef6fea1bf801df98bf87,react.js,Wed Aug 14 2024 23:24:55 GMT+0530 (India Standard Time),Wed Aug 14 2024 23:24:55 GMT+0530 (India Standard Time),0
+66bcf621ea1bf801df98bfdc,next.js,Wed Aug 14 2024 23:53:29 GMT+0530 (India Standard Time),Wed Aug 14 2024 23:53:29 GMT+0530 (India Standard Time),0
+66bcf621ea1bf801df98bfde,typescript,Wed Aug 14 2024 23:53:29 GMT+0530 (India Standard Time),Wed Aug 14 2024 23:53:29 GMT+0530 (India Standard Time),0
+66bcf657ea1bf801df98bfea,authentication,Wed Aug 14 2024 23:54:23 GMT+0530 (India Standard Time),Wed Aug 14 2024 23:54:23 GMT+0530 (India Standard Time),0
+66bdc5fc534770d8a845319f,javascript,Thu Aug 15 2024 14:40:20 GMT+0530 (India Standard Time),Thu Aug 15 2024 14:40:20 GMT+0530 (India Standard Time),0
+66bdc5fc534770d8a84531a1,redux,Thu Aug 15 2024 14:40:20 GMT+0530 (India Standard Time),Thu Aug 15 2024 14:40:20 GMT+0530 (India Standard Time),0
+66bdd18b534770d8a845323a,python,Thu Aug 15 2024 15:29:39 GMT+0530 (India Standard Time),Thu Aug 15 2024 15:29:39 GMT+0530 (India Standard Time),0
+66c4d583dfffd4b735c1a34b,numpy,Tue Aug 20 2024 23:12:27 GMT+0530 (India Standard Time),Tue Aug 20 2024 23:12:27 GMT+0530 (India Standard Time),0
+66c4d627dfffd4b735c1a368,nlp,Tue Aug 20 2024 23:15:11 GMT+0530 (India Standard Time),Tue Aug 20 2024 23:15:11 GMT+0530 (India Standard Time),0
+66c8c50b7a8d485beef748d8,browser,Fri Aug 23 2024 22:51:15 GMT+0530 (India Standard Time),Fri Aug 23 2024 22:51:15 GMT+0530 (India Standard Time),0
+66c8c80e7a8d485beef7490a,web developement,Fri Aug 23 2024 23:04:06 GMT+0530 (India Standard Time),Fri Aug 23 2024 23:04:06 GMT+0530 (India Standard Time),0
+66c8c8387a8d485beef74917,backend developement,Fri Aug 23 2024 23:04:48 GMT+0530 (India Standard Time),Fri Aug 23 2024 23:04:48 GMT+0530 (India Standard Time),0
+66c8c8697a8d485beef74929,frontend developement,Fri Aug 23 2024 23:05:37 GMT+0530 (India Standard Time),Fri Aug 23 2024 23:05:37 GMT+0530 (India Standard Time),0
+66ddfdf2c3f117bd46b9b3f9,data structures,,,0
+66e2dd26ce0d26e4e8b3f34d,database,,,0
+66e2dd26ce0d26e4e8b3f34f,mongoose,,,0
+66e2dde6ce0d26e4e8b3f40f,react-router,,,0
+66e2de54ce0d26e4e8b3f41d,git,,,0
+66e2de54ce0d26e4e8b3f41f,github,,,0
+66e2de55ce0d26e4e8b3f421,version-control,,,0
+66e2e0c6ce0d26e4e8b3f8bc,tailwindcss,,,0
+66e2e0c7ce0d26e4e8b3f8be,css,,,0
+66e2e218ce0d26e4e8b3f925,dsa,,,0
+66e2e2e0ce0d26e4e8b3f937,arrays,,,0
+66e2e2e1ce0d26e4e8b3f939,linked list,,,0
+66e2e2e1ce0d26e4e8b3f93b,strings,,,0
+66e2e2e1ce0d26e4e8b3f93d,graph,,,0
+66e2e2e1ce0d26e4e8b3f93f,trees,,,0
+66e2e2e1ce0d26e4e8b3f941,dynamic programming,,,0
+66e2e2e1ce0d26e4e8b3f943,recursion,,,0
+66e2e2e1ce0d26e4e8b3f945,algorithms,,,0
+66e2e2e1ce0d26e4e8b3f947,binary search,,,0
+66e2e2e1ce0d26e4e8b3f949,stack,,,0
+66e2e2e1ce0d26e4e8b3f94b,queue,,,0
+66e2e5bdce0d26e4e8b400da,rust,,,0
+66e2e5bdce0d26e4e8b400dc,programming,,,0
+66e2e5bdce0d26e4e8b400de,programming language,,,0
+66e2e6a1ce0d26e4e8b401b6,video calling,,,0
+66e2e6a2ce0d26e4e8b401b8,web-rtc,,,0
+66e2e6a2ce0d26e4e8b401ba,socket.io,,,0
+66e2e6bfce0d26e4e8b401cd,web socket,,,0
+66e2e6dace0d26e4e8b401de,redux toolkit,,,0
+66e2ed2ece0d26e4e8b4027f,mobile developement,,,0
+66e2ed2ece0d26e4e8b40281,react native,,,0
+66e2ed2ece0d26e4e8b40283,cross platform,,,0
+66e2ed2ece0d26e4e8b40285,app developement,,,0
+66e2ed7cce0d26e4e8b4029a,projects,,,0
+66e2ee75ce0d26e4e8b40313,sql,,,0
+66e2ef15ce0d26e4e8b40323,machine learning,,,0
+66e2ef15ce0d26e4e8b40325,data science,,,0
+66e2ef16ce0d26e4e8b40327,eda,,,0
+66e2effbce0d26e4e8b404f2,data analysis,,,0
+66e2f195ce0d26e4e8b40500,solidity,,,0
+66e2f195ce0d26e4e8b40502,web3,,,0
+66e2f195ce0d26e4e8b40504,smart contracts,,,0
+66e2f195ce0d26e4e8b40506,blockchain,,,0
+66e2f195ce0d26e4e8b40508,foundry,,,0
+66e2f196ce0d26e4e8b4050a,hardhat,,,0
+66e2f196ce0d26e4e8b4050c,ethereum,,,0
+66e2f1ddce0d26e4e8b40528,web3 developement,,,0

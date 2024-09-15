@@ -26,7 +26,11 @@ import CourseEnrollments from './User/CourseEnrollments';
 import DashboardGoalsCard from './User/DashboardGoalsCard';
 import UserDashboardCards from './User/UserDashboardCards';
 import Container from './Misc/Container';
+import RecommendedVideos from './PublicVideo/RecommendedVideos';
+import VideosTabsSection from './PublicVideo/VideosTabsSection';
 export {
+    VideosTabsSection,
+    RecommendedVideos,
     UserDashboardCards,
     DashboardGoalsCard,
     GetStarted,

@@ -18,8 +18,10 @@ import CourseExplore from './CourseExplore';
 import PublicVideos from './InstructorPages/PublicVideos';
 import WelcomePage from './WelcomePage';
 import UserGoals from './UserGoals';
+import PublicVideoWatch from './PublicVideoWatch';
 
 export {
+    PublicVideoWatch,
     TestingPage,
     Home,
     SignIn,
