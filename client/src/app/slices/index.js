@@ -4,6 +4,7 @@ import courseSlice from './courseSlice';
 import topicSlice from './topicSlice';
 import allCourseSlice from './allCourseSlice';
 import videoSlice from './videoSlice';
+import quizSlice from './quizSlice';
 
 export {
     authSlice,
@@ -12,4 +13,5 @@ export {
     topicSlice,
     allCourseSlice,
     videoSlice,
+    quizSlice
 };
