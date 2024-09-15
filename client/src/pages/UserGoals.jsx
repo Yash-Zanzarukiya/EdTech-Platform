@@ -88,7 +88,7 @@ export default function UserGoals() {
                             {goals?.map((goal) => (
                                 <TableRow key={goal.id}>
                                     <TableCell className="font-medium">
-                                        <Link to={`/goals/${goal._id}`}>
+                                        <Link to={`/goals/${goal._id}/skills`}>
                                             {goal.name}
                                         </Link>
                                     </TableCell>

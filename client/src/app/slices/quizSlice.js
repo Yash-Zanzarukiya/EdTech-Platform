@@ -11,7 +11,7 @@ export const quizSlice = createSlice({
     reducers: {
         topics: (state, action) => {
             state.status = true;
-            state.userData = action.payload.topicsData;
+            state.topicsData = action.payload.topicsData;
         }
     },
 });

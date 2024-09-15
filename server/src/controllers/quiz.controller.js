@@ -6,6 +6,8 @@ import { createGoogleGenerativeAI } from '@ai-sdk/google';
 const createQuiz = asyncHandler(async (req, res) => {
     const { topics } = req.body;
 
+    console.log({topics});
+
     if (!Array.isArray(topics) || topics.length === 0) {
         return handleResponse(
             res,
@@ -28,7 +30,7 @@ const createQuiz = asyncHandler(async (req, res) => {
 
     	    The Quiz should be in the form of Array.in which the options could be array of four options.
 
-    		1. Create 5-6 questions covering all the topics in the transcription.
+    		1. Create 55-60 questions covering all the topics in the transcription.
             2. Each question should have four options, with one correct answer.
             3. Provide a short explanation for the correct answer.
             4. Randomize the position of the correct answer to avoid patterns.

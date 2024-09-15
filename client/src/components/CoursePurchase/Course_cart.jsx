@@ -39,29 +39,32 @@ export default function CourseCart() {
         fetchCartData();
     }, [dispatch]);
 
-    const handleBuy = (course) => {
-        dispatch(addCourse({ courseId: course._id }))
-            .then((res) => {
-                if (res.payload) {
-                    window.open(PAYMENT_URL.URL, '_blank');
-                    navigate('/');
-                } else {
-                    toastErrorMessage('Failed to purchase course.');
-                }
-            })
-            .catch((error) => {
-                console.error('Error purchasing course:', error);
+    const handleBuy = async (course) => {
+        try {
+            const result = await dispatch(
+                addCourse({ courseId: course._id })
+            ).unwrap();
+            if (result && result.success) {
+                toastSuccessMessage('Course purchased successfully');
+                window.open(PAYMENT_URL.URL, '_blank');
+                navigate('/');
+            } else {
                 toastErrorMessage(
-                    'An error occurred while purchasing the course.'
+                    result.message || 'Failed to purchase course.'
                 );
-            });
+            }
+        } catch (error) {
+            console.error('Error purchasing course:', error);
+            toastErrorMessage(
+                error.message ||
+                    'An error occurred while purchasing the course.'
+            );
+        }
     };
     const handleCheckoutAll = () => {
         setSelectedCourses(courses); // Select all courses
         setIsCheckoutOpen(true); // Open checkout dialog
     };
-
-    
 
     return (
         <div className="container mx-auto p-4">
@@ -76,12 +79,18 @@ export default function CourseCart() {
                             <div className="p-4 w-full">
                                 <CardHeader>
                                     <CardTitle className="text-xl">
-                                        {item.name}
+                                        {item.course.name}
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
                                     <p className="text-gray-300 mb-4">
-                                        {item.description}
+                                        {item.course.description}
+                                    </p>
+                                    <div className="flex justify-between text-sm text-gray-500">
+                                        <span>{item.course.status}</span>
+                                    </div>
+                                    <p className="font-bold text-lg mt-4 text-primary">
+                                        ${item.course.price.toFixed(2)}
                                     </p>
                                 </CardContent>
                                 <CardFooter className="mt-4">

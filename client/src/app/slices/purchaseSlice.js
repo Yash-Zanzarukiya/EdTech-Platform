@@ -39,8 +39,7 @@ export const addCoursesToCart = createAsyncThunk(
             toastSuccessMessage('Course added to cart successfully');
             return response.data;
         } catch (error) {
-            console.log("Error : ",error);
-            toastErrorMessage(error.message);
+            toastErrorMessage('Course adding Failed', error);
             return null
         }
     }
@@ -81,7 +80,7 @@ export const addCourse = createAsyncThunk(
     async (courseData) => {
         console.log(courseData)
         try {
-            const response = await axiosConfig.post('/purchase', courseData);
+            const response = await axiosConfig.post('/purchase', { courseIds: [courseData] });
             toastSuccessMessage('Course purchased successfully');
             return response.data;
         } catch (error) {

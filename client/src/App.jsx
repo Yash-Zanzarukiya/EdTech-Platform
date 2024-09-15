@@ -22,6 +22,7 @@ import {
     WelcomePage,
     UserGoals,
     PublicVideoWatch,
+    GoalSkills,
 } from './pages';
 import { Toaster } from './components/ui/toaster';
 import {
@@ -45,6 +46,7 @@ import CourseCart from './components/CoursePurchase/Course_cart';
 import OrderSuccessful from './components/CoursePurchase/OrderSuccessful';
 import PublicVideoForm from './pages/PublicVideoForm';
 import Quiz from './components/Quiz';
+import DisqualificationPage from './components/Disqualified';
 
 let toastMessage;
 
@@ -69,6 +71,10 @@ function App() {
                     <Route path="explore" element={<Explore />} />
                     <Route path="goals" element={<UserGoals />} />
                     <Route path="goals/:goalId" element={<GoalForm />} />
+                    <Route
+                        path="goals/:goalId/skills"
+                        element={<GoalSkills />}
+                    />
                     <Route path="user-dashboard" element={<UserDashboard />} />
                     <Route path="courses" element={<CourseExplore />} />
                     <Route
@@ -78,8 +84,15 @@ function App() {
                     <Route path="welcome" element={<WelcomePage />} />
                     <Route path="testing" element={<TestingPage />} />
                     <Route path="quiz" element={<Quiz />} />
-                    <Route path = "cart" element={<CourseCart/>} />
-                    <Route path="/order-successfull" element={<OrderSuccessful />} />
+                    <Route path="cart" element={<CourseCart />} />
+                    <Route
+                        path="disqualified"
+                        element={<DisqualificationPage />}
+                    />
+                    <Route
+                        path="/order-successfull"
+                        element={<OrderSuccessful />}
+                    />
                     <Route
                         path="admin-dashboard"
                         element={<AdminDashboard />}

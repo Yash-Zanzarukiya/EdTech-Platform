@@ -4,6 +4,7 @@ import connectDB from './src/config/dbConfig.js';
 import router from './src/routes/index.js';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import exportCollectionsToCSV from './src/utils/updateCSVData.js';
 
 const app = express();
 

@@ -27,7 +27,7 @@ export default function Quiz() {
     const [loading, setLoading] = useState(true);
     const [tabSwitchCount, setTabSwitchCount] = useState(0); // For counting tab switches
     const [disqualified, setDisqualified] = useState(false);
-    
+
     const navigate = useNavigate();
     const topics = useSelector((state) => state.quiz.topicsData);
     useEffect(() => {
