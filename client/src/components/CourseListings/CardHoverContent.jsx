@@ -1,10 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CalendarDays, Eye, ShoppingCart, Video } from 'lucide-react';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
-import { formate } from '@/utils';
+import { formate, toastErrorMessage, toastSuccessMessage } from '@/utils';
+import { useDispatch } from 'react-redux';
+import { addCoursesToCart } from '@/app/slices/purchaseSlice';
 
 function CardHoverContent({ course }) {
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
+    const handleAddToCart = () => {
+        setLoading(true);
+
+        // Change: Pass the course._id directly, no need for an object
+        dispatch(addCoursesToCart(course._id))
+            .then((res) => {
+                if (res.payload) {
+                    toastSuccessMessage('Course added to cart successfully...');
+                }
+            })
+            .catch((error) => {
+                console.error('Failed to add course to cart', error);
+                toastErrorMessage('An error occurred while adding the course.');
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
+
     return (
         <div className="space-y-2 w-full">
             <h4 className="text-xl font-semibold">{course.name}</h4>
@@ -38,7 +61,20 @@ function CardHoverContent({ course }) {
             <div className="flex justify-between items-center">
                 <Button className="text-xs px-3 py-1">
                     <ShoppingCart className="size-[14px] mr-2" />
-                    <span>Add to Cart</span>
+                    <Button
+                        className="text-xs px-3 py-1"
+                        onClick={handleAddToCart}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <span>Adding...</span>
+                        ) : (
+                            <>
+                                <ShoppingCart className="size-[14px] mr-2" />
+                                <span>Buy</span>
+                            </>
+                        )}
+                    </Button>
                 </Button>
             </div>
         </div>

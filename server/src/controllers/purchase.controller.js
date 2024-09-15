@@ -40,6 +40,7 @@ const getCartCourses = asyncHandler(async (req, res) => {
 
 const addCoursesToCart = asyncHandler(async (req, res) => {
     const { courseIds = [] } = req.body;
+    console.log(courseIds)
 
     const courses = courseIds.map((courseId) => ({
         course: courseId,
@@ -47,6 +48,7 @@ const addCoursesToCart = asyncHandler(async (req, res) => {
     }));
 
     const cartCourses = await Cart.insertMany(courses);
+    console.log("alp",cartCourses)
 
     handleResponse(
         res,
