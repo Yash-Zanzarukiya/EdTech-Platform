@@ -12,7 +12,7 @@ import cloudinary from './cloudinary.js';
 import checkOneField from './checkOneField.js';
 import fetchVideoTranscript from './fetchTranscript.js';
 import fetchYouTubeVideos from './fetchYouTubeVideos.js';
-
+import exportCollectionsToCSV from './updateCSVData.js';
 export {
     isEmail,
     isPassword,
@@ -29,4 +29,5 @@ export {
     checkOneField,
     fetchVideoTranscript,
     fetchYouTubeVideos,
+    exportCollectionsToCSV,
 };

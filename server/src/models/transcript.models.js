@@ -9,6 +9,7 @@ const TranscriptSchema = new Schema(
         },
         transcript: {
             type: String,
+            index: true,
             default: 'No Transcripts Available',
         },
         summary: {

@@ -5,6 +5,7 @@ import {
     toastErrorMessage,
     toastSuccessMessage,
 } from '@/utils/index.js';
+import { videoUpdateFun, videoUploadFun } from './courseSlice';
 
 const initialState = {
     loading: false,
@@ -32,19 +33,6 @@ export const getAllVideos = createAsyncThunk(
     }
 );
 
-export const getAllPublicVideos = createAsyncThunk(
-    'video/getAllPublicVideos',
-    async () => {
-        try {
-            const response = await axiosConfig.get(`/video/inst/public`);
-            return response.data.data;
-        } catch (error) {
-            toastErrorMessage('Fetching Videos Failed', error);
-            return null;
-        }
-    }
-);
-
 export const deletePublicVideo = createAsyncThunk(
     'video/deletePublicVideo',
     async (videoId) => {
@@ -61,32 +49,12 @@ export const deletePublicVideo = createAsyncThunk(
 
 export const updatePublicVideo = createAsyncThunk(
     'video/updatePublicVideo',
-    async (data) => {
-        try {
-            const response = await axiosConfig.patch(
-                `/video/${data.videoId}`,
-                data
-            );
-            toastSuccessMessage('Video updated', response);
-            return response.data.data;
-        } catch (error) {
-            toastErrorMessage('Video update Failed', error);
-            return null;
-        }
-    }
+    videoUpdateFun
 );
 
-export const getVideoById = createAsyncThunk(
-    'video/getVideoById',
-    async (videoId) => {
-        try {
-            const response = await axiosConfig.get(`/video/${videoId}`);
-            return response.data.data;
-        } catch (error) {
-            toastErrorMessage('Fetching Video Failed', error);
-            return null;
-        }
-    }
+export const uploadPublicVideo = createAsyncThunk(
+    'video/uploadPublicVideo',
+    videoUploadFun
 );
 
 const videoSlice = createSlice({
@@ -107,36 +75,6 @@ const videoSlice = createSlice({
             state.loading = false;
             state.status = false;
         });
-        //getVideoById
-        builder.addCase(getVideoById.pending, (state) => {
-            state.loading = true;
-            state.status = false;
-            state.videoData = null;
-        });
-        builder.addCase(getVideoById.fulfilled, (state, action) => {
-            state.loading = false;
-            state.status = true;
-            state.videoData = action.payload;
-        });
-        builder.addCase(getVideoById.rejected, (state) => {
-            state.loading = false;
-            state.status = false;
-        });
-        // getAllPublicVideos
-        builder.addCase(getAllPublicVideos.pending, (state) => {
-            state.loading = true;
-            state.status = false;
-            state.videoData = null;
-        });
-        builder.addCase(getAllPublicVideos.fulfilled, (state, action) => {
-            state.loading = false;
-            state.status = true;
-            state.videoData = action.payload;
-        });
-        builder.addCase(getAllPublicVideos.rejected, (state) => {
-            state.loading = false;
-            state.status = false;
-        });
         // deletePublicVideo
         builder.addCase(deletePublicVideo.pending, () => {});
         builder.addCase(deletePublicVideo.fulfilled, (state, action) => {
@@ -152,13 +90,25 @@ const videoSlice = createSlice({
         builder.addCase(deletePublicVideo.rejected, (state) => {
             state.status = false;
         });
+        // uploadPublicVideo
+        builder.addCase(uploadPublicVideo.pending, (state, _) => {
+            state.loading = true;
+        });
+        builder.addCase(uploadPublicVideo.fulfilled, (state, action) => {
+            const video = action.payload;
+            if (!video) return;
+            if (!state.videoData) state.videoData = [];
+            state.videoData = [...state.videoData, video];
+            state.loading = false;
+        });
+        builder.addCase(uploadPublicVideo.rejected, (state) => {
+            state.loading = false;
+        });
         // updatePublicVideo
         builder.addCase(updatePublicVideo.pending, () => {});
         builder.addCase(updatePublicVideo.fulfilled, (state, action) => {
             state.status = true;
-
             const video = action.payload;
-            console.log({ newvide: video });
             if (!video) return;
 
             state.videoData = state.videoData.map((item) => {

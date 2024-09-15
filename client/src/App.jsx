@@ -21,6 +21,7 @@ import {
     PublicVideos,
     WelcomePage,
     UserGoals,
+    PublicVideoWatch,
 } from './pages';
 import { Toaster } from './components/ui/toaster';
 import {
@@ -43,6 +44,8 @@ import GoalForm from './components/User/GoalForm';
 import Quiz from './components/Quiz';
 import CourseCart from './components/CoursePurchase/Course_cart';
 import OrderSuccessful from './components/CoursePurchase/OrderSuccessful';
+import PublicVideoForm from './pages/PublicVideoForm';
+import Quiz from './components/Quiz';
 
 let toastMessage;
 
@@ -69,9 +72,22 @@ function App() {
                     <Route path="goals/:goalId" element={<GoalForm />} />
                     <Route path="user-dashboard" element={<UserDashboard />} />
                     <Route path="courses" element={<CourseExplore />} />
+                    <Route
+                        path="/courses/:courseId"
+                        element={<CourseLearning />}
+                    >
+                        <Route
+                            path=":videoId"
+                            element={<CourseMainSection />}
+                        />
+                    </Route>
+                    <Route
+                        path="videos/:videoId"
+                        element={<PublicVideoWatch />}
+                    />
                     <Route path="welcome" element={<WelcomePage />} />
                     <Route path="testing" element={<TestingPage />} />
-                    <Route path = "quiz" element={<Quiz/>} />
+                    <Route path="quiz" element={<Quiz />} />
                     <Route path = "cart" element={<CourseCart/>} />
                     <Route path="/order-successfull" element={<OrderSuccessful />} />
                     <Route
@@ -94,12 +110,13 @@ function App() {
                         <Route path="preview" element={<CoursePreview />} />
                     </Route>
                     <Route path="videos" element={<PublicVideos />} />
+                    <Route
+                        path="videos/:videoId"
+                        element={<PublicVideoForm />}
+                    />
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="add-course" element={<AddCourse />} />
                     <Route path="add-course/new" element={<CourseForm />} />
-                </Route>
-                <Route path="/courses/:courseId" element={<CourseLearning />}>
-                    <Route path=":videoId" element={<CourseMainSection />} />
                 </Route>
             </Routes>
         </>

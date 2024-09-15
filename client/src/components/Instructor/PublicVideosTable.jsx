@@ -24,6 +24,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { Link } from 'react-router-dom';
 
 export default function PublicVideosTable({ data, columns }) {
     const [sorting, setSorting] = React.useState([]);
@@ -89,11 +90,13 @@ export default function PublicVideosTable({ data, columns }) {
                             })}
                     </DropdownMenuContent>
                 </DropdownMenu>
-                <Button>
-                    <span className="sm:hidden">
-                        <PlusIcon />
-                    </span>
-                    <span className="hidden sm:block">Upload Video</span>
+                <Button asChild>
+                    <Link to={`new`}>
+                        <span className="sm:hidden">
+                            <PlusIcon />
+                        </span>
+                        <span className="hidden sm:block">Upload Video</span>
+                    </Link>
                 </Button>
             </div>
             <div className="rounded-md border px-1 py">

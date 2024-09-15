@@ -12,6 +12,59 @@ const initialState = {
     courseData: null,
 };
 
+export const videoUpdateFun = async (data) => {
+    try {
+        const formData = new FormData(
+            document.getElementById('lecture-data-form')
+        );
+        formData.append('topics', data['topics']);
+        formData.append('sectionId', data['sectionId']);
+        if (data.status) formData.append('status', data['status']);
+
+        const response = await axiosConfig.patch(
+            `/video/${data.videoId}`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+
+        toastSuccessMessage('Lecture Details Saved', response);
+        return response.data.data;
+    } catch (error) {
+        toastErrorMessage('Lecture Updating Failed', error);
+        return null;
+    }
+};
+
+export const videoUploadFun = async (data) => {
+    try {
+        const formData = new FormData(
+            document.getElementById('lecture-data-form')
+        );
+        formData.append('topics', data['topics']);
+        formData.append('sectionId', data['sectionId']);
+
+        const response = await axiosConfig.post(
+            `/video/add/publish`,
+            formData,
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            }
+        );
+
+        toastSuccessMessage('Lecture Uploaded', response);
+        return response.data.data;
+    } catch (error) {
+        toastErrorMessage('Lecture Uploading Failed', error);
+        return null;
+    }
+};
+
 export const createCourse = createAsyncThunk(
     'course/createCourse',
     async (data) => {
@@ -215,31 +268,7 @@ export const deleteSection = createAsyncThunk(
 
 export const uploadLecture = createAsyncThunk(
     'course/uploadLecture',
-    async (data) => {
-        try {
-            const formData = new FormData(
-                document.getElementById('lecture-data-form')
-            );
-            formData.append('topics', data['topics']);
-            formData.append('sectionId', data['sectionId']);
-
-            const response = await axiosConfig.post(
-                `/video/add/publish`,
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            );
-
-            toastSuccessMessage('Lecture Uploaded', response);
-            return response.data.data;
-        } catch (error) {
-            toastErrorMessage('Lecture Uploading Failed', error);
-            return null;
-        }
-    }
+    videoUploadFun
 );
 
 export const addYTLecture = createAsyncThunk(
@@ -258,32 +287,7 @@ export const addYTLecture = createAsyncThunk(
 
 export const updateLecture = createAsyncThunk(
     'course/updateLecture',
-    async (data) => {
-        try {
-            const formData = new FormData(
-                document.getElementById('lecture-data-form')
-            );
-            formData.append('topics', data['topics']);
-            formData.append('sectionId', data['sectionId']);
-            if (data.status) formData.append('status', data['status']);
-
-            const response = await axiosConfig.patch(
-                `/video/${data.videoId}`,
-                formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                }
-            );
-
-            toastSuccessMessage('Lecture Details Saved', response);
-            return response.data.data;
-        } catch (error) {
-            toastErrorMessage('Lecture Updating Failed', error);
-            return null;
-        }
-    }
+    videoUpdateFun
 );
 
 export const updateProgress = createAsyncThunk(

@@ -5,7 +5,9 @@ import { getAllVideos } from '@/app/slices/videoSlice';
 function useAllVideos({ ...options }) {
     const dispatch = useDispatch();
 
-    const { videoData = [], loading = false } = useSelector((state) => state.video || {});
+    const { videoData = [], loading = false } = useSelector(
+        (state) => state.video || {}
+    );
 
     useEffect(() => {
         dispatch(getAllVideos({ ...options }));

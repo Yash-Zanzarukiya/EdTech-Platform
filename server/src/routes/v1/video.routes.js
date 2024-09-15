@@ -6,7 +6,9 @@ const router = Router();
 
 router.route('/').get(verifyJWT, videoController.getAllVideos);
 
-router.route('/inst/public').get(verifyJWT, videoController.getAllPublicVideos);
+router
+    .route('/inst/public')
+    .get(verifyJWT, videoController.getAllInstructorPublicVideos);
 
 router.route('/add/publish').post(
     verifyJWT,

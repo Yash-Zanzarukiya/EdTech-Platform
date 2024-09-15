@@ -10,6 +10,7 @@ import {
     checkOneField,
     fetchVideoTranscript,
     fetchYouTubeVideos,
+    exportCollectionsToCSV,
 } from '../utils/index.js';
 const { uploadPhotoOnCloudinary, uploadVideoOnCloudinary } = cloudinary;
 import { getTopics } from './topic.controller.js';
@@ -21,13 +22,18 @@ import { VIDEO_STATUS } from '../constants.js';
 const getAllVideos = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, query = '', owner, status } = req.query;
 
+    await exportCollectionsToCSV();
+
     const matchStage = {};
     const pipeline = [];
 
     if (owner) {
         if (owner == 'me') {
             matchStage.owner = req.user?._id;
-            match.$or = [{ status: VIDEO_STATUS.PUBLIC }, { section: null }];
+            matchStage.$or = [
+                { status: VIDEO_STATUS.PUBLIC },
+                { section: null },
+            ];
         } else {
             validateIds(owner);
             matchStage.owner = owner;
@@ -38,6 +44,32 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
     pipeline.push({
         $match: { ...matchStage },
+    });
+
+    pipeline.push({
+        $lookup: {
+            from: 'topiclists',
+            localField: '_id',
+            foreignField: 'video',
+            as: 'topics',
+            pipeline: [
+                {
+                    $lookup: {
+                        from: 'topics',
+                        localField: 'topic',
+                        foreignField: '_id',
+                        as: 'topic',
+                    },
+                },
+                {
+                    $replaceRoot: {
+                        newRoot: {
+                            $first: '$topic',
+                        },
+                    },
+                },
+            ],
+        },
     });
 
     if (query) {
@@ -86,10 +118,13 @@ const getAllVideos = asyncHandler(async (req, res) => {
         $project: {
             id: { $toString: '$_id' },
             title: 1,
+            videoFile: 1,
             duration: 1,
+            description: 1,
             thumbnail: 1,
             status: 1,
             section: 1,
+            topics: 1,
             owner: 1,
             createdAt: 1,
         },
@@ -105,17 +140,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
     );
 });
 
-const getVideoDataSet = asyncHandler(async (req, res) => {
-    const AllVideos = [];
-    handleResponse(
-        res,
-        StatusCodes.OK,
-        AllVideos,
-        'Video DataSet Sent Successfully'
-    );
-});
-
-const getAllPublicVideos = asyncHandler(async (req, res) => {
+const getAllInstructorPublicVideos = asyncHandler(async (req, res) => {
     const pipeline = [];
 
     pipeline.push({
@@ -408,7 +433,7 @@ const deleteManyVideos = async (videoIds = [], conditions = {}) => {
 
 export default {
     getAllVideos,
-    getAllPublicVideos,
+    getAllInstructorPublicVideos,
     publishAVideo,
     getVideoById,
     updateVideo,

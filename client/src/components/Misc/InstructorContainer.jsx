@@ -145,7 +145,7 @@ function InstructorContainer() {
                     <ProfileDropdown />
                 </div>
             </header>
-            <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+            <div className="flex flex-col sm:gap-4 sm:pl-14">
                 <Outlet context={{ setRouteName }} />
             </div>
         </div>

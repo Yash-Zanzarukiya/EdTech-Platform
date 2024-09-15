@@ -37,6 +37,7 @@ import { Progress } from '@/components/ui/progress';
 import { useUserGoals } from '@/hooks';
 import { useDispatch } from 'react-redux';
 import { deleteGoal } from '@/app/slices/authSlice';
+import { Badge } from '@/components/ui/badge';
 
 export default function UserGoals() {
     const { goals } = useUserGoals();
@@ -70,14 +71,17 @@ export default function UserGoals() {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="w-[40%]">
-                                    Goal Name
-                                </TableHead>
-                                <TableHead className="w-[40%]">
+                                <TableHead>Goal Name</TableHead>
+                                <TableHead>Topics</TableHead>
+                                <TableHead className="text-center">
                                     Progress
                                 </TableHead>
-                                <TableHead>Action</TableHead>
-                                <TableHead className="w-[70px]"></TableHead>
+                                <TableHead className="text-center">
+                                    Learn
+                                </TableHead>
+                                <TableHead className="text-center">
+                                    Action
+                                </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -88,7 +92,17 @@ export default function UserGoals() {
                                             {goal.name}
                                         </Link>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="flex gap-1 w-fit">
+                                        {goal.topics.map((topic) => (
+                                            <Badge
+                                                key={topic._id}
+                                                className="rounded-full"
+                                            >
+                                                {topic.name}
+                                            </Badge>
+                                        ))}
+                                    </TableCell>
+                                    <TableCell className="text-center">
                                         <div className="flex items-center gap-2">
                                             <Progress
                                                 value={goal.progress}
@@ -99,10 +113,10 @@ export default function UserGoals() {
                                             </span>
                                         </div>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-center">
                                         <Button size="sm">Let's Go</Button>
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="text-center">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button
@@ -113,7 +127,7 @@ export default function UserGoals() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem>
+                                                <DropdownMenuItem asChild>
                                                     <Button
                                                         asChild
                                                         variant="ghost"
@@ -140,7 +154,7 @@ export default function UserGoals() {
                                                             true
                                                         );
                                                     }}
-                                                    className="text-red-600"
+                                                    className="text-red-600 flex items-center justify-center"
                                                 >
                                                     <Trash className="mr-2 h-4 w-4" />
                                                     Delete

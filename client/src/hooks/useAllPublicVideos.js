@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllPublicVideos } from '@/app/slices/videoSlice';
+import { getAllVideos } from '@/app/slices/videoSlice';
+import { VIDEO_STATUS } from '@/constant';
 
-function useAllPublicVideos() {
+function useAllPublicVideos(options) {
     const dispatch = useDispatch();
 
     const { videoData, loading } = useSelector((state) => state.video);
 
     useEffect(() => {
-        dispatch(getAllPublicVideos());
+        dispatch(getAllVideos({ status: VIDEO_STATUS.PUBLIC, ...options }));
     }, [dispatch]);
 
     return { videoData, loading };

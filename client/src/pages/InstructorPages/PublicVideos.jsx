@@ -34,6 +34,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { deletePublicVideo, updatePublicVideo } from '@/app/slices/videoSlice';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Link } from 'react-router-dom';
 
 export const columns = [
     {
@@ -63,7 +64,9 @@ export const columns = [
             );
         },
         cell: ({ row }) => (
-            <div className="capitalize">{row.getValue('title')}</div>
+            <div className="capitalize">
+                <Link to={`${row.original._id}`}>{row.getValue('title')}</Link>
+            </div>
         ),
     },
     {
@@ -197,7 +200,7 @@ export const columns = [
 export default function PublicVideos() {
     useCourseDataInstructor('Public Videos');
 
-    const { videoData, loading } = useAllPublicVideos();
+    const { videoData, loading } = useAllPublicVideos({ owner: 'me' });
 
     if (loading || !videoData) return <Skeleton />;
 

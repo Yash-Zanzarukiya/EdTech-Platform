@@ -38,8 +38,10 @@ import {
 import { Loader2 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import MultiSelect from '@/components/ui/MultiSelect';
+import { updatePublicVideo } from '@/app/slices/videoSlice';
 
 export default function LectureForm({
+    publicVideo = false,
     lecture = false,
     sectionId,
     cancelAction,
@@ -79,16 +81,30 @@ export default function LectureForm({
         };
 
         if (lecture) {
-            dispatch(updateLecture(lectureData)).then(() =>
+            updateTheVideo(lectureData);
+        } else {
+            uploadTheVideo(lectureData);
+        }
+    }
+
+    const uploadTheVideo = (lectureData) => {
+        dispatch(uploadLecture(lectureData)).then(() => {
+            setIsSubmitting(() => false);
+            cancelAction();
+        });
+    };
+
+    const updateTheVideo = (lectureData) => {
+        if (publicVideo) {
+            dispatch(updatePublicVideo(lectureData)).then(() =>
                 setIsSubmitting(() => false)
             );
         } else {
-            dispatch(uploadLecture(lectureData)).then(() => {
-                setIsSubmitting(() => false);
-                cancelAction();
-            });
+            dispatch(updateLecture(lectureData)).then(() =>
+                setIsSubmitting(() => false)
+            );
         }
-    }
+    };
 
     const handleDelete = () => {
         setIsSubmitting(true);

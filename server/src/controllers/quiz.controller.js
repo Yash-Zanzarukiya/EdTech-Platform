@@ -25,9 +25,9 @@ const createQuiz = asyncHandler(async (req, res) => {
             temperature: 0.7,
             prompt: `
     	    please convert this transcription into a well-structured quiz follow this structure:
-    
+
     	    The Quiz should be in the form of Array.in which the options could be array of four options.
-    
+
     		1. Create 5-6 questions covering all the topics in the transcription.
             2. Each question should have four options, with one correct answer.
             3. Provide a short explanation for the correct answer.
@@ -35,7 +35,7 @@ const createQuiz = asyncHandler(async (req, res) => {
     		6. Do not make quiz on specific video.
             7. Make difficulty level as medium level.
             5. Format each question as a JSON object as follows:
-    
+
     		{
     			"Q": "[Question text]",
     			"A": "[Option 1]",
@@ -45,10 +45,10 @@ const createQuiz = asyncHandler(async (req, res) => {
     			"Correct": "[A, B, C, or D]",
     			"Explanation": "[Brief explanation of the correct answer]"
             }
-    
+
             6. Separate each question object with a line containing only "---".
             7. Ensure the entire response is valid JSON when the separators are removed.
-    
+
                 Here's the topic for this video: ${topics}
                 `,
         });
