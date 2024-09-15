@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/select';
 import { PublicVideosTable } from '@/components';
 import { useAllPublicVideos, useCourseDataInstructor } from '@/hooks';
-import { Badge } from '@/components/ui/badge';
 import { formate } from '@/utils';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -202,7 +201,7 @@ export default function PublicVideos() {
 
     const { videoData, loading } = useAllPublicVideos({ owner: 'me' });
 
-    if (loading || !videoData) return <Skeleton />;
+    if (loading || !videoData) return <p className="p-2">Loading...</p>;
 
     return (
         <div className="w-full p-6 pt-0 ">

@@ -12,8 +12,9 @@ import { Video } from './video.models.js';
 import { CourseSections } from './CourseSections.models.js';
 import { SectionContent } from './sectionContent.models.js';
 import { TopicList } from './topicList.models.js';
-
+import { Cart } from './cart.models.js';
 export {
+    Cart,
     Auth,
     Course,
     Goal,

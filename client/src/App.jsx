@@ -44,7 +44,6 @@ import GoalForm from './components/User/GoalForm';
 import CourseCart from './components/CoursePurchase/Course_cart';
 import OrderSuccessful from './components/CoursePurchase/OrderSuccessful';
 import PublicVideoForm from './pages/PublicVideoForm';
-import Quiz from './components/Quiz';
 
 let toastMessage;
 
@@ -71,15 +70,6 @@ function App() {
                     <Route path="goals/:goalId" element={<GoalForm />} />
                     <Route path="user-dashboard" element={<UserDashboard />} />
                     <Route path="courses" element={<CourseExplore />} />
-                    <Route
-                        path="/courses/:courseId"
-                        element={<CourseLearning />}
-                    >
-                        <Route
-                            path=":videoId"
-                            element={<CourseMainSection />}
-                        />
-                    </Route>
                     <Route
                         path="videos/:videoId"
                         element={<PublicVideoWatch />}
@@ -116,6 +106,9 @@ function App() {
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="add-course" element={<AddCourse />} />
                     <Route path="add-course/new" element={<CourseForm />} />
+                </Route>
+                <Route path="/courses/:courseId" element={<CourseLearning />}>
+                    <Route path=":videoId" element={<CourseMainSection />} />
                 </Route>
             </Routes>
         </>

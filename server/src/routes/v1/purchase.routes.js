@@ -5,7 +5,15 @@ const router = Router();
 
 router.use(verifyJWT);
 
-router.route('/:courseId').post(purchaseController.addCourse);
-router.route('/').get(purchaseController.getPurchasedCourses);
+router
+    .route('/cart')
+    .get(purchaseController.getCartCourses)
+    .post(purchaseController.addCoursesToCart)
+    .delete(purchaseController.removeCourseFromCart);
+
+router
+    .route('/')
+    .get(purchaseController.getPurchasedCourses)
+    .post(purchaseController.addCourse);
 
 export default router;
