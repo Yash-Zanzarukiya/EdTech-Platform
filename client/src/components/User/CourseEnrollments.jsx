@@ -1,5 +1,3 @@
-'use client';
-
 import {
     Card,
     CardContent,
@@ -18,8 +16,6 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { Separator } from '../ui/separator';
-import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { axiosConfig } from '@/utils';
 
@@ -61,39 +57,37 @@ export default function CourseEnrollments() {
             course: {
                 _id: '5',
                 name: 'Learn Node.js',
-                progress: 50,
+                progress: 87,
             },
             hasCertificate: false,
         },
     ]);
 
     useEffect(() => {
-        // fetchCourses();
+        fetchCourses();
     }, []);
 
     const fetchCourses = async () => {
         try {
             const response = await axiosConfig.get('/purchase');
-            setCourses(response.data.data);
+            // setCourses(response.data.data);
         } catch (error) {
             console.error(error);
         }
     };
 
     const getCertificate = async (courseRoot) => {
-        if (courseRoot.hasCertificate) {
-        } else {
-            try {
-                const response = await axiosConfig.post(
-                    `/purchase/cert/${courseRoot.course._id}`
-                );
-                console.log(response.data);
-                fetchCourses();
-            } catch (error) {
-                console.error(error);
-            }
+        try {
+            const response = await axiosConfig.post(
+                `/purchase/cert/${courseRoot.course._id}`
+            );
+            fetchCourses();
+        } catch (error) {
+            console.error(error);
         }
     };
+
+    const viewCertificate = (courseId) => {};
 
     return (
         <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
@@ -153,7 +147,7 @@ export default function CourseEnrollments() {
                                     {hasCertificate ? (
                                         <Button
                                             onClick={() =>
-                                                getCertificate(course._id)
+                                                viewCertificate(course._id)
                                             }
                                             className="text-xs"
                                         >
@@ -166,9 +160,9 @@ export default function CourseEnrollments() {
                                             }
                                             className="text-xs"
                                             variant="outline"
-                                            disabled={course.progress < 100}
+                                            disabled={course.progress < 80}
                                         >
-                                            {course.progress < 100
+                                            {course.progress < 80
                                                 ? 'In Progress'
                                                 : 'Get Certificate'}
                                         </Button>
