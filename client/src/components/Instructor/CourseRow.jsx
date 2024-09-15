@@ -75,7 +75,6 @@ function CourseRow({ course }) {
             <TableCell className="hidden md:table-cell">
                 {formatCreationDate(course.createdAt)}
             </TableCell>
-            {/* ACTIONS */}
             <TableCell>
                 <Dialog>
                     <DropdownMenu>

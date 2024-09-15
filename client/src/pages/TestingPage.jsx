@@ -1,11 +1,13 @@
 import React from 'react';
 import HeroFormSignUpForm from './Auth/HeroFormSignUpForm';
-import { PersonalInfoForm } from '@/components';
+import { PersonalInfoForm, SetGoal } from '@/components';
 
 function TestingPage() {
     return (
         <>
-            <PersonalInfoForm />
+            <div className="flex items-center justify-center grow">
+                <SetGoal />
+            </div>
         </>
     );
 }

@@ -22,13 +22,20 @@ import PublicVideosTable from './Instructor/PublicVideosTable';
 import SetGoal from './User/SetGoal';
 import GetStarted from './Misc/GetStarted';
 import YTPlaylistCourse from './Instructor/YTPlaylistCourse';
+import CourseEnrollments from './User/CourseEnrollments';
+import DashboardGoalsCard from './User/DashboardGoalsCard';
+import UserDashboardCards from './User/UserDashboardCards';
+import Container from './Misc/Container';
 export {
+    UserDashboardCards,
+    DashboardGoalsCard,
     GetStarted,
     NavBar,
     FirstLoading,
     RootContainer,
     InstructorContainer,
     PersonalInfoForm,
+    Container,
     CourseRow,
     CourseCurriculum,
     CourseForm,
@@ -47,4 +54,5 @@ export {
     PublicVideosTable,
     SetGoal,
     YTPlaylistCourse,
+    CourseEnrollments,
 };

@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { DialogClose } from '@radix-ui/react-dialog';
 import { AiFillYoutube } from 'react-icons/ai';
 import { Separator } from '../ui/separator';
 import { useRef, useState } from 'react';
@@ -19,6 +18,7 @@ import { useDispatch } from 'react-redux';
 import { createPlaylistCourse } from '@/app/slices/courseSlice';
 import MultiSelect from '../ui/MultiSelect';
 import { useAllTopics } from '@/hooks';
+import { LoaderCircle } from 'lucide-react';
 
 function YTPlaylistCourse() {
     const dispatch = useDispatch();
@@ -142,7 +142,14 @@ function YTPlaylistCourse() {
                 </div>
                 <DialogFooter>
                     <Button disabled={isSubmitting} onClick={handleSubmit}>
-                        {isSubmitting ? 'Adding...' : ' Add Course'}
+                        {isSubmitting ? (
+                            <span className="flex items-center justify-center">
+                                <LoaderCircle className="size-4 mr-1 animate-spin" />
+                                Adding
+                            </span>
+                        ) : (
+                            'Add Course'
+                        )}
                     </Button>
                 </DialogFooter>
             </DialogContent>

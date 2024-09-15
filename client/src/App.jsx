@@ -20,9 +20,11 @@ import {
     CourseExplore,
     PublicVideos,
     WelcomePage,
+    UserGoals,
 } from './pages';
 import { Toaster } from './components/ui/toaster';
 import {
+    Container,
     CourseCurriculum,
     CourseForm,
     CourseMainSection,
@@ -32,13 +34,12 @@ import {
     FirstLoading,
     InstructorContainer,
     RootContainer,
+    SetGoal,
 } from './components';
 import { useToast } from '@/components/ui/use-toast';
 import { useInitialLoading } from './hooks';
 import HeroFormSignUpForm from './pages/Auth/HeroFormSignUpForm';
-import Course from './pages/Course';
-import { QuizForm } from './components/Instructor/Curriculum';
-import Quiz from './components/Quiz';
+import GoalForm from './components/User/GoalForm';
 
 let toastMessage;
 
@@ -61,7 +62,8 @@ function App() {
                     {/* <Route path="sign-up" element={<HeroFormSignUpForm />} /> */}
                     <Route path="about" element={<About />} />
                     <Route path="explore" element={<Explore />} />
-                    <Route path="certificate" element={<Certificate />} />
+                    <Route path="goals" element={<UserGoals />} />
+                    <Route path="goals/:goalId" element={<GoalForm />} />
                     <Route path="user-dashboard" element={<UserDashboard />} />
                     <Route path="courses" element={<CourseExplore />} />
                     <Route path="welcome" element={<WelcomePage />} />
