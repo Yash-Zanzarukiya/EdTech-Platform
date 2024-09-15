@@ -10,8 +10,8 @@ function TestingPage() {
         <>
             <div className="flex items-center justify-center grow">
                 {/* <Certificate /> */}
-                {/* <CertificateVerifier /> */}
-                <CertificateGallery />
+                <CertificateVerifier />
+                {/* <CertificateGallery /> */}
             </div>
         </>
     );

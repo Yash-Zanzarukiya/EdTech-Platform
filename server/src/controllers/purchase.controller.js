@@ -1,25 +1,20 @@
 import { StatusCodes } from 'http-status-codes';
-import { Purchase } from '../models/index.js';
-import {
-    handleResponse,
-    ApiError,
-    asyncHandler,
-    validateIds,
-} from '../utils/index.js';
+import { Cart, Purchase } from '../models/index.js';
+import { handleResponse, asyncHandler } from '../utils/index.js';
 
 const addCourse = asyncHandler(async (req, res) => {
-    const { courseId } = req.params;
+    const { courseIds = [] } = req.body;
 
-    validateIds(courseId);
-
-    const course = await Purchase.create({
-        lerner: req.user?._id,
+    const courses = courseIds.map((courseId) => ({
         course: courseId,
-    });
+        lerner: req.user?._id,
+    }));
 
-    if (!course) throw new ApiError(StatusCodes.NOT_FOUND, 'Course not found');
+    await Purchase.insertMany(courses);
 
-    handleResponse(res, StatusCodes.OK, course, 'course added successfully');
+    await removeFromCart(courseIds);
+
+    handleResponse(res, StatusCodes.OK, courses, 'course added successfully');
 });
 
 const getPurchasedCourses = asyncHandler(async (req, res) => {
@@ -35,4 +30,60 @@ const getPurchasedCourses = asyncHandler(async (req, res) => {
     );
 });
 
-export default { addCourse, getPurchasedCourses };
+const getCartCourses = asyncHandler(async (req, res) => {
+    const courses = await Cart.find({
+        user: req.user?._id,
+    });
+
+    handleResponse(res, StatusCodes.OK, courses, 'Courses sent successfully');
+});
+
+const addCoursesToCart = asyncHandler(async (req, res) => {
+    const { courseIds = [] } = req.body;
+
+    const courses = courseIds.map((courseId) => ({
+        course: courseId,
+        user: req.user?._id,
+    }));
+
+    const cartCourses = await Cart.insertMany(courses);
+
+    handleResponse(
+        res,
+        StatusCodes.OK,
+        cartCourses,
+        'Courses sent successfully'
+    );
+});
+
+const removeCourseFromCart = asyncHandler(async (req, res) => {
+    const { courseIds = [] } = req.body;
+
+    const cartCourses = await removeFromCart(courseIds);
+
+    handleResponse(
+        res,
+        StatusCodes.OK,
+        cartCourses,
+        'Courses removed successfully'
+    );
+});
+
+const removeFromCart = async (courseIds = []) => {
+    const courses = courseIds.map((courseId) => ({
+        course: courseId,
+        user: req.user?._id,
+    }));
+
+    const cartCourses = await Cart.deleteMany(courses);
+
+    return courseIds;
+};
+
+export default {
+    addCourse,
+    getPurchasedCourses,
+    getCartCourses,
+    addCoursesToCart,
+    removeCourseFromCart,
+};
