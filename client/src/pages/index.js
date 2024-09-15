@@ -19,8 +19,9 @@ import PublicVideos from './InstructorPages/PublicVideos';
 import WelcomePage from './WelcomePage';
 import UserGoals from './UserGoals';
 import PublicVideoWatch from './PublicVideoWatch';
-
+import GoalSkills from './GoalSkills';
 export {
+    GoalSkills,
     PublicVideoWatch,
     TestingPage,
     Home,

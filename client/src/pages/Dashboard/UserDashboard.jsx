@@ -63,7 +63,6 @@ function UserDashboard() {
                 <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
                     <CourseEnrollments />
                     <DashboardGoalsCard />
-                    <CourseEnrollments />
                 </div>
             </main>
         </div>

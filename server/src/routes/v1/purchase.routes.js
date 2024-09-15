@@ -16,4 +16,8 @@ router
     .get(purchaseController.getPurchasedCourses)
     .post(purchaseController.addCourse);
 
+router
+    .route('/cert/:courseId')
+    .patch(purchaseController.updateCertificateEligibility);
+
 export default router;

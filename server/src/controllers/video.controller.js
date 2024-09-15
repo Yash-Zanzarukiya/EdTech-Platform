@@ -22,8 +22,6 @@ import { VIDEO_STATUS } from '../constants.js';
 const getAllVideos = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, query = '', owner, status } = req.query;
 
-    await exportCollectionsToCSV();
-
     const matchStage = {};
     const pipeline = [];
 
