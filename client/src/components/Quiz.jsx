@@ -16,8 +16,9 @@ import { Progress } from '@/components/ui/progress';
 import axios from 'axios';
 import { toastErrorMessage } from '@/utils';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-export default function Quiz({topics = []}) {
+export default function Quiz() {
     const [quizData, setQuizData] = useState([]);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [answers, setAnswers] = useState([]);
@@ -28,7 +29,7 @@ export default function Quiz({topics = []}) {
     const [disqualified, setDisqualified] = useState(false);
     
     const navigate = useNavigate();
-
+    const topics = useSelector((state) => state.quiz.topicsData);
     useEffect(() => {
         fetchQuizData();
         document.addEventListener('visibilitychange', handleTabSwitch);

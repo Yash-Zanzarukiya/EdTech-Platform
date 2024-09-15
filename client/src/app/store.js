@@ -6,6 +6,7 @@ import {
     topicSlice,
     allCourseSlice,
     videoSlice,
+    quizSlice
 } from './slices';
 
 export const store = configureStore({
@@ -16,5 +17,6 @@ export const store = configureStore({
         course: courseSlice,
         video: videoSlice,
         topic: topicSlice,
+        quiz : quizSlice
     },
 });

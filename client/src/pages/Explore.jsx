@@ -7,6 +7,8 @@ import {
     useAllVideos,
 } from '@/hooks';
 import { CourseCard } from '@/components';
+import { VIDEO_STATUS } from '@/constant';
+import VideoCard from '@/components/CourseListings/VideoCard';
 
 function Explore() {
     const [query, setQuery] = useState('');
@@ -16,7 +18,7 @@ function Explore() {
     const { topicsIds, topicsLoading, topicsNames } = useAllTopics();
     const [recommendedVideos, setRecommendedVideos] = useState([]);
 
-    // console.log(videoData);
+    console.log("Video data : ",videoData);
 
     const fetchRecommendedCourses = async (searchQuery) => {
         try {
@@ -47,6 +49,7 @@ function Explore() {
                 }
             );
             // console.log(response.data);
+            console.log("video ",response.data);
             const recommendedIds = response.data['recommendations'].map(
                 (video) => video._id
             );
@@ -55,6 +58,7 @@ function Explore() {
             console.error('Error fetching recommended videos:', error);
         }
     };
+
 
     useEffect(() => {
         fetchRecommendedCourses();
@@ -90,7 +94,7 @@ function Explore() {
             <h2 className="text-2xl font-bold mb-4 mt-8">Recommended Videos</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pt-2">
                 {filteredVideos?.map((video) => (
-                    <h2>video.names</h2>
+                    <VideoCard key={video._id} video={video} />
                 ))}
             </div>
         </div>

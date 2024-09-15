@@ -41,6 +41,9 @@ import { useToast } from '@/components/ui/use-toast';
 import { useInitialLoading } from './hooks';
 import HeroFormSignUpForm from './pages/Auth/HeroFormSignUpForm';
 import GoalForm from './components/User/GoalForm';
+import Quiz from './components/Quiz';
+import CourseCart from './components/CoursePurchase/Course_cart';
+import OrderSuccessful from './components/CoursePurchase/OrderSuccessful';
 import PublicVideoForm from './pages/PublicVideoForm';
 import Quiz from './components/Quiz';
 
@@ -76,6 +79,8 @@ function App() {
                     <Route path="welcome" element={<WelcomePage />} />
                     <Route path="testing" element={<TestingPage />} />
                     <Route path="quiz" element={<Quiz />} />
+                    <Route path = "cart" element={<CourseCart/>} />
+                    <Route path="/order-successfull" element={<OrderSuccessful />} />
                     <Route
                         path="admin-dashboard"
                         element={<AdminDashboard />}
