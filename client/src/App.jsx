@@ -45,7 +45,6 @@ import Quiz from './components/Quiz';
 import CourseCart from './components/CoursePurchase/Course_cart';
 import OrderSuccessful from './components/CoursePurchase/OrderSuccessful';
 import PublicVideoForm from './pages/PublicVideoForm';
-import Quiz from './components/Quiz';
 
 let toastMessage;
 
