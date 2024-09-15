@@ -9,7 +9,7 @@ import {
 const initialState = {
     loading: false,
     status: false,
-    videoData: null,
+    videoData: [],
 };
 
 export const getAllVideos = createAsyncThunk(
@@ -76,6 +76,19 @@ export const updatePublicVideo = createAsyncThunk(
     }
 );
 
+export const getVideoById = createAsyncThunk(
+    'video/getVideoById',
+    async (videoId) => {
+        try {
+            const response = await axiosConfig.get(`/video/${videoId}`);
+            return response.data.data;
+        } catch (error) {
+            toastErrorMessage('Fetching Video Failed', error);
+            return null;
+        }
+    }
+);
+
 const videoSlice = createSlice({
     name: 'video',
     initialState,
@@ -84,7 +97,6 @@ const videoSlice = createSlice({
         builder.addCase(getAllVideos.pending, (state) => {
             state.loading = true;
             state.status = false;
-            state.videoData = null;
         });
         builder.addCase(getAllVideos.fulfilled, (state, action) => {
             state.loading = false;
@@ -92,6 +104,21 @@ const videoSlice = createSlice({
             state.videoData = action.payload;
         });
         builder.addCase(getAllVideos.rejected, (state) => {
+            state.loading = false;
+            state.status = false;
+        });
+        //getVideoById
+        builder.addCase(getVideoById.pending, (state) => {
+            state.loading = true;
+            state.status = false;
+            state.videoData = null;
+        });
+        builder.addCase(getVideoById.fulfilled, (state, action) => {
+            state.loading = false;
+            state.status = true;
+            state.videoData = action.payload;
+        });
+        builder.addCase(getVideoById.rejected, (state) => {
             state.loading = false;
             state.status = false;
         });

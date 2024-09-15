@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendation System</title>
+</head>
+<body>
+    <h1>Recommendation System</h1>
+    
+    <form method="POST" action="/recommend_course">
+        <input type="text" name="query" placeholder="Enter your query here" required>
+        <button type="submit">Get Recommendations</button>
+    </form>
+
+    {% if query %}
+        <h2>Recommendations for: "{{ query }}"</h2>
+        <ul>
+            {% for rec in recommendations %}
+                <li>
+                    <strong>{{rec._id}}</strong>
+                    <strong>{{ rec.name }}</strong><br>
+                <br>
+                    
+                </li>
+            {% endfor %}
+        </ul>
+    {% elif recommendations is not none %}
+        <p>No recommendations found.</p>
+    {% endif %}
+</body>
+</html>
